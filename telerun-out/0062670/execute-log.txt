@@ -1,5 +1,0 @@
-Content:
-bin.tar
-out
-run.sh
-/tmp/telerun-execute/d1ccde4d-7a02-405a-b4ee-ef29b8528885/run.sh: line 15: ./vector_add: No such file or directory
