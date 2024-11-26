@@ -9,4 +9,4 @@ experiments:
             ratio in (0, 1, 2) AND
             nr+ratio < 30
       ORDER BY nr, ratio
-      LIMIT 1;
+      LIMIT 3;

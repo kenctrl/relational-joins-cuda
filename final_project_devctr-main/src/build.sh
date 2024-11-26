@@ -35,6 +35,8 @@ mkdir -p ${BIN_DIR} ${BUILD_DIR}
 # Find all .cu files in current directory and subdirectories
 CU_SRC=$(find . -name "*.cu")
 
+cache_dir=cache/bin/
+
 # For each .cu file, compile to .o and then link to executable
 for cu_file in ${CU_SRC}; do
     # Get the relative path and base name
@@ -46,19 +48,21 @@ for cu_file in ${CU_SRC}; do
     obj_file=${BUILD_DIR}/${base_name}.o
     output_exe=${BIN_DIR}/${base_name}
 
+    # Get last part of output.exe
+    output_exe_base=${output_exe##*/}
+
     # Create directories for object file and executable
     mkdir -p $(dirname ${obj_file})
     mkdir -p $(dirname ${output_exe})
 
     # If executable already exists in ./cache/bin/, then copy it over and skip compilation
-    # cache_dir=./cache/bin/
-    # # TODO: add manual list of files to rebuild
-    # if [ -f ${cache_dir}${base_name} ]; then
-    #     echo "Copying ${cache_dir}${base_name} to ${output_exe}"
-    #     cp ${cache_dir}${base_name} ${output_exe}
-    #     continue
-    # fi
-
+    # NOTE: comment this out if you want to recompile binaries
+    if [ -f ${cache_dir}${output_exe_base} ]; then
+        echo "Using cached binary: ${cache_dir}${output_exe_base}, copying to ${output_exe}"
+        cp ${cache_dir}${output_exe_base} ${output_exe}
+        continue
+    fi
+    
     # Compile .cu file to object file
     echo "Compiling ${cu_file} to ${obj_file}"
     ${NVCC} -Xcompiler -fopenmp -MMD ${SM_TARGETS} ${NVCCFLAGS} ${INCLUDES} -O3 --compile ${cu_file} -o ${obj_file}
@@ -66,6 +70,9 @@ for cu_file in ${CU_SRC}; do
     # Link object file to create executable
     echo "Linking ${obj_file} to create ${output_exe}"
     ${NVCC} ${SM_TARGETS} -Xlinker -lgomp ${obj_file} -o ${output_exe}
+
+    # Save executable to cache directory
+    cp ${output_exe} ${cache_dir}
 done
 
 # Copy the exp/ directory

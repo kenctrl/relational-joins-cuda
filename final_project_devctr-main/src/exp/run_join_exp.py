@@ -102,3 +102,8 @@ if __name__ == "__main__":
                 res_path = os.path.join(args.prefix, exp['output'])
                 subprocess.run(f"mkdir -p {os.path.dirname(res_path)}", shell=True, check=True)
                 run_join_exp_from_query(args.binary, df, exp['query'], args.log, res_path, args.output, args.data, args.repeat)
+                
+                # print contents of file at res_path
+                with open(res_path, 'r') as f:
+                    print(f"Contents of {res_path}:")
+                    print(f.read())
