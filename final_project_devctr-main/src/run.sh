@@ -2,19 +2,19 @@
 
 echo "Content:"; ls
 echo "Generating the configuration database. This may take a while..."
-python3 exp/run_join_exp.py -s exp/join_exp_config.csv
+python3 exp/run_join_exp.py -s /tmp/join_exp_config.csv
 echo "[Success] The configuration database is generated."
 
 # Install the required packages
-echo "Installing the required packages"
-python3 -m pip install -r requirements.txt
+# echo "Installing the required packages"
+# python3 -m pip install -r requirements.txt
 
 echo "Run microbenchmarks from Section 5.2.1 to 5.2.7"
 python3 exp/run_join_exp.py \
         -b ./bin/volcano/join_exp_4b4b \
-        -c exp/join_exp_config.csv \
+        -c /tmp/join_exp_config.csv \
         -y exp/join_runs.yaml \
-        -e 0 1 2 3 4 \
+        -e 0 \
         -r 1 \
         -p exp_results/gpu_join
 

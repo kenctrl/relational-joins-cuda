@@ -81,7 +81,14 @@ def make_parser():
 if __name__ == "__main__":
     parser = make_parser()
     args = parser.parse_args()
-    df = create_config_database(args.config, args.save_path)
+    try:
+        df = pd.read_csv(args.save_path)
+    except FileNotFoundError:
+        print("Configuration database not found. Creating a new one...")
+        df = create_config_database(args.config, args.save_path)
+    except ValueError:
+        # actual run, need to read with args.config
+        df = pd.read_csv(args.config)
 
     if args.yaml is not None:
         assert args.binary is not None

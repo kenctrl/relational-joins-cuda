@@ -50,6 +50,15 @@ for cu_file in ${CU_SRC}; do
     mkdir -p $(dirname ${obj_file})
     mkdir -p $(dirname ${output_exe})
 
+    # If executable already exists in ./cache/bin/, then copy it over and skip compilation
+    # cache_dir=./cache/bin/
+    # # TODO: add manual list of files to rebuild
+    # if [ -f ${cache_dir}${base_name} ]; then
+    #     echo "Copying ${cache_dir}${base_name} to ${output_exe}"
+    #     cp ${cache_dir}${base_name} ${output_exe}
+    #     continue
+    # fi
+
     # Compile .cu file to object file
     echo "Compiling ${cu_file} to ${obj_file}"
     ${NVCC} -Xcompiler -fopenmp -MMD ${SM_TARGETS} ${NVCCFLAGS} ${INCLUDES} -O3 --compile ${cu_file} -o ${obj_file}

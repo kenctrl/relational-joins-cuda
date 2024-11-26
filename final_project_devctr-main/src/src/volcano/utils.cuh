@@ -90,7 +90,7 @@ inline size_t get_cuda_free_mem() {
 }
 
 // Choose your own memory pool size
-constexpr size_t mem_pool_size = 25769803776*0.2; // Kenneth: used to be 0.9
+constexpr size_t mem_pool_size = 25769803776*0.4;
 static UserSpaceMM<mem_pool_size>* mm;
 
 inline void alloc_by_rmm_mempool(void** ptr, bool clear, size_t sz, cudaStream_t stream) {
