@@ -49,14 +49,16 @@ def run_join_exp_from_query(binary, df, query, log_path, res_path, out_path, dat
         fail = 0
         for t in config.itertuples(index=False):
             print(f"\n+=========+ [Round {r+1} of {repeat}] {cnt+1} / {total} +=========+")
+            # print("t:", t)
             command = create_join_command(binary, t.nr, t.nr+t.ratio, t.pr, t.ps, t.algo, t.join_type, t.dist, t.zipf_factor, t.selectivity, t.p, t.q, t.unique_keys)
             command += ((' -f ' + data_path) if data_path is not None else '') + ' -o ' + res_path
+            # print("command:", command)
             f.write(f"[{cnt}] {command}\n")
             cnt += 1
             try:
                 with open(out_path, 'a') as out_file:
+                    # print("out_file, out_path:", out_file, out_path)
                     subprocess.run(command, shell=True, check=True, stdout=out_file)
-                    # print(command)
             except subprocess.CalledProcessError as e:
                 f.write(f"[[[fails]]]\n{repr(e)}\n")
                 fail += 1
@@ -104,6 +106,6 @@ if __name__ == "__main__":
                 run_join_exp_from_query(args.binary, df, exp['query'], args.log, res_path, args.output, args.data, args.repeat)
                 
                 # print contents of file at res_path
-                with open(res_path, 'r') as f:
-                    print(f"Contents of {res_path}:")
-                    print(f.read())
+                # with open(res_path, 'r') as f:
+                #     print(f"Contents of {res_path}:")
+                #     print(f.read())

@@ -90,7 +90,10 @@ inline size_t get_cuda_free_mem() {
 }
 
 // Choose your own memory pool size
-constexpr size_t mem_pool_size = 25769803776*0.4;
+// original: 25769803776*0.9.
+// total memory of telerun gpus: 16376MiB = 17171480576 bytes
+// setting to 17171480576*0.8
+constexpr size_t mem_pool_size = 17171480576*0.8; 
 static UserSpaceMM<mem_pool_size>* mm;
 
 inline void alloc_by_rmm_mempool(void** ptr, bool clear, size_t sz, cudaStream_t stream) {
