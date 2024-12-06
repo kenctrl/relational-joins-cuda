@@ -16,6 +16,183 @@
 #include <thrust/gather.h>
 #include <thrust/device_ptr.h>
 
+
+// we borrow the class interface and timing code from the original implementation
+template<typename TupleA,
+         typename TupleB,
+         typename TupleC>
+class OurSortMergeJoin : public JoinBase<TupleOut> {
+                  
+public:
+    explicit OurSortMergeJoin(TupleA a_input, TupleB b_input, int output_buffer_size) 
+             : a(a_input)
+             , b(b_input)
+             , output_buffer_size(output_buffer_size) {
+        
+        num_a_elems = a.num_items;
+        num_b_elems = b.num_items;
+        sort_stats = 0;
+        merge_stats = 0;
+        materialize_stats = 0;
+
+        cudaEventCreate(&start); 
+        cudaEventCreate(&stop);
+
+        out.allocate(output_buffer_size);
+
+        d_temp_storage = nullptr;
+        temp_storage_size = 0;
+
+        allocate_mem(a_keys, false, sizeof(key_t) * num_a_elems);
+        allocate_mem(b_keys, false, sizeof(key_t) * num_b_elems);
+
+        allocate_mem(a_vals, false, TupleA::max_col_size * num_a_elems);
+        allocate_mem(b_vals, false, TupleA::max_col_size * num_a_elems);
+
+        allocate_mem(a_pair_idx, false, sizeof(int) * output_buffer_size);
+        allocate_mem(b_pair_idx, false, sizeof(int) * output_buffer_size);
+
+        // the first sort just fills in the size of temp_storage_size, and does not actually sort
+        void* d_temp_storage1 = nullptr;
+        void* d_temp_storage2 = nullptr;
+        size_t temp_storage_size1 = nullptr;
+        size_t temp_storage_size2 = nullptr;
+
+        using a_largest_col_t = std::tuple_element_t<TupleA::biggest_idx(), typename TupleA::value_type>;
+        cub::DeviceRadixSort::SortPairs(d_temp_storage1, temp_storage_size1, COL(a, 0), (key_t*) a_keys, COL(a, TupleA::biggest_idx()), (a_largest_col_t *) a_vals, num_a_elems, 0, 32); 
+
+        using b_largest_col_t = std::tuple_element_t<TupleB::biggest_idx(), typename TupleB::value_type>;
+        cub::DeviceRadixSort::SortPairs(d_temp_storage2, temp_storage_size2, COL(b, 0), (key_t*) b_keys, COL(b, TupleB::biggest_idx()), (b_largest_col_t* )b_vals, num_b_elems, 0, 32); 
+        
+        temp_storage_size = std::max(temp_storage_size1, temp_storage_size2);
+        allocate_mem(&d_temp_storage, false, temp_storage_size);
+    }
+
+    ~OurSortMergeJoin() {
+        release_mem(a_keys);
+        release_mem(b_keys);
+        release_mem(a_vals);
+        release_mem(b_vals);
+        release_mem(a_pair_idx);
+        release_mem(b_pair_idx);
+        release_mem(d_temp_storage);
+    }
+
+public:
+    TupleA a;
+    TupleB b;
+    TupleC c;
+    
+    int num_a_elems; 
+    int num_b_elems;
+    int num_matches;
+    int output_buffer_size;
+
+    float sort_stats;
+    float merge_stats;
+    float materialize_stats;
+
+    void* d_temp_storage;
+    size_t temp_storage_size;
+    
+    void* a_keys;
+    void* b_keys;
+
+    void* a_vals;
+    void* b_vals;
+
+    int *a_pair_idx;
+    int *b_pair_idx;
+
+    cudaEvent_t start;
+    cudaEvent_t stop;
+
+    using key_t = std::tuple_element_t<0, typename TupleA::value_type>;
+
+public:
+    TupleOut join() override {
+        TIME_FUNC_ACC(sort(), sort_stats);
+        TIME_FUNC_ACC(merge(), merge_stats);
+        TIME_FUNC_ACC(materialize(), materialize_stats);
+        c.num_items = num_matches;
+        return c;
+    }
+
+    void print_stats() override {
+        std::cout << "Sort: " << sort_stats << " ms\n"
+                  << "Merge: " << merge_stats << " ms\n"
+                  << "Materialize: " << matmaterialize_stats_time << " ms\n\n";
+    }
+
+    std::vector<float> all_stats() override {
+        return {sort_stats, merge_stats, materialize_stats};
+    }
+
+public:
+    void sort() {
+        using a_col1_t = std::tuple_element_t<1, typename TupleA::value_type>;
+        cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, (key_t*) COL(a, 0), (key_t*) a_keys, COL(a, 1), (a_col1_t *) a_vals, num_a_elems, 0, 32); 
+        
+        using b_col1_t = std::tuple_element_t<1, typename TupleB::value_type>;
+        cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, (key_t*) COL(b, 0), (key_t*) b_keys, COL(b, 1), (b_col1_t *) b_vals, num_b_elems, 0, 32); 
+    }
+
+    void merge() {
+        merge_path((key_t*) a_keys, num_a_elems, 
+                   (key_t*) b_keys, num_b_elems,
+                   COL(out,0), a_pair_idx, s_match_idx, 
+                   num_matches, output_buffer_size);
+    }
+
+    void materialize() {
+        #pragma unroll
+        for (int i = 0; i < TupleA::num_cols - 1; i++){
+            using a_col_t = std::tuple_element_t<i + 1, typename TupleA::value_type>;
+            if (i > 0){
+                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_bytes, COL(a, 0), (key_t *) a_keys, COL(a, i + 1), (a_col_t*) a_vals, num_a_elems, 0, 32); 
+            } 
+
+            // Create thrust device pointers
+            thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*) a_vals);
+            thrust::device_ptr<int> a_pair_idx_ptr(a_pair_idx);
+            thrust::device_ptr<a_col_t> c_col_ptr(COL(c, i + 1));
+
+            // Perform the gather operation
+            thrust::gather(
+                a_pair_idx_ptr,                        // Map begin: indices in a_pair_idx
+                a_pair_idx_ptr + std::min(num_matches, output_buffer_size),          // Map end
+                a_vals_ptr,                            // Input: sorted values from a's (i+1)-th column
+                c_col_ptr                              // Output: corresponding column in c
+            );
+        }
+
+        #pragma unroll
+        for (int i = 0; i < TupleB::num_cols - 1; i++){
+            using b_col_t = std::tuple_element_t<i + 1, typename TupleB::value_type>;
+            if (i > 0){
+                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_bytes, COL(b, 0), (key_t *) b_keys, COL(b, i + 1), (b_col_t*) b_vals, num_b_elems, 0, 32); 
+            } 
+
+            // Create thrust device pointers
+            thrust::device_ptr<b_col_t> b_vals_ptr((b_col_t*) b_vals);
+            thrust::device_ptr<int> b_pair_idx_ptr(b_pair_idx);
+            thrust::device_ptr<b_col_t> c_col_ptr(COL(c, TupleA::num_cols + i));
+
+            // Perform the gather operation
+            thrust::gather(
+                b_pair_idx_ptr,                        // Map begin: indices in a_pair_idx
+                b_pair_idx_ptr + std::min(num_matches, output_buffer_size),          // Map end
+                b_vals_ptr,                            // Input: sorted values from a's (i+1)-th column
+                c_col_ptr                              // Output: corresponding column in c
+            );
+        }
+    }
+};
+
+
+
+
+
 template<typename TupleR,
          typename TupleS,
          typename TupleOut,
