@@ -7,8 +7,12 @@
 template <typename KeyT, typename ValueT>
 class HashTable {
 
-using IdxT = uint64_t;
-using ErrT = int;
+    using IdxT = uint64_t;
+    using ErrT = int;
+
+    KeyT *key_array;
+    ValueT *value_array;
+    int size;
 
 public:
     IdxT NOT_FOUND = (IdxT) -1;
@@ -17,10 +21,6 @@ public:
 
     ErrT SUCCESS = 0;
     ErrT FAILURE = 1;
-
-    KeyT *key_array;
-    ValueT *value_array;
-    int size;
 
     __device__ HashTable() {
         size = 0;
