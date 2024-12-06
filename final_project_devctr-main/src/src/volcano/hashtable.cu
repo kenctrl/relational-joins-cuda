@@ -1,14 +1,17 @@
 #include <cuda_runtime.h>
 #include <cassert>
+#include <iostream>
+#include <cstdint>
 
-using IdxT = int;
-using ErrT = int;
 // Hash table implementation
 template <typename KeyT, typename ValueT>
 class HashTable {
 
+using IdxT = uint64_t;
+using ErrT = int;
+
 public:
-    IdxT NOT_FOUND = -1;
+    IdxT NOT_FOUND = (IdxT) -1;
     KeyT EMPTY = 0;
     ValueT DEFAULT = 0;
 
@@ -40,10 +43,18 @@ public:
         return sizeof(KeyT) * size + sizeof(ValueT) * size + 1;
     }
 
+    __device__ IdxT hash(KeyT key) {
+        IdxT x = (IdxT) key;
+        x = ((x >> 16) ^ x) * 0x45d9f3b;
+        x = ((x >> 16) ^ x) * 0x45d9f3b;
+        x = (x >> 16) ^ x;
+        return x;
+    }
+
     // Hash function + linear probing
     __device__ IdxT next_probe(KeyT key, int probe_idx) {
         assert(probe_idx < size);
-        return (probe_idx + 1) % size;
+        return (probe_idx + hash(key)) % size;
     }
 
     __device__ ErrT insert(KeyT key, ValueT value) {
