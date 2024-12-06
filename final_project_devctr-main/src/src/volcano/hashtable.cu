@@ -1,4 +1,5 @@
 #include <cuda_runtime.h>
+#include <cassert>
 
 using IdxT = int;
 using ErrT = int;
@@ -6,6 +7,7 @@ using ErrT = int;
 template <typename KeyT, typename ValueT>
 class HashTable {
 
+public:
     IdxT NOT_FOUND = -1;
     KeyT EMPTY = 0;
     ValueT DEFAULT = 0;
@@ -13,7 +15,16 @@ class HashTable {
     ErrT SUCCESS = 0;
     ErrT FAILURE = 1;
 
-public:
+    KeyT *key_array;
+    ValueT *value_array;
+    int size;
+
+    __device__ HashTable() {
+        size = 0;
+        key_array = nullptr;
+        value_array = nullptr;
+    }
+
     __device__ HashTable(int size) {
         this->size = size;
         key_array = new KeyT[size];
@@ -50,7 +61,7 @@ public:
     // Assumes no writes are happening concurrently
     __device__ IdxT find(KeyT key) {
         for (int probe = 0; probe < size; probe++) {
-            IdxT probe_idx = (hash(key) + probe) % size;
+            IdxT probe_idx = next_probe(key, probe);
             if (key_array[probe_idx] == key) {
                 return probe_idx;
             }
@@ -68,19 +79,21 @@ public:
     }
 };;
 
-__global__ int hash_test(){
+__global__ void hash_test(){
     assert(gridDim.x == 1 && gridDim.y == 1 && gridDim.z == 1);
     assert(blockDim.y == 1 && blockDim.z == 1);
 
-    __shared__ HashTable<int, int> ht[1];
-
+    extern __shared__ char ht_memory[];
+    HashTable<int, int>* ht = reinterpret_cast<HashTable<int, int>*>(ht_memory);
     if (threadIdx.x == 0) {
         ht[0] = HashTable<int, int>(32);
     }
     __syncthreads();
     ht[0].insert(threadIdx.x, threadIdx.x);
     __syncthreads();
-    return 0;
+    bool found = ht[0].find(threadIdx.x) != HashTable<int, int>().NOT_FOUND;
+    assert(found);
+    assert(ht[0].get(threadIdx.x) == threadIdx.x);
 }
 
 
