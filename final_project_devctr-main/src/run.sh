@@ -1,6 +1,8 @@
 #!/bin/bash
 
 echo "Content:"; ls
+pip3 install -r requirements.txt
+
 python3 exp/run_join_exp.py -s /tmp/join_exp_config.csv
 # echo "[Success] The configuration database is generated."
 
