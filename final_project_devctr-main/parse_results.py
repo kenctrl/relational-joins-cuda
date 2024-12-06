@@ -60,6 +60,10 @@ def main():
             results.append(content)
     
     # Print results
+    for i, result in enumerate(results):
+        print(result)
+    
+    # Print results
     # for i, result in enumerate(results):
     #     print(f"\nExperiment {i+1}:")
     #     print(f"Output name: {result.get('output_name', 'N/A')}")
