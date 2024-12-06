@@ -1,0 +1,7 @@
+
+Experiment 1:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.1178 ms
+Merge: 10.6158 ms
+Materialize: 0.00144 ms

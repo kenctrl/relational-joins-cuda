@@ -4,9 +4,12 @@
 YAML_DIR="src/exp"
 TEMPLATE_FILE="run-template.sh"
 
+# Initialize counter
+count=0
+
 # Process each YAML file
 for yaml_file in "$YAML_DIR"/*.yaml; do
-    echo "Running $yaml_file..."
+    echo "Running $yaml_file..." >&2
 
     # Get the filename without path and extension
     filename=$(basename "$yaml_file" .yaml)
@@ -22,4 +25,10 @@ for yaml_file in "$YAML_DIR"/*.yaml; do
     
     # Submit the build
     python3 telerun.py submit build.tar
+    
+    # Increment counter
+    ((count++))
 done
+
+# Print only the counter
+echo $count

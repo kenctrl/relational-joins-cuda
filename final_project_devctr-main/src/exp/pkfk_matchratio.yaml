@@ -1,14 +1,14 @@
 experiments:
-  - name: pkfk_morecols
+  - name: pkfk_matchratio
     group: 0
-    output: pkfk_morecols.csv
+    output: pkfk_matchratio.csv
     query: >
       SELECT DISTINCT *
       FROM df
       WHERE nr = 25 AND 
-            ratio = 0 AND
+            ratio in (0, 1, 2) AND
             nr+ratio < 30 AND
-            1 <= pr AND pr <= 3 AND pr = ps AND
+            pr = 1 AND pr = ps AND
             dist = 'uniform' AND
             join_type = 'pkfk' AND
             unique_keys = nr AND
