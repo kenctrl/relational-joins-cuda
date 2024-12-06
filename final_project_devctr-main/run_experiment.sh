@@ -12,7 +12,7 @@ if ! [[ "$yaml_count" =~ ^[0-9]+$ ]]; then
     exit 1
 fi
 
-echo "Processed $yaml_count YAML files"
+# echo "Processed $yaml_count YAML files"
 
 # Run parse_results.py with the yaml count and save output to output.txt
 python3 parse_results.py "$yaml_count" > output.txt

@@ -54,17 +54,19 @@ def main():
     for job_dir in job_dirs:
         output_file = os.path.join(job_dir, 'output.txt')
         if os.path.exists(output_file):
-            result = parse_output_file(output_file)
-            results.append(result)
+            # result = parse_output_file(output_file)
+            with open(output_file, 'r') as f:
+                content = f.read()
+            results.append(content)
     
     # Print results
-    for i, result in enumerate(results):
-        print(f"\nExperiment {i+1}:")
-        print(f"Output name: {result.get('output_name', 'N/A')}")
-        print(f"Join algorithm: {result.get('join_algorithm', 'N/A')}")
-        print(f"Sort: {result.get('sort', 'N/A')} ms")
-        print(f"Merge: {result.get('merge', 'N/A')} ms")
-        print(f"Materialize: {result.get('materialize', 'N/A')} ms")
+    # for i, result in enumerate(results):
+    #     print(f"\nExperiment {i+1}:")
+    #     print(f"Output name: {result.get('output_name', 'N/A')}")
+    #     print(f"Join algorithm: {result.get('join_algorithm', 'N/A')}")
+    #     print(f"Sort: {result.get('sort', 'N/A')} ms")
+    #     print(f"Merge: {result.get('merge', 'N/A')} ms")
+    #     print(f"Materialize: {result.get('materialize', 'N/A')} ms")
 
 if __name__ == "__main__":
     main()

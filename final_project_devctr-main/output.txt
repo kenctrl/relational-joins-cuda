@@ -1,7 +1,119 @@
 
 Experiment 1:
+Output name: pkfk_vanilla.csv
+Join algorithm: SMJ
+Sort: 16.8407 ms
+Merge: 4.39494 ms
+Materialize: 59.7108 ms
+
+Experiment 2:
+Output name: pkfk_vanilla.csv
+Join algorithm: SMJ
+Sort: 12.0566 ms
+Merge: 2.68989 ms
+Materialize: 34.1862 ms
+
+Experiment 3:
+Output name: pkfk_vanilla.csv
+Join algorithm: SMJ
+Sort: 12.0607 ms
+Merge: 2.69024 ms
+Materialize: 34.1862 ms
+
+Experiment 4:
+Output name: pkfk_match_ratio.csv
+Join algorithm: SMJ
+Sort: 30.0923 ms
+Merge: 8.23866 ms
+Materialize: 0.00144 ms
+
+Experiment 5:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.0594 ms
+Merge: 10.6007 ms
+Materialize: 0.001408 ms
+
+Experiment 6:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.1004 ms
+Merge: 10.634 ms
+Materialize: 0.001408 ms
+
+Experiment 7:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.1085 ms
+Merge: 10.6206 ms
+Materialize: 0.00144 ms
+
+Experiment 8:
+Output name: pkfk_matchratio.csv
+Join algorithm: SMJ
+Sort: 30.0913 ms
+Merge: 8.3095 ms
+Materialize: 0.001408 ms
+
+Experiment 9:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.1464 ms
+Merge: 10.6137 ms
+Materialize: 0.00144 ms
+
+Experiment 10:
+Output name: pkfk_matchratio.csv
+Join algorithm: SMJ
+Sort: 30.1015 ms
+Merge: 8.30749 ms
+Materialize: 0.00144 ms
+
+Experiment 11:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.0758 ms
+Merge: 10.6095 ms
+Materialize: 0.001408 ms
+
+Experiment 12:
+Output name: pkfk_matchratio.csv
+Join algorithm: SMJ
+Sort: 30.0677 ms
+Merge: 8.30794 ms
+Materialize: 0.00144 ms
+
+Experiment 13:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.1126 ms
+Merge: 10.6101 ms
+Materialize: 0.001472 ms
+
+Experiment 14:
+Output name: pkfk_matchratio.csv
+Join algorithm: SMJ
+Sort: 30.0943 ms
+Merge: 8.30858 ms
+Materialize: 0.00144 ms
+
+Experiment 15:
 Output name: pkfk_nr.csv
 Join algorithm: SMJ
 Sort: 48.1178 ms
 Merge: 10.6158 ms
 Materialize: 0.00144 ms
+
+Experiment 16:
+Output name: pkfk_matchratio.csv
+Join algorithm: SMJ
+Sort: 30.078 ms
+Merge: 8.30429 ms
+Materialize: 0.00144 ms
+
+Experiment 17:
+Output name: pkfk_nr.csv
+Join algorithm: SMJ
+Sort: 48.1032 ms
+Merge: 10.6335 ms
+Materialize: 0.001472 ms
