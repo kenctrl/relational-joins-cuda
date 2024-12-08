@@ -97,7 +97,7 @@ __global__ void partition(Partition<KeyT, ValueT, CountT, BucketT> &p, void* wor
         BucketT key = p.template get_bucket<low_bit, high_bit>(p.key_array[i]);
         assert(key < NUM_BUCKETS);
         // uncoalesced writes: Optimize this later with warp shuffle
-        // atomicAdd(&local_hist[key], 1);
+        atomicAdd(&local_hist[key], 1);
     }
     __syncthreads();
 
@@ -105,11 +105,11 @@ __global__ void partition(Partition<KeyT, ValueT, CountT, BucketT> &p, void* wor
 
     for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
         // We should not have any status flags set in local_hist
-        // assert(local_hist[i] & (PREFIX_DONE | AGG_DONE) == 0);
-        // auto write_data = write_status | local_hist[i];
+        assert(local_hist[i] & (PREFIX_DONE | AGG_DONE) == 0);
+        auto write_data = write_status | local_hist[i];
         // Assume writes are atomic - value and status are written together
         assert(&block_space[i] < global_block_scan);
-        // block_space[i] = write_data;
+        block_space[i] = write_data;
     }
 
     // Each thread is responsible for some number of buckets
@@ -130,10 +130,10 @@ __global__ void partition(Partition<KeyT, ValueT, CountT, BucketT> &p, void* wor
                 // Keep spinning
             }
         }
-        // // We should not have any status flags set in local_val
-        // assert(local_val & (PREFIX_DONE | AGG_DONE) == 0);
-        // // No race here - write to global
-        // // Set status flag to PREFIX_DONE
+        // We should not have any status flags set in local_val
+        assert(local_val & (PREFIX_DONE | AGG_DONE) == 0);
+        // No race here - write to global
+        // Set status flag to PREFIX_DONE
         assert(&block_space[cur_bucket] < global_block_scan);
         block_space[cur_bucket] = local_val | PREFIX_DONE;
     }
@@ -165,7 +165,7 @@ __global__ void partition(Partition<KeyT, ValueT, CountT, BucketT> &p, void* wor
         auto global_offset = bucket == 0? 0: global_block_scan[bucket - 1];
         auto out_index = global_offset + local_offset;
         // No race - each thread updates its own buckets
-        // output[--out_index] = p.key_array[i]; // Reverse order!!
+        output[--out_index] = p.key_array[i]; // Reverse order!!
     }
 }
 
