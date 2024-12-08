@@ -30,8 +30,8 @@ __global__ void first_pass(int* num_buckets,
     for(int k = 0; k < block; k++) {
         const int i = start + k * blockDim.x + tid;
         if(i < num_rows) {
-            int idx = (keys[k] >> shift) & (radix_size - 1);
-            regs[k] = idx;
+            regs[k] = keys[i];
+            int idx = (regs[k] >> shift) & (radix_size - 1);
             atomicAdd(&cache.end[idx], 1);
         }
     }
@@ -52,7 +52,8 @@ __global__ void first_pass(int* num_buckets,
     for(int k = 0; k < block; k++) {
         const int i = start + k * blockDim.x + tid;
         if(i < num_rows) {
-            int cur = atomicAdd(&cache.head[regs[k]], 1);
+            const int idx = (regs[k] >> shift) & (radix_size - 1);
+            int cur = atomicAdd(&cache.head[idx], 1);
             cache.shuffle[cur] = i;
         }
     }
@@ -63,16 +64,19 @@ __global__ void first_pass(int* num_buckets,
     int right = cache.end[tid];
     unsigned long long length = right - left;
     while(length > 0) {
-        atomicMin(&heads[tid], ((unsigned long long) bucket_size) << 32);
+        // atomicMin(&heads[tid], ((unsigned long long) bucket_size) << 32);
         unsigned long long prev = atomicAdd(&heads[tid], length << 32);
-        uint32_t len = prev >> 32;
-        uint32_t start = prev & 0xFFFFFFFF;
+        // printf("Old head %llu, added %llu\n", prev, length << 32);
+
+        const uint32_t len = prev >> 32;
+        const uint32_t start = prev & 0xFFFFFFFF;
         uint32_t run_length = 0;
-        printf("try bucket %d %d\n", len, start);
-        if(prev < bucket_size) {
+        // printf("iteration::: try bucket block len %llu bucket len %d start %d\n", length, len, start);
+        if(len < bucket_size) {
             // bucket can be filled with everything
-            if(prev + len <= bucket_size) {
-                run_length = len;
+            if(len + length < bucket_size) {
+                // printf("ending length is %llu\n", len + length);
+                run_length = length;
             } else {
                 run_length = bucket_size - len;
 
@@ -80,16 +84,16 @@ __global__ void first_pass(int* num_buckets,
                 int next_bucket = atomicAdd(num_buckets, 1);
 
                 unsigned long long new_start = next_bucket * bucket_size;
-                unsigned long long new_len = 0;
+                atomicExch(&heads[tid], new_start);
 
-                unsigned long long pack = (new_len << 32) | new_start;
-                atomicExch(&heads[tid], pack);
+                // printf("Created new bucket at %d, head[%d] is now %llu\n", next_bucket, tid, new_start);
+
                 chain[cur_bucket] = next_bucket;
             }
         }
         for(int x = 0; x < run_length; x++) {
-            printf("Writing index %d at bucket %d position %d which is of partition %d\n", cache.shuffle[left + x], start / bucket_size, start + x, tid);
-            buckets[start + x] = cache.shuffle[left + x];
+            // printf("Writing index %d at bucket %d position %d which is of partition %d\n", cache.shuffle[left + x], start / bucket_size, start + len + x, tid);
+            buckets[start + len + x] = cache.shuffle[left + x];
         }
         left += run_length;
         length -= run_length;
@@ -117,7 +121,7 @@ __global__ void init_buckets(int *num_buckets,
 // returns the cpu pointer
 int* launch_first_pass(const int* keys, int num_rows) {
     constexpr int radix_size = 256;
-    constexpr int shift = 0;
+    constexpr int shift = 24;
     constexpr int bucket_size = 1024;
     const int max_buckets = num_rows / bucket_size + radix_size + 1;
 
@@ -128,13 +132,10 @@ int* launch_first_pass(const int* keys, int num_rows) {
     int *buckets;
 
     allocate_mem(&d_keys, false, sizeof(int) * num_rows);
-    // allocate_mem(&num_buckets, false, sizeof(int));
-    // allocate_mem(&heads, false, sizeof(unsigned long long) * radix_size);
-    // allocate_mem(&chain, false, sizeof(int) * max_buckets);
-    // allocate_mem(&buckets, false, sizeof(int) * max_buckets * bucket_size);
-
-    printf("hehe\n");
-    exit(0);
+    allocate_mem(&num_buckets, false, sizeof(int));
+    allocate_mem(&heads, false, sizeof(unsigned long long) * radix_size);
+    allocate_mem(&chain, false, sizeof(int) * max_buckets);
+    allocate_mem(&buckets, false, sizeof(int) * max_buckets * bucket_size);
 
     CHECK_CUDA_ERROR(
         cudaMemcpy(d_keys, keys, sizeof(int) * num_rows, cudaMemcpyHostToDevice)
@@ -146,6 +147,7 @@ int* launch_first_pass(const int* keys, int num_rows) {
         chain,
         max_buckets
     );
+    printf("hello everyone\n");
 
     auto launch = [&] () {
         constexpr int block = 8;
@@ -169,7 +171,7 @@ int* launch_first_pass(const int* keys, int num_rows) {
 }
 
 int main() {
-    const int num_rows = 1024;
+    const int num_rows = 1 << 25;
     int *keys;
     CHECK_CUDA_ERROR(
         cudaMallocHost(&keys, sizeof(int) * num_rows)
