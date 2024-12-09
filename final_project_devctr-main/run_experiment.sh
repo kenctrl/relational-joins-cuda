@@ -17,18 +17,27 @@ if [ "$run_initial" = true ]; then
     mkdir -p src/cache/obj
 
     echo "Running initial run to compile all executables"
-    chmod +x initial_run.sh
-    ./initial_run.sh
+    # Copy the template run script to the src/
+    cp scripts/run-initial.sh "src/run.sh"
+
+    # Copy the template build script to the src/
+    cp scripts/build-initial.sh "src/build.sh"
+
+    # Build the project
+    ./devtool build_project
+
+    # Submit the build
+    python3 telerun.py submit build.tar
 fi
 
 # Copy over the template build script into src/, overwriting any existing file
-cp build-template.sh src/build.sh
+cp templates/build-template.sh src/build.sh
 
 # Make build.sh executable
 chmod +x src/build.sh
 
 # Run process_yamls.sh and capture the number of YAMLs processed
-yaml_count=$(./process_yamls.sh)
+yaml_count=$(./scripts/process_yamls.sh)
 
 # Parse yaml_count to ensure it's an integer
 yaml_count=${yaml_count//[^0-9]/}
