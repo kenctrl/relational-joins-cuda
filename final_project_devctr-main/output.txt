@@ -8,6 +8,7 @@ Join type: Primary-foreign
 (if PHJ) log_part1 = 9 log_part2 = 6
 key_bytes = 4 val_bytes = 4
 Late Materialization only? No
+<<<<<<< Updated upstream
 Output file: exp_results/gpu_join/pkfk_matchratio.csv
 Data path prefix: /scratch/wubo/joinmb/
 Aggregation only? No
@@ -213,6 +214,8 @@ Join type: Primary-foreign
 (if PHJ) log_part1 = 9 log_part2 = 6
 key_bytes = 4 val_bytes = 4
 Late Materialization only? No
+=======
+>>>>>>> Stashed changes
 Output file: exp_results/gpu_join/pkfk_morecols.csv
 Data path prefix: /scratch/wubo/joinmb/
 Aggregation only? No
@@ -224,17 +227,29 @@ Circular buffer size = 33554432
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 71742 71740 71738 71736 71734 71732 71730 71728 71726 71724 
 Column-1: 71742 71740 71738 71736 71734 71732 71730 71728 71726 71724 
 Column-2: 71742 71740 71738 71736 71734 71732 71730 71728 71726 71724 
+=======
+Column-0: 78718 78716 78714 78712 78710 78708 78706 78704 78702 78700 
+Column-1: 78718 78716 78714 78712 78710 78708 78706 78704 78702 78700 
+Column-2: 78718 78716 78714 78712 78710 78708 78706 78704 78702 78700 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.2947 ms
 Merge: 2.11005 ms
 Materialize: 1.9231 ms
+=======
+Sort: 11.3859 ms
+Merge: 2.11117 ms
+Materialize: 1.92422 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 2017663747 bytes
 ||R|| = 33554432 ||S|| = 33554432
@@ -258,19 +273,33 @@ Circular buffer size = 33554432
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 48062 48060 48058 48056 48054 48052 48050 48048 48046 48044 
 Column-1: 48062 48060 48058 48056 48054 48052 48050 48048 48046 48044 
 Column-2: 48062 48060 48058 48056 48054 48052 48050 48048 48046 48044 
 Column-3: 48062 48060 48058 48056 48054 48052 48050 48048 48046 48044 
 Column-4: 48062 48060 48058 48056 48054 48052 48050 48048 48046 48044 
+=======
+Column-0: 16574 16572 16570 16568 16566 16564 16562 16560 16558 16556 
+Column-1: 16574 16572 16570 16568 16566 16564 16562 16560 16558 16556 
+Column-2: 16574 16572 16570 16568 16566 16564 16562 16560 16558 16556 
+Column-3: 16574 16572 16570 16568 16566 16564 16562 16560 16558 16556 
+Column-4: 16574 16572 16570 16568 16566 16564 16562 16560 16558 16556 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.3009 ms
 Merge: 2.11693 ms
 Materialize: 15.0839 ms
+=======
+Sort: 11.305 ms
+Merge: 2.12096 ms
+Materialize: 15.0801 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 2554534659 bytes
 ||R|| = 33554432 ||S|| = 33554432
@@ -294,6 +323,7 @@ Circular buffer size = 33554432
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 34878 34876 34874 34872 34870 34868 34866 34864 34862 34860 
 Column-1: 34878 34876 34874 34872 34870 34868 34866 34864 34862 34860 
 Column-2: 34878 34876 34874 34872 34870 34868 34866 34864 34862 34860 
@@ -301,14 +331,29 @@ Column-3: 34878 34876 34874 34872 34870 34868 34866 34864 34862 34860
 Column-4: 34878 34876 34874 34872 34870 34868 34866 34864 34862 34860 
 Column-5: 34878 34876 34874 34872 34870 34868 34866 34864 34862 34860 
 Column-6: 34878 34876 34874 34872 34870 34868 34866 34864 34862 34860 
+=======
+Column-0: 2110 2108 2106 2104 2102 2100 2098 2096 2094 2092 
+Column-1: 2110 2108 2106 2104 2102 2100 2098 2096 2094 2092 
+Column-2: 2110 2108 2106 2104 2102 2100 2098 2096 2094 2092 
+Column-3: 2110 2108 2106 2104 2102 2100 2098 2096 2094 2092 
+Column-4: 2110 2108 2106 2104 2102 2100 2098 2096 2094 2092 
+Column-5: 2110 2108 2106 2104 2102 2100 2098 2096 2094 2092 
+Column-6: 2110 2108 2106 2104 2102 2100 2098 2096 2094 2092 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.3183 ms
 Merge: 2.1247 ms
 Materialize: 28.2418 ms
+=======
+Sort: 11.3172 ms
+Merge: 2.14032 ms
+Materialize: 28.2446 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 3091405571 bytes
 ||R|| = 33554432 ||S|| = 33554432
@@ -332,17 +377,29 @@ Circular buffer size = 33554432
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 29630 29628 29626 29624 29622 29620 29618 29616 29614 29612 
 Column-1: 29630 29628 29626 29624 29622 29620 29618 29616 29614 29612 
 Column-2: 29630 29628 29626 29624 29622 29620 29618 29616 29614 29612 
+=======
+Column-0: 31678 31676 31674 31672 31670 31668 31666 31664 31662 31660 
+Column-1: 31678 31676 31674 31672 31670 31668 31666 31664 31662 31660 
+Column-2: 31678 31676 31674 31672 31670 31668 31666 31664 31662 31660 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.2486 ms
 Merge: 1.84429 ms
 Materialize: 1.92829 ms
+=======
+Sort: 11.2527 ms
+Merge: 1.84845 ms
+Materialize: 1.93843 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 2017663747 bytes
 ||R|| = 33554432 ||S|| = 33554432
@@ -367,19 +424,33 @@ Allocating 273708543 bytes of temporary storage for sorting.
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 43966 43964 43962 43960 43958 43956 43954 43952 43950 43948 
 Column-1: 43966 43964 43962 43960 43958 43956 43954 43952 43950 43948 
 Column-2: 43966 43964 43962 43960 43958 43956 43954 43952 43950 43948 
 Column-3: 43966 43964 43962 43960 43958 43956 43954 43952 43950 43948 
 Column-4: 43966 43964 43962 43960 43958 43956 43954 43952 43950 43948 
+=======
+Column-0: 90238 90236 90234 90232 90230 90228 90226 90224 90222 90220 
+Column-1: 90238 90236 90234 90232 90230 90228 90226 90224 90222 90220 
+Column-2: 90238 90236 90234 90232 90230 90228 90226 90224 90222 90220 
+Column-3: 90238 90236 90234 90232 90230 90228 90226 90224 90222 90220 
+Column-4: 90238 90236 90234 90232 90230 90228 90226 90224 90222 90220 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.2589 ms
 Merge: 2.5039 ms
 Materialize: 32.4473 ms
+=======
+Sort: 11.2527 ms
+Merge: 2.49488 ms
+Materialize: 32.4239 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 2958063104 bytes
 ||R|| = 33554432 ||S|| = 33554432
@@ -404,6 +475,7 @@ Allocating 273708543 bytes of temporary storage for sorting.
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 95102 95100 95098 95096 95094 95092 95090 95088 95086 95084 
 Column-1: 95102 95100 95098 95096 95094 95092 95090 95088 95086 95084 
 Column-2: 95102 95100 95098 95096 95094 95092 95090 95088 95086 95084 
@@ -411,14 +483,29 @@ Column-3: 95102 95100 95098 95096 95094 95092 95090 95088 95086 95084
 Column-4: 95102 95100 95098 95096 95094 95092 95090 95088 95086 95084 
 Column-5: 95102 95100 95098 95096 95094 95092 95090 95088 95086 95084 
 Column-6: 95102 95100 95098 95096 95094 95092 95090 95088 95086 95084 
+=======
+Column-0: 97214 97212 97210 97208 97206 97204 97202 97200 97198 97196 
+Column-1: 97214 97212 97210 97208 97206 97204 97202 97200 97198 97196 
+Column-2: 97214 97212 97210 97208 97206 97204 97202 97200 97198 97196 
+Column-3: 97214 97212 97210 97208 97206 97204 97202 97200 97198 97196 
+Column-4: 97214 97212 97210 97208 97206 97204 97202 97200 97198 97196 
+Column-5: 97214 97212 97210 97208 97206 97204 97202 97200 97198 97196 
+Column-6: 97214 97212 97210 97208 97206 97204 97202 97200 97198 97196 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.2783 ms
 Merge: 2.49827 ms
 Materialize: 48.7178 ms
+=======
+Sort: 11.2722 ms
+Merge: 2.49738 ms
+Materialize: 48.722 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 3494934016 bytes
 
@@ -443,17 +530,29 @@ Circular buffer size = 33554432
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 80894 80892 80890 80888 80886 80884 80882 80880 80878 80876 
 Column-1: 80894 80892 80890 80888 80886 80884 80882 80880 80878 80876 
 Column-2: 80894 80892 80890 80888 80886 80884 80882 80880 80878 80876 
+=======
+Column-0: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
+Column-1: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
+Column-2: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.307 ms
 Merge: 2.12522 ms
 Materialize: 1.93686 ms
+=======
+Sort: 11.3101 ms
+Merge: 2.12662 ms
+Materialize: 1.93242 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 2017663747 bytes
 ||R|| = 67108864 ||S|| = 67108864
@@ -477,17 +576,29 @@ Circular buffer size = 67108864
 
 Output Cardinality = 67108864
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 43198 43196 43194 43192 43190 43188 43186 43184 43182 43180 
 Column-1: 43198 43196 43194 43192 43190 43188 43186 43184 43182 43180 
 Column-2: 43198 43196 43194 43192 43190 43188 43186 43184 43182 43180 
+=======
+Column-0: 41918 41916 41914 41912 41910 41908 41906 41904 41902 41900 
+Column-1: 41918 41916 41914 41912 41910 41908 41906 41904 41902 41900 
+Column-2: 41918 41916 41914 41912 41910 41908 41906 41904 41902 41900 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 22.4502 ms
 Merge: 4.22909 ms
 Materialize: 3.82816 ms
+=======
+Sort: 22.4788 ms
+Merge: 4.24253 ms
+Materialize: 3.8233 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 4035321603 bytes
 ||R|| = 134217728 ||S|| = 134217728
@@ -511,17 +622,29 @@ Circular buffer size = 134217728
 
 Output Cardinality = 134217728
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 894 892 890 888 886 884 882 880 878 876 
 Column-1: 894 892 890 888 886 884 882 880 878 876 
 Column-2: 894 892 890 888 886 884 882 880 878 876 
+=======
+Column-0: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
+Column-1: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
+Column-2: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 44.7785 ms
 Merge: 7.8408 ms
 Materialize: 7.61914 ms
+=======
+Sort: 44.8102 ms
+Merge: 8.40528 ms
+Materialize: 7.61091 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 8070637315 bytes
 ||R|| = 33554432 ||S|| = 33554432
@@ -545,17 +668,29 @@ Circular buffer size = 33554432
 
 Output Cardinality = 33554432
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 18494 18492 18490 18488 18486 18484 18482 18480 18478 18476 
 Column-1: 18494 18492 18490 18488 18486 18484 18482 18480 18478 18476 
 Column-2: 18494 18492 18490 18488 18486 18484 18482 18480 18478 18476 
+=======
+Column-0: 79934 79932 79930 79928 79926 79924 79922 79920 79918 79916 
+Column-1: 79934 79932 79930 79928 79926 79924 79922 79920 79918 79916 
+Column-2: 79934 79932 79930 79928 79926 79924 79922 79920 79918 79916 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 11.2663 ms
 Merge: 1.84486 ms
 Materialize: 1.93795 ms
+=======
+Sort: 11.2476 ms
+Merge: 1.84208 ms
+Materialize: 1.9375 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 2017663747 bytes
 ||R|| = 67108864 ||S|| = 67108864
@@ -579,17 +714,29 @@ Circular buffer size = 67108864
 
 Output Cardinality = 67108864
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 66494 66492 66490 66488 66486 66484 66482 66480 66478 66476 
 Column-1: 66494 66492 66490 66488 66486 66484 66482 66480 66478 66476 
 Column-2: 66494 66492 66490 66488 66486 66484 66482 66480 66478 66476 
+=======
+Column-0: 52094 52092 52090 52088 52086 52084 52082 52080 52078 52076 
+Column-1: 52094 52092 52090 52088 52086 52084 52082 52080 52078 52076 
+Column-2: 52094 52092 52090 52088 52086 52084 52082 52080 52078 52076 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 22.443 ms
 Merge: 4.22595 ms
 Materialize: 3.82538 ms
+=======
+Sort: 22.4328 ms
+Merge: 4.2295 ms
+Materialize: 3.82202 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 4035321603 bytes
 ||R|| = 134217728 ||S|| = 134217728
@@ -613,17 +760,234 @@ Circular buffer size = 134217728
 
 Output Cardinality = 134217728
 Results (first 10 items): 
+<<<<<<< Updated upstream
 Column-0: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
 Column-1: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
 Column-2: 17342 17340 17338 17336 17334 17332 17330 17328 17326 17324 
+=======
+Column-0: 23422 23420 23418 23416 23414 23412 23410 23408 23406 23404 
+Column-1: 23422 23420 23418 23416 23414 23412 23410 23408 23406 23404 
+Column-2: 23422 23420 23418 23416 23414 23412 23410 23408 23406 23404 
+>>>>>>> Stashed changes
 
 Verifying...
 [CORRECT]
 
 ==== Statistics ==== 
+<<<<<<< Updated upstream
 Sort: 44.759 ms
 Merge: 7.75882 ms
 Materialize: 7.61107 ms
+=======
+Sort: 44.7949 ms
+Merge: 8.42349 ms
+Materialize: 7.61027 ms
+>>>>>>> Stashed changes
 
 Peak memory used: 8070637315 bytes
+
+||R|| = 33554432 ||S|| = 33554432
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 33554432
+
+Output Cardinality = 33554432
+Results (first 10 items): 
+Column-0: 79934 79932 79930 79928 79926 79924 79922 79920 79918 79916 
+Column-1: 79934 79932 79930 79928 79926 79924 79922 79920 79918 79916 
+Column-2: 79934 79932 79930 79928 79926 79924 79922 79920 79918 79916 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 11.3132 ms
+Merge: 2.1201 ms
+Materialize: 1.9271 ms
+
+Peak memory used: 2017663747 bytes
+||R|| = 33554432 ||S|| = 67108864
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 67108864
+
+Output Cardinality = 67108864
+Results (first 10 items): 
+Column-0: 8276 8275 8273 8272 8271 8269 8268 8267 8265 8264 
+Column-1: 8276 8275 8273 8272 8271 8269 8268 8267 8265 8264 
+Column-2: 8276 8275 8273 8272 8271 8269 8268 8267 8265 8264 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 16.8642 ms
+Merge: 3.70627 ms
+Materialize: 3.49008 ms
+
+Peak memory used: 3498385155 bytes
+||R|| = 33554432 ||S|| = 134217728
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 134217728
+
+Output Cardinality = 134217728
+Results (first 10 items): 
+Column-0: 6937 6936 6935 6934 6933 6933 6932 6931 6930 6929 
+Column-1: 6937 6936 6935 6934 6933 6933 6932 6931 6930 6929 
+Column-2: 6937 6936 6935 6934 6933 6933 6932 6931 6930 6929 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 28.0218 ms
+Merge: 6.9241 ms
+Materialize: 6.65754 ms
+
+Peak memory used: 6459827971 bytes
+||R|| = 33554432 ||S|| = 33554432
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 33554432
+
+Output Cardinality = 33554432
+Results (first 10 items): 
+Column-0: 67646 67644 67642 67640 67638 67636 67634 67632 67630 67628 
+Column-1: 67646 67644 67642 67640 67638 67636 67634 67632 67630 67628 
+Column-2: 67646 67644 67642 67640 67638 67636 67634 67632 67630 67628 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 11.2609 ms
+Merge: 1.84512 ms
+Materialize: 1.93776 ms
+
+Peak memory used: 2017663747 bytes
+||R|| = 33554432 ||S|| = 67108864
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 67108864
+
+Output Cardinality = 67108864
+Results (first 10 items): 
+Column-0: 26495 26493 26492 26491 26489 26488 26487 26485 26484 26483 
+Column-1: 26495 26493 26492 26491 26489 26488 26487 26485 26484 26483 
+Column-2: 26495 26493 26492 26491 26489 26488 26487 26485 26484 26483 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 16.8663 ms
+Merge: 3.72064 ms
+Materialize: 3.49027 ms
+
+Peak memory used: 3498385155 bytes
+||R|| = 33554432 ||S|| = 134217728
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 134217728
+
+Output Cardinality = 134217728
+Results (first 10 items): 
+Column-0: 6117 6117 6116 6115 6114 6113 6113 6112 6111 6110 
+Column-1: 6117 6117 6116 6115 6114 6113 6113 6112 6111 6110 
+Column-2: 6117 6117 6116 6115 6114 6113 6113 6112 6111 6110 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 28.0381 ms
+Merge: 6.92042 ms
+Materialize: 6.6593 ms
+
+Peak memory used: 6459827971 bytes
 
