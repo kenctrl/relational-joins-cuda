@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Remove build folder
-rm -rf build
-
 # Parse command line arguments
 run_initial=false
 while [[ "$#" -gt 0 ]]; do
@@ -15,7 +12,6 @@ done
 
 # Run initial run to compile all executables only if flag is set
 if [ "$run_initial" = true ]; then
-
     # Delete cached binaries
     mkdir -p src/cache/bin
     mkdir -p src/cache/obj
@@ -27,6 +23,9 @@ fi
 
 # Copy over the template build script into src/, overwriting any existing file
 cp build-template.sh src/build.sh
+
+# Make build.sh executable
+chmod +x src/build.sh
 
 # Run process_yamls.sh and capture the number of YAMLs processed
 yaml_count=$(./process_yamls.sh)

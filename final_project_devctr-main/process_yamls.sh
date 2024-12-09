@@ -21,7 +21,7 @@ for yaml_file in "$YAML_DIR"/*.yaml; do
     sed "s|{{ join_runs_path }}|exp/${filename}.yaml|g" "$TEMPLATE_FILE" > "src/run.sh" 2>&1
     
     # Make run.sh executable
-    # chmod +x src/run.sh
+    chmod +x src/run.sh
     
     # Build the project
     ./devtool build_project >&2
