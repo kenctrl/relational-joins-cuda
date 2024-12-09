@@ -51,6 +51,6 @@ fi
 echo "Processed $yaml_count YAML files"
 
 # Run parse_results.py with the yaml count and save output to output.txt
-python3 parse_results.py "$yaml_count" > output.txt
+python3 scripts/parse_results.py "$yaml_count" > output.txt
 
 echo "Results have been saved to output.txt"
