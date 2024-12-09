@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Delete cached binaries
+mkdir -p src/cache/bin
+mkdir -p src/cache/obj
+
 # Parse command line arguments
 run_initial=false
 while [[ "$#" -gt 0 ]]; do
