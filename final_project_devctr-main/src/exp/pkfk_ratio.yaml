@@ -1,7 +1,7 @@
 experiments:
-  - name: pkfk_matchratio
+  - name: pkfk_ratio
     group: 0
-    output: pkfk_matchratio.csv
+    output: pkfk_ratio.csv
     query: >
       SELECT DISTINCT *
       FROM df
