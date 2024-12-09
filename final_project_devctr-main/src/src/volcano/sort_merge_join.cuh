@@ -151,7 +151,7 @@ public:
         // our_merge_path((key_t*) a_keys, num_a_elems, 
         //            (key_t*) b_keys, num_b_elems,
         //            COL(c,0), a_pair_idx, b_pair_idx, 
-        //            num_matches, output_buffer_size);
+        //            &num_matches, output_buffer_size);
     }
 
     template <std::size_t... Is>
