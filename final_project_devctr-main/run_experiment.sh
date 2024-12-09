@@ -38,6 +38,9 @@ fi
 
 echo "Processed $yaml_count YAML files"
 
+# Delete output.txt
+rm -f output.txt
+
 # Run parse_results.py with the yaml count and save output to output.txt
 python3 parse_results.py "$yaml_count" > output.txt
 
