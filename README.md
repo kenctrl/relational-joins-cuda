@@ -10,3 +10,5 @@ We plan to implement some of the optimizations mentioned in the paper “Efficie
 
 ### How to run
 Run `./run_experiment.sh` to run the experiment. Use the `--compile` flag to recompile cached binaries.
+
+Depending on your computer architecture, you may need to run `export DOCKER_DEFAULT_PLATFORM=linux/amd64` to compile the binaries for x86. If your computer has ARM architecture, run OrbStack; else, run Docker.
