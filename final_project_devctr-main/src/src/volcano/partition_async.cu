@@ -113,8 +113,6 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
     cooperative_groups::wait_prior<1>(block); // sync + memcopy
     // Compute local histogram
     for (auto i = threadIdx.x; i < BLOCK_TILE; i += NUM_THREADS) {
-        auto global_idx = blockIdx.x * BLOCK_TILE + i;
-        if (global_idx >= size) break;
         BucketT key = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage][i]);
         // // uncoalesced writes: Optimize this later with warp shuffle
         atomicAdd(&hist_buffer[stage][key], 1);
@@ -171,8 +169,6 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
         cooperative_groups::wait_prior<1>(block); // sync + memcopy
         // Compute next local histogram
         for (auto i = threadIdx.x; i < BLOCK_TILE; i += NUM_THREADS) {
-            auto global_idx = blockIdx.x * BLOCK_TILE + i;
-            if (global_idx >= size) break;
             BucketT key = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage ^ 1][i]);
             // // uncoalesced writes: Optimize this later with warp shuffle
             atomicAdd(&hist_buffer[stage ^ 1][key], 1);
@@ -184,8 +180,6 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
         // Now we have the global prefix sum
         // Now write out the data - each thread is responsible for a tile
         for (auto i = 0; i < BLOCK_TILE; i++) {
-            auto global_idx = blockIdx.x * BLOCK_TILE + i;
-            if (global_idx >= size) break;
             BucketT bucket = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage][i]);
             // Check if bucket belongs to this thread
             if (bucket % blockDim.x != threadIdx.x) {
@@ -198,7 +192,6 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
             // Clear status flags
             auto out_index = global_offset + local_offset;
             // No race - each thread updates its own buckets
-            // assert(out_index < size && out_index >= 0);
             output[out_index] = keys_buffer[stage][i]; // Reverse order!!
         }
         // Swap buffers
@@ -215,11 +208,15 @@ void test_1(){
 
     auto NUM_BUCKETS = 1 << (HIGH_BIT - LOW_BIT);
 
-    constexpr int NUM_THREADS = 256;
-    constexpr int THREAD_TILE = 1;
-    constexpr int LOOP_TILE = 256;
+    // constexpr int NUM_THREADS = 64;
+    // constexpr int THREAD_TILE = 8;
+    // constexpr int LOOP_TILE = 512;
 
-    size_t size = 1 << 14; //1 << 21;
+    constexpr int NUM_THREADS = 1;
+    constexpr int THREAD_TILE = 8;
+    constexpr int LOOP_TILE = 8;
+
+    size_t size = 1 << 10; //1 << 21;
     uint32_t *key_array = nullptr; // device memory
     uint32_t *host_array = new uint32_t[size]; // host memory
     for(auto i = 0; i < size; i++) {
@@ -230,7 +227,7 @@ void test_1(){
     cudaMalloc(&key_array, size * sizeof(KeyT));
     cudaMemcpy(key_array, host_array, size * sizeof(uint32_t), cudaMemcpyHostToDevice);
 
-    dim3 grid_dim((size + NUM_THREADS * THREAD_TILE - 1) / (NUM_THREADS * THREAD_TILE));
+    dim3 grid_dim((size + NUM_THREADS * THREAD_TILE * LOOP_TILE - 1) / (NUM_THREADS * THREAD_TILE * LOOP_TILE));
     dim3 block_dim(NUM_THREADS);
 
     auto workspace_size = get_workspace_size<CountT, LOW_BIT, HIGH_BIT>(grid_dim, block_dim);
@@ -311,9 +308,9 @@ void test_1(){
     uint32_t* output_host = new uint32_t[size];
     cudaMemcpy(output_host, out, size * sizeof(uint32_t), cudaMemcpyDeviceToHost);
 
-    // for (int i = 0; i < size; i++) {
-    //     std::cout << output_host[i] << "\n";
-    // }
+    for (int i = 0; i < size; i++) {
+        std::cout << output_host[i] << "\n";
+    }
 
     // for (int i = 0; i < size; i++) {
     //     std::cout << host_array[i] << "\n";
