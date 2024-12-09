@@ -11,7 +11,7 @@ echo "Run microbenchmarks from Section 5.2.1 to 5.2.7"
 python3 exp/run_join_exp.py \
         -b ./bin/volcano/join_exp_4b4b \
         -c /tmp/join_exp_config.csv \
-        -y exp/pkfk_skew.yaml \
+        -y exp/pkfk_ratio.yaml \
         -e 0 \
         -r 1 \
         -o exp_results/output \

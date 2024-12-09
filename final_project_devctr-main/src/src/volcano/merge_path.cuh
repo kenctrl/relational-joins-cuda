@@ -323,10 +323,12 @@ __global__ void create_merge_partitions(key_t *r_sorted_keys, const int nr, key_
             int r_index = r_mid - 1;
             int s_index = diag_sum - r_mid - 1;
 
-            if (r_sorted_keys[r_index + 1] < s_sorted_keys[s_index]){
-                r_max = r_mid;
-            } else {
+            if (r_sorted_keys[r_index + 1] <= s_sorted_keys[s_index]){
                 r_low = r_mid + 1;
+                //r_max = r_mid;
+            } else {
+                r_max = r_mid;
+                // r_low = r_mid + 1;
             }
         }
 
@@ -398,9 +400,15 @@ __global__ void merge_join_keys(const int nr, const int ns, key_t *keys_out, int
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int idx_start = threadId * partition_size;
     int idx_end = (threadId + 1) * partition_size;
-    int count = prefix_partition_matches[threadId];
 
-    for (int i = idx_start; i < MAX(idx_end, nr + ns); i++){
+    int count;
+    if (threadId == 0){
+        count = 0;
+    } else {
+        count = prefix_partition_matches[threadId - 1];
+    }
+
+    for (int i = idx_start; i < MIN(idx_end, nr + ns); i++){
         if (i > 0 && merged_keys[i] == merged_keys[i - 1]){
             keys_out[count % output_buffer_size] = merged_keys[i];
             if (keys_r_arr[i] == 1){
