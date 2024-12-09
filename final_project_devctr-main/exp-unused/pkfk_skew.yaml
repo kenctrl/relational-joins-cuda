@@ -7,9 +7,9 @@ experiments:
       FROM
             (SELECT DISTINCT *
             FROM df
-            WHERE nr IN (22, 23, 24) AND 
+            WHERE nr = 22 AND 
                   ratio = 0 AND
-                  pr in (1,2) AND pr = ps AND
+                  pr = 1 AND pr = ps AND
                   dist = 'zipf' AND
                   join_type = 'pkfk' AND
                   unique_keys = nr AND

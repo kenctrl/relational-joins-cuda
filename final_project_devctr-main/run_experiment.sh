@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Remove build folder
+rm -rf build
+
 # Parse command line arguments
 run_initial=false
 while [[ "$#" -gt 0 ]]; do

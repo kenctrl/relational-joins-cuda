@@ -42,6 +42,11 @@ for cu_file in ${CU_SRC}; do
     # Get the relative path and base name
     rel_path=${cu_file#./}
     base_name=${rel_path%.cu}
+
+    # Skip for join_exp_4b8b, join_exp_8b8b, tpcds_q64, tpch_q18, tpch_q19, tpch_q7, tpcds_q95
+    if [[ $base_name == *"join_exp_4b8b"* ]] || [[ $base_name == *"join_exp_8b8b"* ]] || [[ $base_name == *"tpcds_q64"* ]] || [[ $base_name == *"tpch_q18"* ]] || [[ $base_name == *"tpch_q19"* ]] || [[ $base_name == *"tpch_q7"* ]] || [[ $base_name == *"tpcds_q95"* ]]; then
+        continue
+    fi
     
     # Object file and output executable paths
     base_name=${base_name#src/}
