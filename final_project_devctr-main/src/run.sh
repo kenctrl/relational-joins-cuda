@@ -32,6 +32,8 @@ python3 exp/run_join_exp.py \
 
 # Copy results to out/
 mkdir -p out/
+# ./bin/volcano/benchmarks
+./bin/volcano/partitioner
 cp exp_results/output out/output.txt
 
 # python3 exp/run_join_exp.py \

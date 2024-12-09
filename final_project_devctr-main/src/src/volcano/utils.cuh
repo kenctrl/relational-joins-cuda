@@ -50,7 +50,7 @@ void for_(F func)
 template <typename T>
 void check(T err, const char* const func, const char* const file,
            const int line)
-{/*
+{
     if (err != cudaSuccess)
     {
         std::cerr << "CUDA Runtime Error at: " << file << ":" << line
@@ -60,11 +60,11 @@ void check(T err, const char* const func, const char* const file,
         // We don't exit when we encounter CUDA errors in this example.
         // std::exit(EXIT_FAILURE);
     }
-*/}
+}
 
 #define CHECK_LAST_CUDA_ERROR() checkLast(__FILE__, __LINE__)
 void checkLast(const char* const file, const int line)
-{/*
+{
     cudaError_t err{cudaGetLastError()};
     if (err != cudaSuccess)
     {
@@ -74,7 +74,7 @@ void checkLast(const char* const file, const int line)
         // We don't exit when we encounter CUDA errors in this example.
         // std::exit(EXIT_FAILURE);
     }
-*/}
+}
 
 inline void alloc_by_cuda(void** ptr, bool clear, size_t sz, cudaStream_t stream) {
     CHECK_CUDA_ERROR(cudaMallocAsync(ptr, sz, stream));
@@ -93,7 +93,7 @@ inline size_t get_cuda_free_mem() {
 // original: 25769803776*0.9.
 // total memory of telerun gpus: 16376MiB = 17171480576 bytes
 // setting to 17171480576*0.8
-constexpr size_t mem_pool_size = 17171480576*0.8; 
+constexpr size_t mem_pool_size = 7171480576*0.8;
 static UserSpaceMM<mem_pool_size>* mm;
 
 inline void alloc_by_rmm_mempool(void** ptr, bool clear, size_t sz, cudaStream_t stream) {
