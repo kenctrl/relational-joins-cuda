@@ -5,7 +5,7 @@ experiments:
     query: >
       SELECT DISTINCT *
       FROM df
-      WHERE nr = 25 AND 
+      WHERE nr = 23 AND 
             ratio = 0 AND
             pr = 2 AND pr = ps AND
             dist = 'uniform' AND
