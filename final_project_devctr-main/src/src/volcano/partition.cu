@@ -143,8 +143,6 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
             }
         }
     }
-    cooperative_groups::this_grid().sync();
-    __threadfence(); // Ensure all writes are visible
     // // Implicit groups?
 
     // // Now we have the global prefix sum

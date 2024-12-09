@@ -1,6 +1,8 @@
 #include <cuda_runtime.h>
 #include <cassert>
 #include <cooperative_groups.h>
+#include <cooperative_groups/memcpy_async.h>
+#include <cuda/barrier>
 #include <cstdint>
 #include <iostream>
 #include <stdio.h>
@@ -37,7 +39,7 @@ __host__ size_t get_shmem_size(dim3 grid_dim, dim3 block_dim) {
     // assert(grid_dim.y == 1 && grid_dim.z == 1); // We only support 1D grids for now
     auto NUM_BUCKETS = 1 << (high_bit - low_bit);
     // We need a local histogram
-    return NUM_BUCKETS * sizeof(CountT) + THREAD_TILE * block_dim.x * sizeof(KeyT);
+    return (NUM_BUCKETS * sizeof(CountT) + THREAD_TILE * block_dim.x * sizeof(KeyT)) * 2;
 }
 
 template <typename BucketT, typename KeyT, int low_bit, int high_bit>
@@ -71,7 +73,6 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
     CountT* block_space = static_cast<CountT*>(workspace) + blockIdx.x * NUM_BUCKETS;
     // Global scan array starts after all block histograms
     CountT* global_block_scan = static_cast<CountT*>(workspace) + gridDim.x * NUM_BUCKETS;
-    KeyT* output = (KeyT*) out;
 
     // Assert that memory is not overlapping
 
@@ -79,41 +80,53 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
     CountT AGG_DONE = CountT(1) << (sizeof(CountT) * 8 - 2); // Second top bit set means aggregation is done
     CountT ALL_DONE = PREFIX_DONE | AGG_DONE;
 
+    cooperative_groups::thread_block block = cooperative_groups::this_thread_block();
+    cooperative_groups::grid_group grid = cooperative_groups::this_grid();
+
     // assert(__popc(PREFIX_DONE) == 1);
     // assert(__popc(AGG_DONE) == 1);
     // assert(__popc(ALL_DONE) == 2);
 
     // Shared memory
-    extern __shared__ CountT local_hist[];
-    KeyT* local_keys = (KeyT*) &local_hist[NUM_BUCKETS];
+    extern __shared__ int cache[];
 
+    CountT* local_hist0 = (CountT*) cache;
+    CountT* local_hist1 = &local_hist0[NUM_BUCKETS];
+
+    KeyT* local_keys0 = (KeyT*) &local_hist1[NUM_BUCKETS];
+    KeyT* local_keys1 = &local_keys0[BLOCK_TILE];
+
+    KeyT* keys_buffer[2] = {local_keys0, local_keys1};
+    CountT* hist_buffer[2] = {local_hist0, local_hist1};
+
+    int stage = 0;
+
+    // First memory copy
+    cooperative_groups::memcpy_async(cooperative_groups::this_thread_block(), keys_buffer[stage], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+
+    // Initialize local histogram
+    for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
+        hist_buffer[stage][i] = 0;
+    }
+    // Kick off next stage
+    cooperative_groups::memcpy_async(cooperative_groups::this_thread_block(), keys_buffer[stage ^ 1], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+    cooperative_groups::wait_prior<1>(block); // sync + memcopy
+    // Compute local histogram
+    for (auto i = threadIdx.x; i < BLOCK_TILE; i += NUM_THREADS) {
+        auto global_idx = blockIdx.x * BLOCK_TILE + i;
+        if (global_idx >= size) break;
+        BucketT key = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage][i]);
+        // // uncoalesced writes: Optimize this later with warp shuffle
+        atomicAdd(&hist_buffer[stage][key], 1);
+    };
+
+    // Main loop
     for (auto outer_loop = 0; outer_loop < LOOP_TILE; outer_loop++){
-        // Initialize local histogram
-        for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
-            local_hist[i] = 0;
-        }
-        for (auto i = threadIdx.x; i < BLOCK_TILE; i += NUM_THREADS) {
-            auto global_idx = blockIdx.x * BLOCK_TILE + i;
-            local_keys[i] = (global_idx < size)? key_array[global_idx]: 0;
-        }
-        __syncthreads();
-
-        // Compute local histogram
-        for (auto i = blockIdx.x * BLOCK_TILE + threadIdx.x; i < (blockIdx.x + 1) * BLOCK_TILE && i < size; i += NUM_THREADS) {
-            BucketT key = get_bucket<BucketT, KeyT, low_bit, high_bit>(key_array[i]);
-            // // uncoalesced writes: Optimize this later with warp shuffle
-            // assert(key < NUM_BUCKETS);
-            atomicAdd(&local_hist[key], 1);
-        };
-        __syncthreads();
-
+        KeyT* output = (KeyT*) out + outer_loop * BLOCK_TILE * gridDim.x;
         CountT write_status = (blockIdx.x == 0)? PREFIX_DONE: AGG_DONE;
-
+        __syncthreads();
         for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
-            // We should not have any status flags set in local_hist
-            // assert((local_hist[i] & (PREFIX_DONE | AGG_DONE)) == 0);
-            auto write_data = write_status | local_hist[i];
-            // Assume writes are atomic - value and status are written together
+            auto write_data = write_status | hist_buffer[stage][i];
             block_space[i] = write_data;
         }
 
@@ -121,7 +134,7 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
         // It performs a decoupled lookback to get the prefix sum for its buckets
         for (auto cur_bucket = threadIdx.x; cur_bucket < NUM_BUCKETS; cur_bucket += NUM_THREADS) {
             int prev_block = (int) blockIdx.x - 1;
-            CountT local_val = local_hist[cur_bucket]; // No status flags set
+            CountT local_val = hist_buffer[stage][cur_bucket]; // No status flags set
             while (prev_block >= 0) {
                 auto prev_space = ((CountT*) workspace) + prev_block * NUM_BUCKETS;
                 auto prev_status = prev_space[cur_bucket];
@@ -150,16 +163,30 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
                 }
             }
         }
-        cooperative_groups::this_grid().sync();
-        __threadfence(); // Ensure all writes are visible
-        // // Implicit groups?
+        // Initialize next local histogram
+        for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
+            hist_buffer[stage ^ 1][i] = 0;
+        }
+        cooperative_groups::memcpy_async(cooperative_groups::this_thread_block(), keys_buffer[stage], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+        cooperative_groups::wait_prior<1>(block); // sync + memcopy
+        // Compute next local histogram
+        for (auto i = threadIdx.x; i < BLOCK_TILE; i += NUM_THREADS) {
+            auto global_idx = blockIdx.x * BLOCK_TILE + i;
+            if (global_idx >= size) break;
+            BucketT key = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage ^ 1][i]);
+            // // uncoalesced writes: Optimize this later with warp shuffle
+            atomicAdd(&hist_buffer[stage ^ 1][key], 1);
+        };
 
-        // // Now we have the global prefix sum
+        grid.sync();
+        __threadfence(); // Ensure all writes are visible
+
+        // Now we have the global prefix sum
         // Now write out the data - each thread is responsible for a tile
         for (auto i = 0; i < BLOCK_TILE; i++) {
             auto global_idx = blockIdx.x * BLOCK_TILE + i;
             if (global_idx >= size) break;
-            BucketT bucket = get_bucket<BucketT, KeyT, low_bit, high_bit>(local_keys[i]
+            BucketT bucket = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage][i]);
             // Check if bucket belongs to this thread
             if (bucket % blockDim.x != threadIdx.x) {
                 continue;
@@ -167,13 +194,15 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
             // Bucket internal offset, remove status flags
             auto local_offset = (--block_space[bucket]) & ~(PREFIX_DONE | AGG_DONE);
             // Offset from previous buckets - inclusive scan
-            volatile auto global_offset = bucket > 0? global_block_scan[bucket - 1]: 0;
+            auto global_offset = bucket > 0? global_block_scan[bucket - 1]: 0;
             // Clear status flags
             auto out_index = global_offset + local_offset;
             // No race - each thread updates its own buckets
             // assert(out_index < size && out_index >= 0);
-            output[out_index] = local_keys[i]; // Reverse order!!
+            output[out_index] = keys_buffer[stage][i]; // Reverse order!!
         }
+        // Swap buffers
+        stage ^= 1;
     }
 }
 
@@ -186,11 +215,11 @@ void test_1(){
 
     auto NUM_BUCKETS = 1 << (HIGH_BIT - LOW_BIT);
 
-    constexpr int NUM_THREADS = 64;
+    constexpr int NUM_THREADS = 256;
     constexpr int THREAD_TILE = 1;
-    constexpr int LOOP_TILE = 1;
+    constexpr int LOOP_TILE = 256;
 
-    size_t size = 128; //1 << 21;
+    size_t size = 1 << 14; //1 << 21;
     uint32_t *key_array = nullptr; // device memory
     uint32_t *host_array = new uint32_t[size]; // host memory
     for(auto i = 0; i < size; i++) {
@@ -282,9 +311,9 @@ void test_1(){
     uint32_t* output_host = new uint32_t[size];
     cudaMemcpy(output_host, out, size * sizeof(uint32_t), cudaMemcpyDeviceToHost);
 
-    for (int i = 0; i < size; i++) {
-        std::cout << output_host[i] << "\n";
-    }
+    // for (int i = 0; i < size; i++) {
+    //     std::cout << output_host[i] << "\n";
+    // }
 
     // for (int i = 0; i < size; i++) {
     //     std::cout << host_array[i] << "\n";
