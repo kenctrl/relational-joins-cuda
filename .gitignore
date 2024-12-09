@@ -2,3 +2,7 @@
 .vscode
 final_project_devctr-main/auth.json
 final_project_devctr-main/connection.json
+final_project_devctr-main/src/run.sh
+final_project_devctr-main/src/build.sh
+final_project_devctr-main/src/cache
+final_project_devctr-main/output.txt
