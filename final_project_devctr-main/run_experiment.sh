@@ -16,7 +16,7 @@ if [ "$run_initial" = true ]; then
     # Delete cached binaries
     mkdir -p src/cache/bin
     mkdir -p src/cache/obj
-    
+
     echo "Running initial run to compile all executables"
     chmod +x initial_run.sh
     ./initial_run.sh

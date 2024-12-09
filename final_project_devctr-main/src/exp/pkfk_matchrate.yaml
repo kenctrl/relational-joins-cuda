@@ -12,6 +12,6 @@ experiments:
           join_type = 'pkfk' AND
           unique_keys = nr AND
           zipf_factor = 0 AND
-          selectivity in (1, 2, 8) AND
+          selectivity in (1, 8) AND
           (algo LIKE 'smj%')
     ORDER BY algo, nr, pr, ps, selectivity;
