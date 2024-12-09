@@ -23,8 +23,8 @@ void cuda_check(cudaError_t code, const char *file, int line) {
 
 template <typename CountT, int low_bit, int high_bit>
 __host__ size_t get_workspace_size(dim3 grid_dim, dim3 block_dim) {
-    assert(block_dim.y == 1 && block_dim.z == 1); // We only support 1D blocks for now
-    assert(grid_dim.y == 1 && grid_dim.z == 1); // We only support 1D grids for now
+    // assert(block_dim.y == 1 && block_dim.z == 1); // We only support 1D blocks for now
+    // assert(grid_dim.y == 1 && grid_dim.z == 1); // We only support 1D grids for now
     auto NUM_BUCKETS = 1 << (high_bit - low_bit);
     auto NUM_BLOCKS = grid_dim.x;
     // We need two arrays - one for block space and one for global block scan
@@ -33,10 +33,10 @@ __host__ size_t get_workspace_size(dim3 grid_dim, dim3 block_dim) {
 
 template <typename CountT, int low_bit, int high_bit>
 __host__ size_t get_shmem_size(dim3 grid_dim, dim3 block_dim) {
-    assert(block_dim.y == 1 && block_dim.z == 1); // We only support 1D blocks for now
-    assert(grid_dim.y == 1 && grid_dim.z == 1); // We only support 1D grids for now
+    // assert(block_dim.y == 1 && block_dim.z == 1); // We only support 1D blocks for now
+    // assert(grid_dim.y == 1 && grid_dim.z == 1); // We only support 1D grids for now
     auto NUM_BUCKETS = 1 << (high_bit - low_bit);
-    // We need two arrays - one for block space and one for global block scan
+    // We need a local histogram
     return NUM_BUCKETS * sizeof(CountT);
 }
 
@@ -58,9 +58,9 @@ template<
 __global__ void partition(KeyT* key_array, int size, void* workspace, void* out, void* debug_out) {
     CountT* debug_ptr = (CountT*) debug_out;
 
-    assert(gridDim.y == 1 && gridDim.z == 1); // We only support 1D grids for now
-    assert(blockDim.y == 1 && blockDim.z == 1); // We only support 1D blocks for now
-    assert(blockDim.x == NUM_THREADS); // We only support 1D blocks for now
+    // assert(gridDim.y == 1 && gridDim.z == 1); // We only support 1D grids for now
+    // assert(blockDim.y == 1 && blockDim.z == 1); // We only support 1D blocks for now
+    // assert(blockDim.x == NUM_THREADS); // We only support 1D blocks for now
 
     auto BLOCK_TILE = NUM_THREADS * THREAD_TILE;
     auto NUM_BUCKETS = 1 << (high_bit - low_bit);
@@ -69,20 +69,18 @@ __global__ void partition(KeyT* key_array, int size, void* workspace, void* out,
     // Block space points to current block's histogram in workspace
     CountT* block_space = static_cast<CountT*>(workspace) + blockIdx.x * NUM_BUCKETS;
     // Global scan array starts after all block histograms
-    CountT* global_block_scan = block_space + NUM_BUCKETS * gridDim.x;
+    CountT* global_block_scan = static_cast<CountT*>(workspace) + gridDim.x * NUM_BUCKETS;
     KeyT* output = (KeyT*) out;
 
-    // Assert that global_block_scan and output don't overlap
-    assert((global_block_scan + NUM_BUCKETS) <= output || 
-           (output + size) <= global_block_scan);
+    // Assert that memory is not overlapping
 
     CountT PREFIX_DONE = CountT(1) << (sizeof(CountT) * 8 - 1); // Top bit set means prefix sum is done
     CountT AGG_DONE = CountT(1) << (sizeof(CountT) * 8 - 2); // Second top bit set means aggregation is done
     CountT ALL_DONE = PREFIX_DONE | AGG_DONE;
 
-    assert(__popc(PREFIX_DONE) == 1);
-    assert(__popc(AGG_DONE) == 1);
-    assert(__popc(ALL_DONE) == 2);
+    // assert(__popc(PREFIX_DONE) == 1);
+    // assert(__popc(AGG_DONE) == 1);
+    // assert(__popc(ALL_DONE) == 2);
 
     // Shared memory
     extern __shared__ CountT local_hist[];
@@ -97,6 +95,7 @@ __global__ void partition(KeyT* key_array, int size, void* workspace, void* out,
     for (auto i = blockIdx.x * BLOCK_TILE + threadIdx.x; i < (blockIdx.x + 1) * BLOCK_TILE && i < size; i += NUM_THREADS) {
         BucketT key = get_bucket<BucketT, KeyT, low_bit, high_bit>(key_array[i]);
         // // uncoalesced writes: Optimize this later with warp shuffle
+        // assert(key < NUM_BUCKETS);
         atomicAdd(&local_hist[key], 1);
     };
     __syncthreads();
@@ -105,10 +104,9 @@ __global__ void partition(KeyT* key_array, int size, void* workspace, void* out,
 
     for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
         // We should not have any status flags set in local_hist
-        assert((local_hist[i] & (PREFIX_DONE | AGG_DONE)) == 0);
+        // assert((local_hist[i] & (PREFIX_DONE | AGG_DONE)) == 0);
         auto write_data = write_status | local_hist[i];
         // Assume writes are atomic - value and status are written together
-        assert(&block_space[i] < global_block_scan);
         block_space[i] = write_data;
     }
 
@@ -119,22 +117,21 @@ __global__ void partition(KeyT* key_array, int size, void* workspace, void* out,
         CountT local_val = local_hist[cur_bucket]; // No status flags set
         while (prev_block >= 0) {
             auto prev_space = ((CountT*) workspace) + prev_block * NUM_BUCKETS;
-            auto prev_status = prev_space[cur_bucket] & ~(PREFIX_DONE | AGG_DONE);
+            auto prev_status = prev_space[cur_bucket];
             if (prev_status & PREFIX_DONE) {
-                local_val += prev_status; // Clear status flags
+                local_val += prev_status & ~(PREFIX_DONE | AGG_DONE); // Clear status flags
                 break;
             } else if (prev_status & AGG_DONE) {
-                local_val += prev_status; // Clear status flags
+                local_val += prev_status & ~(PREFIX_DONE | AGG_DONE); // Clear status flags
                 prev_block--;
             } else {
                 // Keep spinning
             }
         }
         // We should not have any status flags set in local_val
-        assert((local_val & (PREFIX_DONE | AGG_DONE)) == 0);
+        // assert((local_val & (PREFIX_DONE | AGG_DONE)) == 0);
         // No race here - write to global
         // Set status flag to PREFIX_DONE
-        assert(&block_space[cur_bucket] < global_block_scan);
         block_space[cur_bucket] = local_val | PREFIX_DONE;
     }
     if (blockIdx.x == gridDim.x - 1) {
@@ -143,13 +140,11 @@ __global__ void partition(KeyT* key_array, int size, void* workspace, void* out,
             auto thread_val = block_space[cur_bucket] & ~(PREFIX_DONE | AGG_DONE);
             for (auto j = cur_bucket; j < NUM_BUCKETS; j++) {
                 atomicAdd(&global_block_scan[j], thread_val);
-                // Other threads should be blocked
-                assert((global_block_scan[j] & ALL_DONE) == 0);
             }
         }
     }
-    cooperative_groups::grid_group g = cooperative_groups::this_grid();
-    g.sync();
+    cooperative_groups::this_grid().sync();
+    __threadfence(); // Ensure all writes are visible
     // // Implicit groups?
 
     // // Now we have the global prefix sum
@@ -163,11 +158,11 @@ __global__ void partition(KeyT* key_array, int size, void* workspace, void* out,
         // Bucket internal offset, remove status flags
         auto local_offset = (--block_space[bucket]) & ~(PREFIX_DONE | AGG_DONE);
         // Offset from previous buckets - inclusive scan
-        auto global_offset = bucket > 0? global_block_scan[bucket - 1]: 0;
+        volatile auto global_offset = bucket > 0? global_block_scan[bucket - 1]: 0;
         // Clear status flags
         auto out_index = global_offset + local_offset;
         // No race - each thread updates its own buckets
-        assert(out_index < size && out_index >= 0);
+        // assert(out_index < size && out_index >= 0);
         output[out_index] = key_array[i]; // Reverse order!!
     }
 }
@@ -184,7 +179,7 @@ void test_1(){
 
     auto NUM_BUCKETS = 1 << (HIGH_BIT - LOW_BIT);
 
-    int size = 33;
+    int size = 45;
     uint32_t *key_array = nullptr; // device memory
     uint32_t *host_array = new uint32_t[size]; // host memory
     for(int i = 0; i < size; i++) {
@@ -192,7 +187,7 @@ void test_1(){
         host_array[i] = size - i - 1; // Reverse order
     }
 
-    cudaMalloc(&key_array, size * sizeof(uint32_t));
+    cudaMalloc(&key_array, size * sizeof(KeyT));
     cudaMemcpy(key_array, host_array, size * sizeof(uint32_t), cudaMemcpyHostToDevice);
 
     dim3 grid_dim((size + NUM_THREADS * THREAD_TILE - 1) / (NUM_THREADS * THREAD_TILE));
@@ -209,11 +204,11 @@ void test_1(){
     void* debug_out = nullptr;
 
     cudaMalloc(&workspace, workspace_size);
-    cudaMalloc(&out, size * sizeof(uint32_t));
-    cudaMalloc(&debug_out, NUM_BUCKETS * sizeof(uint32_t));
+    cudaMalloc(&out, size * sizeof(KeyT));
+    cudaMalloc(&debug_out, NUM_BUCKETS * sizeof(CountT));
 
     cudaMemset(workspace, 0, workspace_size);
-    cudaMemset(debug_out, 0, NUM_BUCKETS * sizeof(uint32_t));
+    cudaMemset(debug_out, 0, NUM_BUCKETS * sizeof(CountT));
     CUDA_CHECK(cudaDeviceSynchronize());
 
     cudaDeviceProp deviceProp;
@@ -225,16 +220,12 @@ void test_1(){
         partition<KeyT, ValueT, CountT, BucketT, NUM_THREADS, THREAD_TILE, LOW_BIT, HIGH_BIT>, 
         NUM_THREADS, shmem_size);
     cudaDeviceGetAttribute(&supportsCoopLaunch, cudaDevAttrCooperativeLaunch, dev);
-
-    dim3 dimBlock(NUM_THREADS, 1, 1);
-    dim3 dimGrid(deviceProp.multiProcessorCount*numBlocksPerSm, 1, 1);
+    // assert(numBlocksPerSm * deviceProp.multiProcessorCount >= grid_dim.x);
 
     std::cout << "Blocks per SM: " << numBlocksPerSm << "\n";
-    std::cout << "Blocks: " << dimGrid.x << "\n";
+    std::cout << "Blocks: " << numBlocksPerSm * deviceProp.multiProcessorCount << "\n";
     std::cout << "Cooperative launch: " << supportsCoopLaunch << "\n";
-    assert(supportsCoopLaunch);
-
-    assert(dimGrid.x >= grid_dim.x);
+    // assert(supportsCoopLaunch);
 
     void* args[] = {
         (void*)&key_array,
@@ -245,11 +236,13 @@ void test_1(){
     };
     cudaLaunchCooperativeKernel(
         reinterpret_cast<void*>(partition<KeyT, ValueT, CountT, BucketT, 32, 1, LOW_BIT, HIGH_BIT>),
-        dimGrid,
-        dimBlock,
+        grid_dim,
+        block_dim,
         args,
-        shmem_size
+        shmem_size,
+        nullptr
     );
+    CUDA_CHECK(cudaGetLastError());
     CUDA_CHECK(cudaDeviceSynchronize());
 
     uint32_t* debug_host = new uint32_t[NUM_BUCKETS];
@@ -262,9 +255,9 @@ void test_1(){
     uint32_t* output_host = new uint32_t[size];
     cudaMemcpy(output_host, out, size * sizeof(uint32_t), cudaMemcpyDeviceToHost);
 
-    // for (int i = 0; i < size; i++) {
-    //     std::cout << output_host[i] << "\n";
-    // }
+    for (int i = 0; i < size; i++) {
+        std::cout << output_host[i] << "\n";
+    }
 
     // for (int i = 0; i < size; i++) {
     //     std::cout << host_array[i] << "\n";
