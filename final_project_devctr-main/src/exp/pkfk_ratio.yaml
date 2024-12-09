@@ -1,0 +1,18 @@
+experiments:
+  - name: pkfk_ratio
+    group: 0
+    output: pkfk_ratio.csv
+    query: >
+      SELECT DISTINCT *
+      FROM df
+      WHERE nr = 25 AND 
+            ratio in (0, 1, 2) AND
+            nr+ratio < 30 AND
+            pr = 1 AND pr = ps AND
+            dist = 'uniform' AND
+            join_type = 'pkfk' AND
+            unique_keys = nr AND
+            zipf_factor = 0 AND
+            selectivity = 1 AND
+            (algo LIKE 'smj%')
+      ORDER BY algo, nr, ratio, pr, ps;
