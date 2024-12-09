@@ -47,7 +47,7 @@ public:
         allocate_mem(&b_keys, false, sizeof(key_t) * num_b_elems);
 
         allocate_mem(&a_vals, false, TupleA::max_col_size * num_a_elems);
-        allocate_mem(&b_vals, false, TupleA::max_col_size * num_a_elems);
+        allocate_mem(&b_vals, false, TupleB::max_col_size * num_b_elems);
 
         allocate_mem(&a_pair_idx, false, sizeof(int) * output_buffer_size);
         allocate_mem(&b_pair_idx, false, sizeof(int) * output_buffer_size);
@@ -257,8 +257,6 @@ public:
         // }
     }
 };
-
-
 
 
 
