@@ -2,7 +2,7 @@
 
 # Directory containing YAML files
 YAML_DIR="src/exp"
-TEMPLATE_FILE="run-template.sh"
+TEMPLATE_FILE="templates/run-template.sh"
 
 # Initialize counter
 count=0
