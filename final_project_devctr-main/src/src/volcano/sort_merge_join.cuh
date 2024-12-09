@@ -144,48 +144,107 @@ public:
                    num_matches, output_buffer_size);
     }
 
-    void materialize() {
-        #pragma unroll
-        for (unsigned int i = 0; i < TupleA::num_cols - 1; i++){
+    template <std::size_t... Is>
+    void process_a_columns(std::index_sequence<Is...>) {
+        (([&]() {
+            constexpr unsigned int i = Is; // Compile-time constant
+
             using a_col_t = std::tuple_element_t<i + 1, typename TupleA::value_type>;
-            if (i > 0){
-                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, COL(a, 0), (key_t *) a_keys, COL(a, i + 1), (a_col_t*) a_vals, num_a_elems, 0, 32); 
-            } 
+
+            if constexpr (i > 0) { // Compile-time condition
+                cub::DeviceRadixSort::SortPairs(
+                    d_temp_storage, temp_storage_size, COL(a, 0),
+                    (key_t*)a_keys, COL(a, i + 1),
+                    (a_col_t*)a_vals, num_a_elems, 0, 32);
+            }
 
             // Create thrust device pointers
-            thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*) a_vals);
+            thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*)a_vals);
             thrust::device_ptr<int> a_pair_idx_ptr(a_pair_idx);
             thrust::device_ptr<a_col_t> c_col_ptr(COL(c, i + 1));
 
             // Perform the gather operation
             thrust::gather(
-                a_pair_idx_ptr,                        // Map begin: indices in a_pair_idx
-                a_pair_idx_ptr + std::min(num_matches, output_buffer_size),          // Map end
-                a_vals_ptr,                            // Input: sorted values from a's (i+1)-th column
-                c_col_ptr                              // Output: corresponding column in c
-            );
-        }
+                a_pair_idx_ptr, 
+                a_pair_idx_ptr + std::min(num_matches, output_buffer_size),
+                a_vals_ptr, c_col_ptr);
+        })(), ...); // Fold expression to expand all values in Is...
+    }
 
-        #pragma unroll
-        for (unsigned int i = 0; i < TupleB::num_cols - 1; i++){
+    template <std::size_t... Is>
+    void process_b_columns(std::index_sequence<Is...>) {
+        (([&]() {
+            constexpr unsigned int i = Is; // Compile-time constant
+
             using b_col_t = std::tuple_element_t<i + 1, typename TupleB::value_type>;
-            if (i > 0){
-                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, COL(b, 0), (key_t *) b_keys, COL(b, i + 1), (b_col_t*) b_vals, num_b_elems, 0, 32); 
-            } 
+
+            if constexpr (i > 0) { // Compile-time condition
+                cub::DeviceRadixSort::SortPairs(
+                    d_temp_storage, temp_storage_size, COL(b, 0),
+                    (key_t*)b_keys, COL(b, i + 1),
+                    (b_col_t*)b_vals, num_b_elems, 0, 32);
+            }
 
             // Create thrust device pointers
-            thrust::device_ptr<b_col_t> b_vals_ptr((b_col_t*) b_vals);
+            thrust::device_ptr<b_col_t> b_vals_ptr((b_col_t*)b_vals);
             thrust::device_ptr<int> b_pair_idx_ptr(b_pair_idx);
             thrust::device_ptr<b_col_t> c_col_ptr(COL(c, TupleA::num_cols + i));
 
             // Perform the gather operation
             thrust::gather(
-                b_pair_idx_ptr,                        // Map begin: indices in a_pair_idx
-                b_pair_idx_ptr + std::min(num_matches, output_buffer_size),          // Map end
-                b_vals_ptr,                            // Input: sorted values from a's (i+1)-th column
-                c_col_ptr                              // Output: corresponding column in c
-            );
-        }
+                b_pair_idx_ptr, 
+                b_pair_idx_ptr + std::min(num_matches, output_buffer_size),
+                b_vals_ptr, c_col_ptr);
+        })(), ...); // Fold expression to expand all values in Is...
+    }
+
+    void materialize() {
+        constexpr unsigned int num_cols_in_a = TupleA::num_cols;
+        process_a_columns(std::make_index_sequence<num_cols_in_a - 1>{});
+
+        constexpr unsigned int num_cols_in_b = TupleB::num_cols;
+        process_b_columns(std::make_index_sequence<num_cols_in_b - 1>{});
+        // #pragma unroll
+        // for (unsigned int i = 0; i < TupleA::num_cols - 1; i++){
+        //     using a_col_t = std::tuple_element_t<i + 1, typename TupleA::value_type>;
+        //     if (i > 0){
+        //         cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, COL(a, 0), (key_t *) a_keys, COL(a, i + 1), (a_col_t*) a_vals, num_a_elems, 0, 32); 
+        //     } 
+
+        //     // Create thrust device pointers
+        //     thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*) a_vals);
+        //     thrust::device_ptr<int> a_pair_idx_ptr(a_pair_idx);
+        //     thrust::device_ptr<a_col_t> c_col_ptr(COL(c, i + 1));
+
+        //     // Perform the gather operation
+        //     thrust::gather(
+        //         a_pair_idx_ptr,                        // Map begin: indices in a_pair_idx
+        //         a_pair_idx_ptr + std::min(num_matches, output_buffer_size),          // Map end
+        //         a_vals_ptr,                            // Input: sorted values from a's (i+1)-th column
+        //         c_col_ptr                              // Output: corresponding column in c
+        //     );
+        // }
+
+        // #pragma unroll
+        // for (unsigned int i = 0; i < TupleB::num_cols - 1; i++){
+        //     using b_col_t = std::tuple_element_t<i + 1, typename TupleB::value_type>;
+        //     if (i > 0){
+        //         cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, COL(b, 0), (key_t *) b_keys, COL(b, i + 1), (b_col_t*) b_vals, num_b_elems, 0, 32); 
+        //     } 
+
+        //     // Create thrust device pointers
+        //     thrust::device_ptr<b_col_t> b_vals_ptr((b_col_t*) b_vals);
+        //     thrust::device_ptr<int> b_pair_idx_ptr(b_pair_idx);
+        //     thrust::device_ptr<b_col_t> c_col_ptr(COL(c, TupleA::num_cols + i));
+
+        //     // Perform the gather operation
+        //     thrust::gather(
+        //         b_pair_idx_ptr,                        // Map begin: indices in a_pair_idx
+        //         b_pair_idx_ptr + std::min(num_matches, output_buffer_size),          // Map end
+        //         b_vals_ptr,                            // Input: sorted values from a's (i+1)-th column
+        //         c_col_ptr                              // Output: corresponding column in c
+        //     );
+        // }
     }
 };
 
