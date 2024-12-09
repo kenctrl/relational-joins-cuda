@@ -23,7 +23,7 @@ CTR_BUILD_DIR=/build
 # Create all need dirs on the host.
 ensure_build_dir() {
     for dir in "$BUILD_DIR"; do
-        rm -rf "$dir"
+        sudo rm -rf "$dir"
         mkdir -p "$dir"
     done
 }

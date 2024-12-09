@@ -20,7 +20,7 @@ SM_DEF="-DSM860"
 # SM_TARGETS="-gencode=arch=compute_80,code=\"sm_80,compute_80\""
 # SM_DEF="-DSM800"
 
-NVCCFLAGS="--std=c++17 --expt-relaxed-constexpr --expt-extended-lambda --extended-lambda ${SM_DEF} -Xptxas=\"-v\" -lineinfo -Xcudafe -#"
+NVCCFLAGS="--std=c++20 --expt-relaxed-constexpr --expt-extended-lambda --extended-lambda ${SM_DEF} -Xptxas=\"-v\" -lineinfo -Xcudafe -#"
 
 # Directories
 BUILD_DIR=${CTR_BUILD_DIR}/obj
