@@ -57,11 +57,11 @@ for cu_file in ${CU_SRC}; do
 
     # If executable already exists in ./cache/bin/, then copy it over and skip compilation
     # NOTE: comment this out if you want to recompile binaries
-    if [ -f ${cache_dir}${output_exe_base} ]; then
-        echo "Using cached binary: ${cache_dir}${output_exe_base}, copying to ${output_exe}"
-        cp ${cache_dir}${output_exe_base} ${output_exe}
-        continue
-    fi
+    # if [ -f ${cache_dir}${output_exe_base} ]; then
+    #     echo "Using cached binary: ${cache_dir}${output_exe_base}, copying to ${output_exe}"
+    #     cp ${cache_dir}${output_exe_base} ${output_exe}
+    #     continue
+    # fi
     
     # Compile .cu file to object file
     echo "Compiling ${cu_file} to ${obj_file}"

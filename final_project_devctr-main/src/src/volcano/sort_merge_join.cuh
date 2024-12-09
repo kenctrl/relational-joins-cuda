@@ -138,10 +138,20 @@ public:
     }
 
     void merge() {
-        merge_path((key_t*) a_keys, num_a_elems, 
-                   (key_t*) b_keys, num_b_elems,
-                   COL(c,0), a_pair_idx, b_pair_idx, 
-                   num_matches, output_buffer_size);
+        cub::CountingInputIterator<int> r_itr(0);
+        cub::CountingInputIterator<int> s_itr(0);
+        merge_path((key_t*) a_keys, 
+                    (key_t*) b_keys, 
+                    r_itr,
+                    s_itr,
+                    num_a_elems, num_b_elems, 
+                    COL(c,0), a_pair_idx, b_pair_idx, 
+                    num_matches, output_buffer_size);
+
+        // our_merge_path((key_t*) a_keys, num_a_elems, 
+        //            (key_t*) b_keys, num_b_elems,
+        //            COL(c,0), a_pair_idx, b_pair_idx, 
+        //            num_matches, output_buffer_size);
     }
 
     template <std::size_t... Is>
