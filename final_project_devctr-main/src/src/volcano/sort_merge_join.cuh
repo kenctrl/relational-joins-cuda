@@ -121,7 +121,7 @@ public:
     void print_stats() override {
         std::cout << "Sort: " << sort_stats << " ms\n"
                   << "Merge: " << merge_stats << " ms\n"
-                  << "Materialize: " << materialize_stats_time << " ms\n\n";
+                  << "Materialize: " << materialize_stats << " ms\n\n";
     }
 
     std::vector<float> all_stats() override {
