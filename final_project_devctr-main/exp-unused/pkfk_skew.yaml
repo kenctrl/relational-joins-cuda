@@ -7,7 +7,7 @@ experiments:
       FROM
             (SELECT DISTINCT *
             FROM df
-            WHERE nr IN (25, 26, 27) AND 
+            WHERE nr IN (22, 23, 24) AND 
                   ratio = 0 AND
                   pr in (1,2) AND pr = ps AND
                   dist = 'zipf' AND

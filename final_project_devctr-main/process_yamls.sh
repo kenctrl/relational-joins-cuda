@@ -25,9 +25,11 @@ for yaml_file in "$YAML_DIR"/*.yaml; do
     
     # Build the project
     ./devtool build_project >&2
+    wait # Wait for build to complete
     
     # Submit the build
     python3 telerun.py submit build.tar >&2
+    wait # Wait for submit to complete
     
     # Increment counter
     ((count++))
