@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define LOW_BIT 0
-#define HIGH_BIT 4
+#define HIGH_BIT 8
 
 void cuda_check(cudaError_t code, const char *file, int line) {
     if (code != cudaSuccess) {
@@ -42,7 +42,7 @@ __host__ size_t get_shmem_size(dim3 grid_dim, dim3 block_dim) {
 
 template <typename BucketT, typename KeyT, int low_bit, int high_bit>
 __device__ BucketT get_bucket(KeyT key) {
-    return key >> low_bit & ((1 << (high_bit - low_bit)) - 1);
+    return (key >> low_bit) & ((1 << (high_bit - low_bit)) - 1);
 }
 
 // CountT must support atomic writes
@@ -55,7 +55,7 @@ template<
     int THREAD_TILE, 
     int low_bit, 
     int high_bit>
-__global__ void partition(KeyT* key_array, int size, void* workspace, void* out, void* debug_out) {
+__global__ void partition(KeyT* key_array, size_t size, void* workspace, void* out, void* debug_out) {
     CountT* debug_ptr = (CountT*) debug_out;
 
     // assert(gridDim.y == 1 && gridDim.z == 1); // We only support 1D grids for now
@@ -174,15 +174,15 @@ void test_1(){
     using CountT = uint32_t;
     using BucketT = uint32_t;
 
-    constexpr int NUM_THREADS = 32;
-    constexpr int THREAD_TILE = 1;
-
     auto NUM_BUCKETS = 1 << (HIGH_BIT - LOW_BIT);
 
-    int size = 45;
+    constexpr int NUM_THREADS = 64;
+    constexpr int THREAD_TILE = 1024;
+
+    size_t size = 1 << 25; //1 << 21;
     uint32_t *key_array = nullptr; // device memory
     uint32_t *host_array = new uint32_t[size]; // host memory
-    for(int i = 0; i < size; i++) {
+    for(auto i = 0; i < size; i++) {
         // host_array[i] = rand() % NUM_BUCKETS; // Random values for testing
         host_array[i] = size - i - 1; // Reverse order
     }
@@ -198,6 +198,7 @@ void test_1(){
 
     std::cout << "Workspace size: " << workspace_size << "\n";
     std::cout << "Shared memory size: " << shmem_size << "\n";
+    std::cout << "Workload: " << size << "\n";
 
     void* workspace = nullptr;
     void* out = nullptr;
@@ -220,10 +221,11 @@ void test_1(){
         partition<KeyT, ValueT, CountT, BucketT, NUM_THREADS, THREAD_TILE, LOW_BIT, HIGH_BIT>, 
         NUM_THREADS, shmem_size);
     cudaDeviceGetAttribute(&supportsCoopLaunch, cudaDevAttrCooperativeLaunch, dev);
-    // assert(numBlocksPerSm * deviceProp.multiProcessorCount >= grid_dim.x);
+    assert(numBlocksPerSm * deviceProp.multiProcessorCount >= grid_dim.x);
 
     std::cout << "Blocks per SM: " << numBlocksPerSm << "\n";
-    std::cout << "Blocks: " << numBlocksPerSm * deviceProp.multiProcessorCount << "\n";
+    std::cout << "Max Blocks: " << numBlocksPerSm * deviceProp.multiProcessorCount << "\n";
+    std::cout << "Grid dim: " << grid_dim.x << "\n";
     std::cout << "Cooperative launch: " << supportsCoopLaunch << "\n";
     // assert(supportsCoopLaunch);
 
@@ -234,14 +236,28 @@ void test_1(){
         (void*)&out,
         (void*)&debug_out
     };
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    
+    cudaEventRecord(start);
     cudaLaunchCooperativeKernel(
-        reinterpret_cast<void*>(partition<KeyT, ValueT, CountT, BucketT, 32, 1, LOW_BIT, HIGH_BIT>),
+        reinterpret_cast<void*>(partition<KeyT, ValueT, CountT, BucketT, NUM_THREADS, THREAD_TILE, LOW_BIT, HIGH_BIT>),
         grid_dim,
         block_dim,
         args,
         shmem_size,
         nullptr
     );
+    cudaEventRecord(stop);
+    
+    cudaEventSynchronize(stop);
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+    std::cout << "Kernel execution time: " << milliseconds << " ms\n";
+    
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
     CUDA_CHECK(cudaGetLastError());
     CUDA_CHECK(cudaDeviceSynchronize());
 
@@ -255,9 +271,9 @@ void test_1(){
     uint32_t* output_host = new uint32_t[size];
     cudaMemcpy(output_host, out, size * sizeof(uint32_t), cudaMemcpyDeviceToHost);
 
-    for (int i = 0; i < size; i++) {
-        std::cout << output_host[i] << "\n";
-    }
+    // for (int i = 0; i < size; i++) {
+    //     std::cout << output_host[i] << "\n";
+    // }
 
     // for (int i = 0; i < size; i++) {
     //     std::cout << host_array[i] << "\n";
@@ -273,8 +289,40 @@ void test_1(){
     delete[] output_host;
 }
 
+template <typename KeyT, typename BucketT, int low_bit, int high_bit>
+__global__ void key_tester(KeyT* key_array, BucketT* out_array, size_t size) {
+
+    for (int i = 0; i < size; i++) {
+        out_array[i] = get_bucket<BucketT, KeyT, low_bit, high_bit>(key_array[i]);
+        assert(out_array[i] == key_array[i] % 256);
+    }
+}
+
+void test_2(){
+    using KeyT = uint32_t;
+    using BucketT = uint32_t;
+
+    constexpr int NUM_KEYS = 32;
+    KeyT host_keys[NUM_KEYS];
+    for(int i = 0; i < NUM_KEYS; i++) {
+        host_keys[i] = i;
+    }
+
+    KeyT* cuda_keys;
+    cudaMalloc(&cuda_keys, NUM_KEYS * sizeof(KeyT));
+    cudaMemcpy(cuda_keys, host_keys, NUM_KEYS * sizeof(KeyT), cudaMemcpyHostToDevice);
+
+    dim3 grid_dim(1);
+    dim3 block_dim(1);
+
+    BucketT* cuda_out;
+    cudaMalloc(&cuda_out, NUM_KEYS * sizeof(BucketT));
+
+    key_tester<KeyT, BucketT, LOW_BIT, HIGH_BIT><<<grid_dim, block_dim>>>(cuda_keys, cuda_out, NUM_KEYS);
+}
 
 
 int main() {
     test_1();
+    // test_2();
 }
