@@ -311,7 +311,7 @@ void merge_path(KeyIt r_sorted_keys, KeyIt s_sorted_keys,
 #define MAX(a, b) (((a) > (b)) ? (a): (b))
 
 template<typename key_t>
-__global__ void create_merge_partitions(key_t *r_sorted_keys, const int nr, key_t *s_sorted_keys, const int ns, int *partition_starts, int partition_size){
+__global__ void create_merge_partitions(const key_t *r_sorted_keys, const int nr, const key_t *s_sorted_keys, const int ns, int *partition_starts, const int partition_size){
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int diag_sum = threadId * partition_size;
     if (diag_sum < nr + ns){
@@ -341,7 +341,7 @@ __global__ void create_merge_partitions(key_t *r_sorted_keys, const int nr, key_
 }
 
 template<typename key_t>
-__global__ void sequential_merge(key_t *r_sorted_keys, const int nr, key_t *s_sorted_keys, const int ns, int *partition_starts, key_t *merged_keys, int *keys_idx, int *keys_r_arr){
+__global__ void sequential_merge(const key_t *r_sorted_keys, const int nr, const key_t *s_sorted_keys, const int ns, int *partition_starts, key_t *merged_keys, int *keys_idx, int *keys_r_arr){
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int r_start = partition_starts[2 * threadId];
     int s_start = partition_starts[2 * threadId + 1];
@@ -380,7 +380,7 @@ __global__ void sequential_merge(key_t *r_sorted_keys, const int nr, key_t *s_so
 }
 
 template<typename key_t>
-__global__ void merge_partition_sizes(const int nr, const int ns, int *partition_matches, key_t *merged_keys, int partition_size){
+__global__ void merge_partition_sizes(const int nr, const int ns, int *partition_matches, const key_t *merged_keys, int partition_size){
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int idx_start = threadId * partition_size;
     int idx_end = (threadId + 1) * partition_size;
@@ -396,7 +396,7 @@ __global__ void merge_partition_sizes(const int nr, const int ns, int *partition
 }
 
 template<typename key_t>
-__global__ void merge_join_keys(const int nr, const int ns, key_t *keys_out, int *r_out, int *s_out, int *prefix_partition_matches, key_t *merged_keys, int *keys_idx, int *keys_r_arr, int partition_size, int output_buffer_size){
+__global__ void merge_join_keys(const int nr, const int ns, key_t *keys_out, int *r_out, int *s_out, const int *prefix_partition_matches, const key_t *merged_keys, const int *keys_idx, const int *keys_r_arr, int partition_size, int output_buffer_size){
     int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int idx_start = threadId * partition_size;
     int idx_end = (threadId + 1) * partition_size;
@@ -427,21 +427,22 @@ __global__ void merge_join_keys(const int nr, const int ns, key_t *keys_out, int
 template<typename key_t>
 void our_merge_path(key_t *r_sorted_keys, const int nr, key_t *s_sorted_keys, const int ns, 
                 key_t *keys_out, int *r_out, int *s_out, 
-                int *num_matches, int output_buffer_size) {
+                int *num_matches, int output_buffer_size,
+                key_t *merged_keys, int *keys_idx, int *keys_r_arr) {
 
     int partition_size = (nr + ns + NUM_THREADS * NUM_BLOCKS - 1) / (NUM_THREADS * NUM_BLOCKS);
     int *partition_starts;
     int *partition_matches;
 
-    key_t *merged_keys;
-    int *keys_idx;
-    int *keys_r_arr;
+    // key_t *merged_keys;
+    // int *keys_idx;
+    // int *keys_r_arr;
 
     allocate_mem(&partition_starts, false, sizeof(int) * 2 * NUM_THREADS * NUM_BLOCKS);
     allocate_mem(&partition_matches, false, sizeof(int) * NUM_THREADS * NUM_BLOCKS);
-    allocate_mem(&merged_keys, false, sizeof(key_t) * (nr + ns));
-    allocate_mem(&keys_idx, false, sizeof(int) * (nr + ns));
-    allocate_mem(&keys_r_arr, false, sizeof(int) * (nr + ns));
+    // allocate_mem(&merged_keys, false, sizeof(key_t) * (nr + ns));
+    // allocate_mem(&keys_idx, false, sizeof(int) * (nr + ns));
+    // allocate_mem(&keys_r_arr, false, sizeof(int) * (nr + ns));
 
     create_merge_partitions<<<NUM_BLOCKS, NUM_THREADS>>>(r_sorted_keys, nr, s_sorted_keys, ns, partition_starts, partition_size);
     sequential_merge<<<NUM_BLOCKS, NUM_THREADS>>>(r_sorted_keys, nr, s_sorted_keys, ns, partition_starts, merged_keys, keys_idx, keys_r_arr);
@@ -462,7 +463,7 @@ void our_merge_path(key_t *r_sorted_keys, const int nr, key_t *s_sorted_keys, co
     // simple_sequential_merge_keys<<<>>>();
     release_mem(partition_starts);
     release_mem(partition_matches);
-    release_mem(merged_keys);
-    release_mem(keys_idx);
-    release_mem(keys_r_arr);
+    // release_mem(merged_keys);
+    // release_mem(keys_idx);
+    // release_mem(keys_r_arr);
 }

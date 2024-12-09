@@ -52,6 +52,10 @@ public:
         allocate_mem(&a_pair_idx, false, sizeof(int) * output_buffer_size);
         allocate_mem(&b_pair_idx, false, sizeof(int) * output_buffer_size);
 
+        allocate_mem(&merged_keys, false, sizeof(key_t) * (num_a_elems + num_b_elems));
+        allocate_mem(&keys_idx, false, sizeof(int) * (num_a_elems + num_b_elems));
+        allocate_mem(&keys_r_arr, false, sizeof(int) * (num_a_elems + num_b_elems));
+
         // the first sort just fills in the size of temp_storage_size, and does not actually sort
         void* d_temp_storage1 = nullptr;
         void* d_temp_storage2 = nullptr;
@@ -76,6 +80,10 @@ public:
         release_mem(a_pair_idx);
         release_mem(b_pair_idx);
         release_mem(d_temp_storage);
+
+        release_mem(merged_keys);
+        release_mem(keys_idx);
+        release_mem(keys_r_arr);
     }
 
 public:
@@ -108,6 +116,10 @@ public:
     cudaEvent_t stop;
 
     using key_t = std::tuple_element_t<0, typename TupleA::value_type>;
+
+    key_t *merged_keys;
+    int *keys_idx;
+    int *keys_r_arr;
 
 public:
     TupleC join() override {
@@ -151,7 +163,8 @@ public:
         our_merge_path((key_t*) a_keys, num_a_elems, 
                    (key_t*) b_keys, num_b_elems,
                    COL(c,0), a_pair_idx, b_pair_idx, 
-                   &num_matches, output_buffer_size);
+                   &num_matches, output_buffer_size,
+                   merged_keys, keys_idx, keys_r_arr);
     }
 
     template <std::size_t... Is>
