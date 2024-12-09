@@ -28,7 +28,7 @@ for yaml_file in "$YAML_DIR"/*.yaml; do
     wait # Wait for build to complete
     
     # Submit the build
-    python3 telerun.py submit build.tar >&2
+    python3 telerun.py submit --force build.tar >&2
     wait # Wait for submit to complete
     
     # Increment counter
