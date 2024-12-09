@@ -21,7 +21,7 @@
 template<typename TupleA,
          typename TupleB,
          typename TupleC>
-class OurSortMergeJoin : public JoinBase<TupleOut> {
+class OurSortMergeJoin : public JoinBase<TupleC> {
                   
 public:
     explicit OurSortMergeJoin(TupleA a_input, TupleB b_input, int output_buffer_size) 
@@ -38,25 +38,25 @@ public:
         cudaEventCreate(&start); 
         cudaEventCreate(&stop);
 
-        out.allocate(output_buffer_size);
+        c.allocate(output_buffer_size);
 
         d_temp_storage = nullptr;
         temp_storage_size = 0;
 
-        allocate_mem(a_keys, false, sizeof(key_t) * num_a_elems);
-        allocate_mem(b_keys, false, sizeof(key_t) * num_b_elems);
+        allocate_mem(&a_keys, false, sizeof(key_t) * num_a_elems);
+        allocate_mem(&b_keys, false, sizeof(key_t) * num_b_elems);
 
-        allocate_mem(a_vals, false, TupleA::max_col_size * num_a_elems);
-        allocate_mem(b_vals, false, TupleA::max_col_size * num_a_elems);
+        allocate_mem(&a_vals, false, TupleA::max_col_size * num_a_elems);
+        allocate_mem(&b_vals, false, TupleA::max_col_size * num_a_elems);
 
-        allocate_mem(a_pair_idx, false, sizeof(int) * output_buffer_size);
-        allocate_mem(b_pair_idx, false, sizeof(int) * output_buffer_size);
+        allocate_mem(&a_pair_idx, false, sizeof(int) * output_buffer_size);
+        allocate_mem(&b_pair_idx, false, sizeof(int) * output_buffer_size);
 
         // the first sort just fills in the size of temp_storage_size, and does not actually sort
         void* d_temp_storage1 = nullptr;
         void* d_temp_storage2 = nullptr;
-        size_t temp_storage_size1 = nullptr;
-        size_t temp_storage_size2 = nullptr;
+        size_t temp_storage_size1 = 0;
+        size_t temp_storage_size2 = 0;
 
         using a_largest_col_t = std::tuple_element_t<TupleA::biggest_idx(), typename TupleA::value_type>;
         cub::DeviceRadixSort::SortPairs(d_temp_storage1, temp_storage_size1, COL(a, 0), (key_t*) a_keys, COL(a, TupleA::biggest_idx()), (a_largest_col_t *) a_vals, num_a_elems, 0, 32); 
@@ -110,7 +110,7 @@ public:
     using key_t = std::tuple_element_t<0, typename TupleA::value_type>;
 
 public:
-    TupleOut join() override {
+    TupleC join() override {
         TIME_FUNC_ACC(sort(), sort_stats);
         TIME_FUNC_ACC(merge(), merge_stats);
         TIME_FUNC_ACC(materialize(), materialize_stats);
@@ -121,7 +121,7 @@ public:
     void print_stats() override {
         std::cout << "Sort: " << sort_stats << " ms\n"
                   << "Merge: " << merge_stats << " ms\n"
-                  << "Materialize: " << matmaterialize_stats_time << " ms\n\n";
+                  << "Materialize: " << materialize_stats_time << " ms\n\n";
     }
 
     std::vector<float> all_stats() override {
@@ -140,16 +140,16 @@ public:
     void merge() {
         merge_path((key_t*) a_keys, num_a_elems, 
                    (key_t*) b_keys, num_b_elems,
-                   COL(out,0), a_pair_idx, s_match_idx, 
+                   COL(c,0), a_pair_idx, b_pair_idx, 
                    num_matches, output_buffer_size);
     }
 
     void materialize() {
         #pragma unroll
-        for (int i = 0; i < TupleA::num_cols - 1; i++){
+        for (unsigned int i = 0; i < TupleA::num_cols - 1; i++){
             using a_col_t = std::tuple_element_t<i + 1, typename TupleA::value_type>;
             if (i > 0){
-                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_bytes, COL(a, 0), (key_t *) a_keys, COL(a, i + 1), (a_col_t*) a_vals, num_a_elems, 0, 32); 
+                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, COL(a, 0), (key_t *) a_keys, COL(a, i + 1), (a_col_t*) a_vals, num_a_elems, 0, 32); 
             } 
 
             // Create thrust device pointers
@@ -167,10 +167,10 @@ public:
         }
 
         #pragma unroll
-        for (int i = 0; i < TupleB::num_cols - 1; i++){
+        for (unsigned int i = 0; i < TupleB::num_cols - 1; i++){
             using b_col_t = std::tuple_element_t<i + 1, typename TupleB::value_type>;
             if (i > 0){
-                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_bytes, COL(b, 0), (key_t *) b_keys, COL(b, i + 1), (b_col_t*) b_vals, num_b_elems, 0, 32); 
+                cub::DeviceRadixSort::SortPairs(d_temp_storage, temp_storage_size, COL(b, 0), (key_t *) b_keys, COL(b, i + 1), (b_col_t*) b_vals, num_b_elems, 0, 32); 
             } 
 
             // Create thrust device pointers

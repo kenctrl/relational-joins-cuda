@@ -431,9 +431,9 @@ void our_merge_path(key_t *r_sorted_keys, const int nr, key_t *s_sorted_keys, co
 
     allocate_mem(&partition_starts, false, sizeof(int) * 2 * NUM_THREADS * NUM_BLOCKS);
     allocate_mem(&partition_matches, false, sizeof(int) * NUM_THREADS * NUM_BLOCKS);
-    allocate_mem(merged_keys, false, sizeof(key_t) * output_buffer_size);
-    allocate_mem(keys_idx, false, sizeof(int) * output_buffer_size);
-    allocate_mem(keys_r_arr, false, sizeof(int) * output_buffer_size);
+    allocate_mem(&merged_keys, false, sizeof(key_t) * output_buffer_size);
+    allocate_mem(&keys_idx, false, sizeof(int) * output_buffer_size);
+    allocate_mem(&keys_r_arr, false, sizeof(int) * output_buffer_size);
 
     create_merge_partitions<<<NUM_BLOCKS, NUM_THREADS>>>(r_sorted_keys, nr, s_sorted_keys, ns, partition_starts, partition_size);
     sequential_merge<<<NUM_BLOCKS, NUM_THREADS>>>(r_sorted_keys, nr, s_sorted_keys, ns, partition_starts, merged_keys, keys_idx, keys_r_arr);
@@ -445,7 +445,7 @@ void our_merge_path(key_t *r_sorted_keys, const int nr, key_t *s_sorted_keys, co
                         d_partition_matches + (NUM_THREADS * NUM_BLOCKS), 
                         d_partition_matches);
 
-    CUDA_CHECK(cudaMemcpy(num_matches, partition_matches + (NUM_THREADS * NUM_BLOCKS - 1), sizeof(int), cudaMemcpyDeviceToHost));
+    cudaMemcpy(num_matches, partition_matches + (NUM_THREADS * NUM_BLOCKS - 1), sizeof(int), cudaMemcpyDeviceToHost);
     // cudaMemcpy(&final_sum, partition_matches + (NUM_THREADS * NUM_BLOCKS - 1), sizeof(int), cudaMemcpyDeviceToHost);
 
     // thrust::inclusive_scan(partition_matches, partition_matches + NUM_THREADS * NUM_BLOCKS, partition_matches, 1, thrust::maximum<>{});
