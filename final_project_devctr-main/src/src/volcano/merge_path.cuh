@@ -436,39 +436,186 @@ __global__ void direct_merge_join(const key_t* __restrict__ r_sorted_keys, const
     partition_matches[threadId] = local_matches;
 }
 
+#define MP_NUM_THREADS 128
+#define MP_NUM_BLOCKS 48
+
 template<typename key_t>
-void our_merge_path(key_t *r_sorted_keys, const int nr,
-                    key_t *s_sorted_keys, const int ns,
-                    key_t *keys_out, int *r_out, int *s_out,
-                    int *num_matches, int output_buffer_size) {
-    std::cout << "Inside the custom merge path code\n";
+__global__ void create_merge_partitions_kernel(
+    const key_t *r_sorted_keys, int nr,
+    const key_t *s_sorted_keys, int ns,
+    int partition_size, int *partition_starts, int total_partitions)
+{
+    int threadId = blockIdx.x * blockDim.x + threadIdx.x;
+    if (threadId >= total_partitions) return;
 
-    // Cache preference for kernels to prefer L1
-    cudaFuncSetCacheConfig(create_merge_partitions<key_t>, cudaFuncCachePreferL1);
-    cudaFuncSetCacheConfig(direct_merge_join<key_t>, cudaFuncCachePreferL1);
+    int diag = threadId * partition_size;
+    if (diag > nr + ns) {
+        partition_starts[2*threadId] = nr;
+        partition_starts[2*threadId+1] = ns;
+        return;
+    }
 
-    int partition_size = (nr + ns + NUM_THREADS * NUM_BLOCKS - 1) / (NUM_THREADS * NUM_BLOCKS);
+    int r_low = max(0, diag - ns);
+    int r_high = min(diag, nr);
+
+    while (r_low < r_high) {
+        int r_mid = (r_low + r_high) >> 1;
+        int s_mid = diag - r_mid;
+
+        key_t a_key = (r_mid < nr) ? r_sorted_keys[r_mid] : (key_t)INT_MAX;
+        key_t b_key = (s_mid > 0) ? s_sorted_keys[s_mid - 1] : (key_t)(-INT_MAX);
+
+        if (s_mid > 0 && a_key < b_key) {
+            r_low = r_mid + 1;
+        } else {
+            r_high = r_mid;
+        }
+    }
+
+    int s_low = diag - r_low;
+    partition_starts[2 * threadId] = r_low;
+    partition_starts[2 * threadId + 1] = s_low;
+}
+
+// Kernel to count matches only
+template<int NT=128, typename key_t>
+__global__ void count_matches_kernel(
+    const key_t* r_sorted_keys, int nr,
+    const key_t* s_sorted_keys, int ns,
+    const int* partition_starts, int partition_size,
+    int *partition_matches,
+    int total_partitions)
+{
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid >= total_partitions) return;
+
+    int r_start = partition_starts[2 * tid];
+    int s_start = partition_starts[2 * tid + 1];
+    int r_end = (tid == total_partitions - 1) ? nr : partition_starts[2 * tid + 2];
+    int s_end = (tid == total_partitions - 1) ? ns : partition_starts[2 * tid + 3];
+
+    int r_idx = r_start;
+    int s_idx = s_start;
+
+    int match_count = 0;
+
+    // Merge and count matches without output
+    while (r_idx < r_end && s_idx < s_end) {
+        key_t rk = r_sorted_keys[r_idx];
+        key_t sk = s_sorted_keys[s_idx];
+        if (rk == sk) {
+            match_count++;
+            r_idx++;
+            s_idx++;
+        } else if (rk < sk) {
+            r_idx++;
+        } else {
+            s_idx++;
+        }
+    }
+
+    partition_matches[tid] = match_count;
+}
+
+// Kernel to write matches using prefix sums
+template<int NT=128, typename key_t>
+__global__ void write_matches_kernel(
+    const key_t* r_sorted_keys, int nr,
+    const key_t* s_sorted_keys, int ns,
+    const int* partition_starts, int partition_size,
+    const int *prefix_partition_matches,
+    key_t* keys_out, int* r_out, int* s_out,
+    int output_buffer_size,
+    int total_partitions)
+{
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid >= total_partitions) return;
+
+    int r_start = partition_starts[2 * tid];
+    int s_start = partition_starts[2 * tid + 1];
+    int r_end = (tid == total_partitions - 1) ? nr : partition_starts[2 * tid + 2];
+    int s_end = (tid == total_partitions - 1) ? ns : partition_starts[2 * tid + 3];
+
+    int r_idx = r_start;
+    int s_idx = s_start;
+
+    // offset for this partition's matches
+    int offset = (tid == 0) ? 0 : prefix_partition_matches[tid - 1];
+
+    // Merge again and write matches
+    while (r_idx < r_end && s_idx < s_end) {
+        key_t rk = r_sorted_keys[r_idx];
+        key_t sk = s_sorted_keys[s_idx];
+        if (rk == sk) {
+            int pos = offset++;
+            int w_pos = pos % output_buffer_size;
+            keys_out[w_pos] = rk;
+            r_out[w_pos] = r_idx;
+            s_out[w_pos] = s_idx;
+            r_idx++;
+            s_idx++;
+        } else if (rk < sk) {
+            r_idx++;
+        } else {
+            s_idx++;
+        }
+    }
+}
+
+template<typename key_t>
+void our_merge_path(
+    key_t *r_sorted_keys, const int nr,
+    key_t *s_sorted_keys, const int ns,
+    key_t *keys_out, int *r_out, int *s_out,
+    int *num_matches, int output_buffer_size)
+{
+    int total_threads = MP_NUM_THREADS * MP_NUM_BLOCKS;
+    int total_partitions = total_threads;
+    int partition_size = (nr + ns + total_threads - 1) / total_threads;
+
     int *partition_starts;
-    int *partition_matches;
+    allocate_mem(&partition_starts, false, sizeof(int)*2*total_partitions);
 
-    allocate_mem(&partition_starts, false, sizeof(int) * 2 * NUM_THREADS * NUM_BLOCKS);
-    allocate_mem(&partition_matches, false, sizeof(int) * NUM_THREADS * NUM_BLOCKS);
+    // compute partitions
+    create_merge_partitions_kernel<<<MP_NUM_BLOCKS, MP_NUM_THREADS>>>(
+        r_sorted_keys, nr,
+        s_sorted_keys, ns,
+        partition_size, partition_starts, total_partitions
+    );
+    // CHECK_ERROR(cudaGetLastError());
 
-    // Create partitions
-    create_merge_partitions<<<NUM_BLOCKS, NUM_THREADS>>>(r_sorted_keys, nr, s_sorted_keys, ns, partition_starts, partition_size);
+    // count matches only
+    int* partition_matches;
+    allocate_mem(&partition_matches, false, sizeof(int)*total_partitions);
 
-    direct_merge_join<<<NUM_BLOCKS, NUM_THREADS>>>(
-        r_sorted_keys, nr, s_sorted_keys, ns,
-        partition_starts, keys_out, r_out, s_out,
-        partition_matches, output_buffer_size);
+    count_matches_kernel<<<MP_NUM_BLOCKS, MP_NUM_THREADS>>>(
+        r_sorted_keys, nr,
+        s_sorted_keys, ns,
+        partition_starts, partition_size,
+        partition_matches,
+        total_partitions
+    );
+    // CHECK_ERROR(cudaGetLastError());
 
-    // Inclusive scan to get prefix sums of matches
+    // prefix sum of matches
     thrust::device_ptr<int> d_partition_matches(partition_matches);
-    thrust::inclusive_scan(d_partition_matches, d_partition_matches + (NUM_THREADS * NUM_BLOCKS), d_partition_matches);
+    thrust::inclusive_scan(d_partition_matches, d_partition_matches + total_partitions, d_partition_matches);
 
-    int final_sum;
-    cudaMemcpy(&final_sum, partition_matches + (NUM_THREADS * NUM_BLOCKS - 1), sizeof(int), cudaMemcpyDeviceToHost);
-    *num_matches = final_sum;
+    int final_count;
+    cudaMemcpy(&final_count, partition_matches + (total_partitions - 1), sizeof(int), cudaMemcpyDeviceToHost);
+    *num_matches = final_count;
+
+    // write matches using prefix sums
+    write_matches_kernel<<<MP_NUM_BLOCKS, MP_NUM_THREADS>>>(
+        r_sorted_keys, nr,
+        s_sorted_keys, ns,
+        partition_starts, partition_size,
+        partition_matches,
+        keys_out, r_out, s_out,
+        output_buffer_size,
+        total_partitions
+    );
+    // CHECK_ERROR(cudaGetLastError());
 
     release_mem(partition_starts);
     release_mem(partition_matches);

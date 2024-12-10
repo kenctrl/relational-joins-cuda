@@ -52,9 +52,9 @@ public:
         allocate_mem(&a_pair_idx, false, sizeof(int) * output_buffer_size);
         allocate_mem(&b_pair_idx, false, sizeof(int) * output_buffer_size);
 
-        allocate_mem(&merged_keys, false, sizeof(key_t) * (num_a_elems + num_b_elems));
-        allocate_mem(&keys_idx, false, sizeof(int) * (num_a_elems + num_b_elems));
-        allocate_mem(&keys_r_arr, false, sizeof(int) * (num_a_elems + num_b_elems));
+        // allocate_mem(&merged_keys, false, sizeof(key_t) * (num_a_elems + num_b_elems));
+        // allocate_mem(&keys_idx, false, sizeof(int) * (num_a_elems + num_b_elems));
+        // allocate_mem(&keys_r_arr, false, sizeof(int) * (num_a_elems + num_b_elems));
 
         // the first sort just fills in the size of temp_storage_size, and does not actually sort
         void* d_temp_storage1 = nullptr;
@@ -81,9 +81,9 @@ public:
         release_mem(b_pair_idx);
         release_mem(d_temp_storage);
 
-        release_mem(merged_keys);
-        release_mem(keys_idx);
-        release_mem(keys_r_arr);
+        // release_mem(merged_keys);
+        // release_mem(keys_idx);
+        // release_mem(keys_r_arr);
     }
 
 public:
@@ -117,9 +117,9 @@ public:
 
     using key_t = std::tuple_element_t<0, typename TupleA::value_type>;
 
-    key_t *merged_keys;
-    int *keys_idx;
-    int *keys_r_arr;
+    // key_t *merged_keys;
+    // int *keys_idx;
+    // int *keys_r_arr;
 
 public:
     TupleC join() override {
@@ -153,19 +153,24 @@ public:
     void merge() {
         cub::CountingInputIterator<int> r_itr(0);
         cub::CountingInputIterator<int> s_itr(0);
-        merge_path((key_t*) a_keys, 
-                    (key_t*) b_keys, 
-                    r_itr,
-                    s_itr,
-                    num_a_elems, num_b_elems, 
-                    COL(c,0), a_pair_idx, b_pair_idx, 
-                    num_matches, output_buffer_size);
+        // merge_path((key_t*) a_keys, 
+        //             (key_t*) b_keys, 
+        //             r_itr,
+        //             s_itr,
+        //             num_a_elems, num_b_elems, 
+        //             COL(c,0), a_pair_idx, b_pair_idx, 
+        //             num_matches, output_buffer_size);
 
         // our_merge_path((key_t*) a_keys, num_a_elems, 
         //            (key_t*) b_keys, num_b_elems,
         //            COL(c,0), a_pair_idx, b_pair_idx, 
         //            &num_matches, output_buffer_size,
         //            merged_keys, keys_idx, keys_r_arr);
+
+        our_merge_path((key_t*) a_keys, num_a_elems,
+                    (key_t*) b_keys, num_b_elems,
+                    (key_t*)COL(c,0), a_pair_idx, b_pair_idx,
+                    &num_matches, output_buffer_size);
     }
 
     template <std::size_t... Is>
@@ -311,9 +316,9 @@ public:
         allocate_mem(&a_vals, false, TupleA::max_col_size * num_a_elems);
         allocate_mem(&b_vals, false, TupleB::max_col_size * num_b_elems);
 
-        allocate_mem(&merged_keys, false, sizeof(key_t) * (num_a_elems + num_b_elems));
-        allocate_mem(&keys_idx, false, sizeof(int) * (num_a_elems + num_b_elems));
-        allocate_mem(&keys_r_arr, false, sizeof(int) * (num_a_elems + num_b_elems));
+        // allocate_mem(&merged_keys, false, sizeof(key_t) * (num_a_elems + num_b_elems));
+        // allocate_mem(&keys_idx, false, sizeof(int) * (num_a_elems + num_b_elems));
+        // allocate_mem(&keys_r_arr, false, sizeof(int) * (num_a_elems + num_b_elems));
 
         allocate_mem(&a_pair_idx, false, sizeof(int) * output_buffer_size);
         allocate_mem(&b_pair_idx, false, sizeof(int) * output_buffer_size);
@@ -360,9 +365,9 @@ public:
         release_mem(b_pair_idx);
         release_mem(d_temp_storage);
 
-        release_mem(merged_keys);
-        release_mem(keys_idx);
-        release_mem(keys_r_arr);
+        // release_mem(merged_keys);
+        // release_mem(keys_idx);
+        // release_mem(keys_r_arr);
 
         release_mem(a_seq_idx);
         release_mem(b_seq_idx);
@@ -403,9 +408,9 @@ public:
 
     using key_t = std::tuple_element_t<0, typename TupleA::value_type>;
 
-    key_t *merged_keys;
-    int *keys_idx;
-    int *keys_r_arr;
+    // key_t *merged_keys;
+    // int *keys_idx;
+    // int *keys_r_arr;
 
     struct Chunk<key_t, int> a_pid;
     struct Chunk<key_t, int> b_pid;
@@ -444,19 +449,25 @@ public:
     void merge() {
         cub::CountingInputIterator<int> r_itr(0);
         cub::CountingInputIterator<int> s_itr(0);
-        merge_path((key_t*) a_keys, 
-                    (key_t*) b_keys, 
-                    r_itr,
-                    s_itr,
-                    num_a_elems, num_b_elems, 
-                    COL(c_temp,0), a_pair_idx, b_pair_idx, 
-                    num_matches, output_buffer_size);
+        // merge_path((key_t*) a_keys, 
+        //             (key_t*) b_keys, 
+        //             r_itr,
+        //             s_itr,
+        //             num_a_elems, num_b_elems, 
+        //             COL(c_temp,0), a_pair_idx, b_pair_idx, 
+        //             num_matches, output_buffer_size);
 
         // our_merge_path((key_t*) a_keys, num_a_elems, 
         //            (key_t*) b_keys, num_b_elems,
         //            COL(c_temp,0), a_pair_idx, b_pair_idx, 
         //            &num_matches, output_buffer_size,
         //            merged_keys, keys_idx, keys_r_arr);
+
+        // using key_t = std::tuple_element_t<0, typename TupleA::value_type>;
+        our_merge_path((key_t*) a_keys, num_a_elems,
+                    (key_t*) b_keys, num_b_elems,
+                    (key_t*)COL(c,0), a_pair_idx, b_pair_idx,
+                    &num_matches, output_buffer_size);
 
         using a_col_t = int; // std::tuple_element_t<1, int>;
         thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*)a_vals);
