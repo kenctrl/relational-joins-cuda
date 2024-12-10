@@ -466,7 +466,7 @@ public:
         // using key_t = std::tuple_element_t<0, typename TupleA::value_type>;
         our_merge_path((key_t*) a_keys, num_a_elems,
                     (key_t*) b_keys, num_b_elems,
-                    (key_t*)COL(c,0), a_pair_idx, b_pair_idx,
+                    (key_t*)COL(c_temp,0), a_pair_idx, b_pair_idx,
                     &num_matches, output_buffer_size);
 
         using a_col_t = int; // std::tuple_element_t<1, int>;
