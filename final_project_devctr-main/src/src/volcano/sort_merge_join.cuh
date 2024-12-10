@@ -340,11 +340,11 @@ public:
         size_t temp_storage_size1 = 0;
         size_t temp_storage_size2 = 0;
 
-        using a_largest_col_t = int; //std::tuple_element_t<1, int>;
-        cub::DeviceRadixSort::SortPairs(d_temp_storage1, temp_storage_size1, COL(a_pid, 0), (key_t*) a_keys, COL(a_pid, 1), (a_largest_col_t *) a_vals, num_a_elems, 0, 32); 
+        using a_largest_col_t = std::tuple_element_t<TupleA::biggest_idx(), typename TupleA::value_type>;
+        cub::DeviceRadixSort::SortPairs(d_temp_storage1, temp_storage_size1, COL(a, 0), (key_t*) a_keys, COL(a, TupleA::biggest_idx()), (a_largest_col_t *) a_vals, num_a_elems, 0, 32); 
 
-        using b_largest_col_t = int; //std::tuple_element_t<1, int>;
-        cub::DeviceRadixSort::SortPairs(d_temp_storage2, temp_storage_size2, COL(b_pid, 0), (key_t*) b_keys, COL(b_pid, 1), (b_largest_col_t* ) b_vals, num_b_elems, 0, 32); 
+        using b_largest_col_t = std::tuple_element_t<TupleB::biggest_idx(), typename TupleB::value_type>;
+        cub::DeviceRadixSort::SortPairs(d_temp_storage2, temp_storage_size2, COL(b, 0), (key_t*) b_keys, COL(b, TupleB::biggest_idx()), (b_largest_col_t* )b_vals, num_b_elems, 0, 32); 
         
         temp_storage_size = std::max(temp_storage_size1, temp_storage_size2);
         allocate_mem(&d_temp_storage, false, temp_storage_size);
@@ -365,6 +365,7 @@ public:
 
         release_mem(a_seq_idx);
         release_mem(b_seq_idx);
+        c_temp.free_mem();
     }
 
 public:
@@ -490,15 +491,15 @@ public:
 
             using a_col_t = std::tuple_element_t<i + 1, typename TupleA::value_type>;
 
-            if constexpr (i > 0) { // Compile-time condition
-                cub::DeviceRadixSort::SortPairs(
-                    d_temp_storage, temp_storage_size, COL(a, 0),
-                    (key_t*)a_keys, COL(a, i + 1),
-                    (a_col_t*)a_vals, num_a_elems, 0, 32);
-            }
+            // if constexpr (i > 0) { // Compile-time condition
+                // cub::DeviceRadixSort::SortPairs(
+                //     d_temp_storage, temp_storage_size, COL(a, 0),
+                //     (key_t*)a_keys, COL(a, i + 1),
+                //     (a_col_t*)a_vals, num_a_elems, 0, 32);
+            // }
 
             // Create thrust device pointers
-            thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*)a_vals);
+            thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*) COL(a, i + 1));
             thrust::device_ptr<int> a_pair_idx_ptr(a_pair_idx);
             thrust::device_ptr<a_col_t> c_col_ptr(COL(c, i + 1));
 
@@ -517,15 +518,15 @@ public:
 
             using b_col_t = std::tuple_element_t<i + 1, typename TupleB::value_type>;
 
-            if constexpr (i > 0) { // Compile-time condition
-                cub::DeviceRadixSort::SortPairs(
-                    d_temp_storage, temp_storage_size, COL(b, 0),
-                    (key_t*)b_keys, COL(b, i + 1),
-                    (b_col_t*)b_vals, num_b_elems, 0, 32);
-            }
+            // if constexpr (i > 0) { // Compile-time condition
+                // cub::DeviceRadixSort::SortPairs(
+                //     d_temp_storage, temp_storage_size, COL(b, 0),
+                //     (key_t*)b_keys, COL(b, i + 1),
+                //     (b_col_t*)b_vals, num_b_elems, 0, 32);
+            // }
 
             // Create thrust device pointers
-            thrust::device_ptr<b_col_t> b_vals_ptr((b_col_t*)b_vals);
+            thrust::device_ptr<b_col_t> b_vals_ptr((b_col_t*) COL(b, i + 1));
             thrust::device_ptr<int> b_pair_idx_ptr(b_pair_idx);
             thrust::device_ptr<b_col_t> c_col_ptr(COL(c, TupleA::num_cols + i));
 
