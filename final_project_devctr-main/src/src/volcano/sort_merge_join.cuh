@@ -228,6 +228,7 @@ public:
 
         constexpr unsigned int num_cols_in_b = TupleB::num_cols;
         process_b_columns(std::make_index_sequence<num_cols_in_b - 1>{});
+        
         // #pragma unroll
         // for (unsigned int i = 0; i < TupleA::num_cols - 1; i++){
         //     using a_col_t = std::tuple_element_t<i + 1, typename TupleA::value_type>;
@@ -491,13 +492,6 @@ public:
 
             using a_col_t = std::tuple_element_t<i + 1, typename TupleA::value_type>;
 
-            // if constexpr (i > 0) { // Compile-time condition
-                // cub::DeviceRadixSort::SortPairs(
-                //     d_temp_storage, temp_storage_size, COL(a, 0),
-                //     (key_t*)a_keys, COL(a, i + 1),
-                //     (a_col_t*)a_vals, num_a_elems, 0, 32);
-            // }
-
             // Create thrust device pointers
             thrust::device_ptr<a_col_t> a_vals_ptr((a_col_t*) COL(a, i + 1));
             thrust::device_ptr<int> a_pair_idx_ptr(a_pair_idx);
@@ -517,13 +511,6 @@ public:
             constexpr unsigned int i = Is; // Compile-time constant
 
             using b_col_t = std::tuple_element_t<i + 1, typename TupleB::value_type>;
-
-            // if constexpr (i > 0) { // Compile-time condition
-                // cub::DeviceRadixSort::SortPairs(
-                //     d_temp_storage, temp_storage_size, COL(b, 0),
-                //     (key_t*)b_keys, COL(b, i + 1),
-                //     (b_col_t*)b_vals, num_b_elems, 0, 32);
-            // }
 
             // Create thrust device pointers
             thrust::device_ptr<b_col_t> b_vals_ptr((b_col_t*) COL(b, i + 1));
@@ -546,9 +533,6 @@ public:
         process_b_columns(std::make_index_sequence<num_cols_in_b - 1>{});
     }
 };
-
-
-
 
 
 
