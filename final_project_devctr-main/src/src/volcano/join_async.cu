@@ -44,8 +44,8 @@ __global__ void materialize_async(
 
     extern __shared__ int cache[];
     HashSetT* hashsets = (HashSetT*) cache; // 2 hash Sets
-    barrier* bar = (barrier*) (hashsets[2]); // For pair of producer-consumer
-    KeyT* shared_keys_S = (KeyT*) (bar + 1); // For streaming join double buffer
+    barrier* bar = (barrier*) (&hashsets[2]); // For pair of producer-consumer
+    KeyT* shared_keys_S = (KeyT*) (&bar[1]); // For streaming join double buffer
 
     // HashSet barrier initialization
     if (threadIdx.x == 0) {
