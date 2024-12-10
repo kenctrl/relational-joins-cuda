@@ -305,7 +305,7 @@ void merge_path(KeyIt r_sorted_keys, KeyIt s_sorted_keys,
 
 
 #define NUM_THREADS 128*4
-#define NUM_BLOCKS 48*2
+#define NUM_BLOCKS 48*4
 
 #define MIN(a, b) (((a) < (b)) ? (a): (b))
 #define MAX(a, b) (((a) > (b)) ? (a): (b))
