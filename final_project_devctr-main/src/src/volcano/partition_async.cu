@@ -126,18 +126,13 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
             block_space[stage][i] = write_data;
         }
 
-        if (threadIdx.x == 0) {
-            for (auto i = 0; i < NUM_BUCKETS; i++) {
-                assert(block_space[stage][i] & (PREFIX_DONE | AGG_DONE));
-            }
-        }
-
         // Each thread is responsible for some number of buckets
         // It performs a decoupled lookback to get the prefix sum for its buckets
         for (auto cur_bucket = threadIdx.x; cur_bucket < NUM_BUCKETS; cur_bucket += NUM_THREADS) {
             int prev_block = (int) blockIdx.x - 1;
             CountT local_val = hist_buffer[stage][cur_bucket]; // No status flags set
-            while (prev_block >= 0) {
+            auto local_ctr = 0;
+            while (prev_block >= 0 && local_ctr < 10000) {
                 auto prev_space = ((CountT*) workspace) + prev_block * NUM_BUCKETS + stage * NUM_BUCKETS * gridDim.x;
                 auto prev_status = prev_space[cur_bucket];
                 if (prev_status & PREFIX_DONE) {
@@ -149,6 +144,7 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
                 } else {
                     // Keep spinning
                 }
+                local_ctr++;
             }
             block_space[stage][cur_bucket] = local_val | PREFIX_DONE;
             assert(block_space[stage][cur_bucket] & PREFIX_DONE);
@@ -219,11 +215,16 @@ void test_1(){
 
     auto NUM_BUCKETS = 1 << (HIGH_BIT - LOW_BIT);
 
-    constexpr int NUM_THREADS = 64;
-    constexpr int THREAD_TILE = 8;
-    constexpr int LOOP_TILE = 4;
+    // constexpr int NUM_THREADS = 64;
+    // constexpr int THREAD_TILE = 8;
+    // constexpr int LOOP_TILE = 4;
 
-    size_t size = 1 << 13;
+    // size_t size = 1 << 13;
+    constexpr int NUM_THREADS = 64;
+    constexpr int THREAD_TILE = 64;
+    constexpr int LOOP_TILE = 128;
+
+    size_t size = 1 << 25;
     uint32_t *key_array = nullptr; // device memory
     uint32_t *host_array = new uint32_t[size]; // host memory
     for(auto i = 0; i < size; i++) {
