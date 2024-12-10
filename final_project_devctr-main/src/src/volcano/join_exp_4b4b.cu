@@ -411,7 +411,8 @@ ResultTuple exec_join(TupleR& relation_r, TupleS& relation_s, const struct join_
 
     std::cout << "Circular buffer size = " << circular_buffer_size << "\n";
     if(args.algo == SMJ || (args.algo == SMJI && args.pr == 1 && args.ps == 1)) {
-        impl = new SortMergeJoin<TupleR, TupleS, ResultTuple, true>(relation_r, relation_s, circular_buffer_size);
+        impl = new OurSortMergeJoin<TupleR, TupleS, ResultTuple>(relation_r, relation_s, circular_buffer_size);
+        // impl = new SortMergeJoin<TupleR, TupleS, ResultTuple, true>(relation_r, relation_s, circular_buffer_size);
     } else if(args.algo == PHJ) {
         impl = new PartitionHashJoin<TupleR, TupleS, ResultTuple>(relation_r, relation_s, args.phj_log_part1, args.phj_log_part2, first_bit, circular_buffer_size);
     } else if(args.algo == SHJ) {
