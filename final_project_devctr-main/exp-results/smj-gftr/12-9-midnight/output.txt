@@ -15,25 +15,25 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 71806 71804 71802 71800 71798 71796 71794 71792 71790 71788 
-Column-1: 71806 71804 71802 71800 71798 71796 71794 71792 71790 71788 
-Column-2: 71806 71804 71802 71800 71798 71796 71794 71792 71790 71788 
-Column-3: 71806 71804 71802 71800 71798 71796 71794 71792 71790 71788 
-Column-4: 71806 71804 71802 71800 71798 71796 71794 71792 71790 71788 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.12499 ms
-Merge: 0.552096 ms
-Materialize: 4.14333 ms
+Sort: 2.93888 ms
+Merge: 33.5841 ms
+Materialize: 3.87789 ms
 
-Peak memory used: 638892803 bytes
+Peak memory used: 840521215 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 2 S payload columns = 2
 Join algorithm: SMJ
@@ -50,25 +50,25 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 1048576
 Results (first 10 items): 
-Column-0: 76848 76833 76827 76816 76789 76786 76766 76751 76744 76734 
-Column-1: 76848 76833 76827 76816 76789 76786 76766 76751 76744 76734 
-Column-2: 76848 76833 76827 76816 76789 76786 76766 76751 76744 76734 
-Column-3: 76848 76833 76827 76816 76789 76786 76766 76751 76744 76734 
-Column-4: 76848 76833 76827 76816 76789 76786 76766 76751 76744 76734 
+Column-0: 8 11 12 25 30 32 48 59 66 89 
+Column-1: 8 11 12 25 30 32 48 59 66 89 
+Column-2: 8 11 12 25 30 32 48 59 66 89 
+Column-3: 8 11 12 25 30 32 48 59 66 89 
+Column-4: 8 11 12 25 30 32 48 59 66 89 
 
 
 ==== Statistics ==== 
-Sort: 3.10374 ms
-Merge: 0.350752 ms
-Materialize: 3.31091 ms
+Sort: 2.90816 ms
+Merge: 21.2919 ms
+Materialize: 3.11194 ms
 
-Peak memory used: 638892803 bytes
+Peak memory used: 840521215 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 2 S payload columns = 2
 Join algorithm: SMJI
@@ -85,23 +85,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
 Allocating 68434431 bytes of temporary storage for sorting.
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 75966 75964 75962 75960 75958 75956 75954 75952 75950 75948 
-Column-1: 75966 75964 75962 75960 75958 75956 75954 75952 75950 75948 
-Column-2: 75966 75964 75962 75960 75958 75956 75954 75952 75950 75948 
-Column-3: 75966 75964 75962 75960 75958 75956 75954 75952 75950 75948 
-Column-4: 75966 75964 75962 75960 75958 75956 75954 75952 75950 75948 
+Column-0: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
+Column-1: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
+Column-2: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
+Column-3: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
+Column-4: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
 
 
 ==== Statistics ==== 
-Sort: 3.06272 ms
-Merge: 0.687968 ms
-Materialize: 7.57168 ms
+Sort: 2.8599 ms
+Merge: 0.65968 ms
+Materialize: 7.21613 ms
 
 Peak memory used: 739523072 bytes
 ||R|| = 8388608 ||S|| = 8388608
@@ -120,23 +120,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
 Allocating 68434431 bytes of temporary storage for sorting.
 
 Output Cardinality = 1048576
 Results (first 10 items): 
-Column-0: 78243 78237 78230 78227 78224 78216 78208 78202 78195 78173 
-Column-1: 78243 78237 78230 78227 78224 78216 78208 78202 78195 78173 
-Column-2: 78243 78237 78230 78227 78224 78216 78208 78202 78195 78173 
-Column-3: 78243 78237 78230 78227 78224 78216 78208 78202 78195 78173 
-Column-4: 78243 78237 78230 78227 78224 78216 78208 78202 78195 78173 
+Column-0: 77240 77228 77217 77206 77203 77197 77171 77158 77597 77582 
+Column-1: 77240 77228 77217 77206 77203 77197 77171 77158 77597 77582 
+Column-2: 77240 77228 77217 77206 77203 77197 77171 77158 77597 77582 
+Column-3: 77240 77228 77217 77206 77203 77197 77171 77158 77597 77582 
+Column-4: 77240 77228 77217 77206 77203 77197 77171 77158 77597 77582 
 
 
 ==== Statistics ==== 
-Sort: 3.07206 ms
-Merge: 0.378944 ms
-Materialize: 0.9984 ms
+Sort: 2.86413 ms
+Merge: 0.375168 ms
+Materialize: 0.963584 ms
 
 Peak memory used: 739523072 bytes
 
@@ -157,23 +157,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 31678 31676 31674 31672 31670 31668 31666 31664 31662 31660 
-Column-1: 31678 31676 31674 31672 31670 31668 31666 31664 31662 31660 
-Column-2: 31678 31676 31674 31672 31670 31668 31666 31664 31662 31660 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.13344 ms
-Merge: 0.68688 ms
-Materialize: 0.00144 ms
+Sort: 2.93488 ms
+Merge: 33.7254 ms
+Materialize: 0.507904 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 2 S payload columns = 2
 Join algorithm: SMJ
@@ -190,25 +190,25 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
-Column-1: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
-Column-2: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
-Column-3: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
-Column-4: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.0976 ms
-Merge: 0.513728 ms
-Materialize: 4.11194 ms
+Sort: 2.90099 ms
+Merge: 33.6957 ms
+Materialize: 3.84714 ms
 
-Peak memory used: 638892803 bytes
+Peak memory used: 840521215 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 3 S payload columns = 3
 Join algorithm: SMJ
@@ -225,27 +225,27 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 6270 6268 6266 6264 6262 6260 6258 6256 6254 6252 
-Column-1: 6270 6268 6266 6264 6262 6260 6258 6256 6254 6252 
-Column-2: 6270 6268 6266 6264 6262 6260 6258 6256 6254 6252 
-Column-3: 6270 6268 6266 6264 6262 6260 6258 6256 6254 6252 
-Column-4: 6270 6268 6266 6264 6262 6260 6258 6256 6254 6252 
-Column-5: 6270 6268 6266 6264 6262 6260 6258 6256 6254 6252 
-Column-6: 6270 6268 6266 6264 6262 6260 6258 6256 6254 6252 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
+Column-5: 0 1 2 3 4 5 6 7 8 9 
+Column-6: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.10877 ms
-Merge: 0.513056 ms
-Materialize: 7.71216 ms
+Sort: 2.90493 ms
+Merge: 33.0342 ms
+Materialize: 7.19472 ms
 
-Peak memory used: 773110531 bytes
+Peak memory used: 974738943 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -262,23 +262,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 47358 47356 47354 47352 47350 47348 47346 47344 47342 47340 
-Column-1: 47358 47356 47354 47352 47350 47348 47346 47344 47342 47340 
-Column-2: 47358 47356 47354 47352 47350 47348 47346 47344 47342 47340 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.10784 ms
-Merge: 0.686304 ms
-Materialize: 0.001312 ms
+Sort: 2.90714 ms
+Merge: 33.8872 ms
+Materialize: 0.50912 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 2 S payload columns = 2
 Join algorithm: SMJI
@@ -295,23 +295,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
 Allocating 68434431 bytes of temporary storage for sorting.
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 33726 33724 33722 33720 33718 33716 33714 33712 33710 33708 
-Column-1: 33726 33724 33722 33720 33718 33716 33714 33712 33710 33708 
-Column-2: 33726 33724 33722 33720 33718 33716 33714 33712 33710 33708 
-Column-3: 33726 33724 33722 33720 33718 33716 33714 33712 33710 33708 
-Column-4: 33726 33724 33722 33720 33718 33716 33714 33712 33710 33708 
+Column-0: 80510 80508 80506 80504 80502 80500 80498 80496 80494 80492 
+Column-1: 80510 80508 80506 80504 80502 80500 80498 80496 80494 80492 
+Column-2: 80510 80508 80506 80504 80502 80500 80498 80496 80494 80492 
+Column-3: 80510 80508 80506 80504 80502 80500 80498 80496 80494 80492 
+Column-4: 80510 80508 80506 80504 80502 80500 80498 80496 80494 80492 
 
 
 ==== Statistics ==== 
-Sort: 3.06973 ms
-Merge: 0.683712 ms
-Materialize: 7.58374 ms
+Sort: 2.86515 ms
+Merge: 0.649088 ms
+Materialize: 7.10246 ms
 
 Peak memory used: 739523072 bytes
 ||R|| = 8388608 ||S|| = 8388608
@@ -330,25 +330,25 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
 Allocating 68434431 bytes of temporary storage for sorting.
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 93182 93180 93178 93176 93174 93172 93170 93168 93166 93164 
-Column-1: 93182 93180 93178 93176 93174 93172 93170 93168 93166 93164 
-Column-2: 93182 93180 93178 93176 93174 93172 93170 93168 93166 93164 
-Column-3: 93182 93180 93178 93176 93174 93172 93170 93168 93166 93164 
-Column-4: 93182 93180 93178 93176 93174 93172 93170 93168 93166 93164 
-Column-5: 93182 93180 93178 93176 93174 93172 93170 93168 93166 93164 
-Column-6: 93182 93180 93178 93176 93174 93172 93170 93168 93166 93164 
+Column-0: 75838 75836 75834 75832 75830 75828 75826 75824 75822 75820 
+Column-1: 75838 75836 75834 75832 75830 75828 75826 75824 75822 75820 
+Column-2: 75838 75836 75834 75832 75830 75828 75826 75824 75822 75820 
+Column-3: 75838 75836 75834 75832 75830 75828 75826 75824 75822 75820 
+Column-4: 75838 75836 75834 75832 75830 75828 75826 75824 75822 75820 
+Column-5: 75838 75836 75834 75832 75830 75828 75826 75824 75822 75820 
+Column-6: 75838 75836 75834 75832 75830 75828 75826 75824 75822 75820 
 
 
 ==== Statistics ==== 
-Sort: 3.07472 ms
-Merge: 0.687968 ms
-Materialize: 11.393 ms
+Sort: 2.8672 ms
+Merge: 0.65232 ms
+Materialize: 10.6946 ms
 
 Peak memory used: 873740800 bytes
 
@@ -369,23 +369,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 4194304
-Allocating 34221567 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 4194304
 Results (first 10 items): 
-Column-0: 57470 57468 57466 57464 57462 57460 57458 57456 57454 57452 
-Column-1: 57470 57468 57466 57464 57462 57460 57458 57456 57454 57452 
-Column-2: 57470 57468 57466 57464 57462 57460 57458 57456 57454 57452 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 1.65978 ms
-Merge: 0.36448 ms
-Materialize: 0.00192 ms
+Sort: 1.57667 ms
+Merge: 16.3891 ms
+Materialize: 0.275456 ms
 
-Peak memory used: 218787587 bytes
+Peak memory used: 353449471 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -402,23 +402,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
-Column-1: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
-Column-2: 68542 68540 68538 68536 68534 68532 68530 68528 68526 68524 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.13549 ms
-Merge: 0.699776 ms
-Materialize: 0.001664 ms
+Sort: 2.90918 ms
+Merge: 33.7991 ms
+Materialize: 0.51808 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 16777216 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -435,23 +435,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 16777216
 Results (first 10 items): 
-Column-0: 21310 21308 21306 21304 21302 21300 21298 21296 21294 21292 
-Column-1: 21310 21308 21306 21304 21302 21300 21298 21296 21294 21292 
-Column-2: 21310 21308 21306 21304 21302 21300 21298 21296 21294 21292 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 6.1256 ms
-Merge: 1.34208 ms
-Materialize: 0.001696 ms
+Sort: 5.69958 ms
+Merge: 82.2661 ms
+Materialize: 0.97792 ms
 
-Peak memory used: 875122435 bytes
+Peak memory used: 1412011519 bytes
 ||R|| = 4194304 ||S|| = 4194304
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -468,23 +468,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 4194304
-Allocating 34221567 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 4194304
 Results (first 10 items): 
-Column-0: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
-Column-1: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
-Column-2: 41854 41852 41850 41848 41846 41844 41842 41840 41838 41836 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 1.63533 ms
-Merge: 0.361824 ms
-Materialize: 0.001664 ms
+Sort: 1.55136 ms
+Merge: 16.3931 ms
+Materialize: 0.26624 ms
 
-Peak memory used: 218787587 bytes
+Peak memory used: 353449471 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -501,23 +501,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 80830 80828 80826 80824 80822 80820 80818 80816 80814 80812 
-Column-1: 80830 80828 80826 80824 80822 80820 80818 80816 80814 80812 
-Column-2: 80830 80828 80826 80824 80822 80820 80818 80816 80814 80812 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.13754 ms
-Merge: 0.697792 ms
-Materialize: 0.001664 ms
+Sort: 2.90406 ms
+Merge: 33.794 ms
+Materialize: 0.510048 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 16777216 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -534,23 +534,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 16777216
 Results (first 10 items): 
-Column-0: 141438 141436 141434 141432 141430 141428 141426 141424 141422 141420 
-Column-1: 141438 141436 141434 141432 141430 141428 141426 141424 141422 141420 
-Column-2: 141438 141436 141434 141432 141430 141428 141426 141424 141422 141420 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 6.12746 ms
-Merge: 1.34336 ms
-Materialize: 0.001664 ms
+Sort: 5.69139 ms
+Merge: 82.2804 ms
+Materialize: 0.984896 ms
 
-Peak memory used: 875122435 bytes
+Peak memory used: 1412011519 bytes
 
 ============================ Experiment 4 ============================
 ||R|| = 8388608 ||S|| = 8388608
@@ -569,23 +569,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 64446 64444 64442 64440 64438 64436 64434 64432 64430 64428 
-Column-1: 64446 64444 64442 64440 64438 64436 64434 64432 64430 64428 
-Column-2: 64446 64444 64442 64440 64438 64436 64434 64432 64430 64428 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.12941 ms
-Merge: 0.689856 ms
-Materialize: 0.00144 ms
+Sort: 3.14352 ms
+Merge: 34.8744 ms
+Materialize: 0.551744 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -602,23 +602,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 16777216
 Results (first 10 items): 
-Column-0: 1919 1917 1916 1915 1913 1912 1911 1909 1908 1907 
-Column-1: 1919 1917 1916 1915 1913 1912 1911 1909 1908 1907 
-Column-2: 1919 1917 1916 1915 1913 1912 1911 1909 1908 1907 
+Column-0: 0 0 1 1 2 2 3 3 4 4 
+Column-1: 0 0 2 1 4 2 6 3 8 4 
+Column-2: 0 0 1 1 2 2 3 3 4 4 
 
 
 ==== Statistics ==== 
-Sort: 4.59891 ms
-Merge: 1.16429 ms
-Materialize: 0.001312 ms
+Sort: 4.61824 ms
+Merge: 49.9374 ms
+Materialize: 1.13766 ms
 
-Peak memory used: 740888323 bytes
+Peak memory used: 1177130495 bytes
 ||R|| = 8388608 ||S|| = 33554432
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -635,23 +635,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 33554432
-Allocating 273708543 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 33554432
 Results (first 10 items): 
-Column-0: 36377 36376 36375 36374 36373 36373 36372 36371 36370 36369 
-Column-1: 36377 36376 36375 36374 36373 36373 36372 36371 36370 36369 
-Column-2: 36377 36376 36375 36374 36373 36373 36372 36371 36370 36369 
+Column-0: 0 0 0 0 1 1 1 1 2 2 
+Column-1: 0 1 2 0 4 5 6 1 8 9 
+Column-2: 0 0 0 0 1 1 1 1 2 2 
 
 
 ==== Statistics ==== 
-Sort: 7.60832 ms
-Merge: 2.05178 ms
-Materialize: 0.001312 ms
+Sort: 7.57958 ms
+Merge: 126.437 ms
+Materialize: 2.15853 ms
 
-Peak memory used: 1347532547 bytes
+Peak memory used: 2118785535 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -668,23 +668,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 41214 41212 41210 41208 41206 41204 41202 41200 41198 41196 
-Column-1: 41214 41212 41210 41208 41206 41204 41202 41200 41198 41196 
-Column-2: 41214 41212 41210 41208 41206 41204 41202 41200 41198 41196 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
 
 ==== Statistics ==== 
-Sort: 3.10602 ms
-Merge: 0.687104 ms
-Materialize: 0.001312 ms
+Sort: 3.12627 ms
+Merge: 34.8231 ms
+Materialize: 0.545696 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -701,23 +701,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 16777216
 Results (first 10 items): 
-Column-0: 42921 42920 42919 42917 42916 42915 42913 42912 42911 42909 
-Column-1: 42921 42920 42919 42917 42916 42915 42913 42912 42911 42909 
-Column-2: 42921 42920 42919 42917 42916 42915 42913 42912 42911 42909 
+Column-0: 0 0 1 1 2 2 3 3 4 4 
+Column-1: 0 0 2 1 4 2 6 3 8 4 
+Column-2: 0 0 1 1 2 2 3 3 4 4 
 
 
 ==== Statistics ==== 
-Sort: 4.60157 ms
-Merge: 1.1639 ms
-Materialize: 0.001344 ms
+Sort: 4.60582 ms
+Merge: 49.9436 ms
+Materialize: 1.12947 ms
 
-Peak memory used: 740888323 bytes
+Peak memory used: 1177130495 bytes
 ||R|| = 8388608 ||S|| = 33554432
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -734,23 +734,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 33554432
-Allocating 273708543 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 33554432
 Results (first 10 items): 
-Column-0: 16741 16741 16740 16739 16738 16737 16737 16736 16735 16734 
-Column-1: 16741 16741 16740 16739 16738 16737 16737 16736 16735 16734 
-Column-2: 16741 16741 16740 16739 16738 16737 16737 16736 16735 16734 
+Column-0: 0 0 0 0 1 1 1 1 2 2 
+Column-1: 0 1 2 0 4 5 6 1 8 9 
+Column-2: 0 0 0 0 1 1 1 1 2 2 
 
 
 ==== Statistics ==== 
-Sort: 7.58653 ms
-Merge: 2.06186 ms
-Materialize: 0.001344 ms
+Sort: 7.59194 ms
+Merge: 126.432 ms
+Materialize: 2.15046 ms
 
-Peak memory used: 1347532547 bytes
+Peak memory used: 2118785535 bytes
 
 ============================ Experiment 5 ============================
 ||R|| = 8388608 ||S|| = 8388608
@@ -769,23 +769,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 31693 31691 31689 31686 31685 31682 31680 31679 31678 31675 
-Column-1: 31693 31691 31689 31686 31685 31682 31680 31679 31678 31675 
-Column-2: 31693 31691 31689 31686 31685 31682 31680 31679 31678 31675 
+Column-0: 0 0 0 0 0 1 2 3 5 7 
+Column-1: 0 1 2 3 0 1 2 3 5 9 
+Column-2: 0 0 0 0 0 1 2 3 5 7 
 
 
 ==== Statistics ==== 
-Sort: 3.13549 ms
-Merge: 0.701984 ms
-Materialize: 0.00144 ms
+Sort: 3.14669 ms
+Merge: 36.6479 ms
+Materialize: 0.54272 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -802,23 +802,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 49203 49200 49199 49196 49193 49191 49190 49187 49186 49182 
-Column-1: 49203 49200 49199 49196 49193 49191 49190 49187 49186 49182 
-Column-2: 49203 49200 49199 49196 49193 49191 49190 49187 49186 49182 
+Column-0: 0 1 1 2 2 3 4 5 5 7 
+Column-1: 0 1 1 3 2 3 4 7 5 9 
+Column-2: 0 1 1 2 2 3 4 5 5 7 
 
 
 ==== Statistics ==== 
-Sort: 3.1232 ms
-Merge: 0.699008 ms
-Materialize: 0.00128 ms
+Sort: 3.14368 ms
+Merge: 36.6612 ms
+Materialize: 0.54272 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -835,23 +835,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 20759 20759 20759 20759 20759 20759 20759 20759 20759 20759 
-Column-1: 20759 20759 20759 20759 20759 20759 20759 20759 20759 20759 
-Column-2: 20759 20759 20759 20759 20759 20759 20759 20759 20759 20759 
+Column-0: 0 2 2 2 2 3 3 3 6 6 
+Column-1: 0 1 2 3 2 5 6 3 8 6 
+Column-2: 0 2 2 2 2 3 3 3 6 6 
 
 
 ==== Statistics ==== 
-Sort: 3.11296 ms
-Merge: 0.695776 ms
-Materialize: 0.00128 ms
+Sort: 3.14266 ms
+Merge: 36.826 ms
+Materialize: 0.538624 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -868,23 +868,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
-Column-1: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
-Column-2: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
+Column-0: 0 0 0 0 0 2 3 5 8 8 
+Column-1: 0 1 2 3 0 2 3 5 8 8 
+Column-2: 0 0 0 0 0 2 3 5 8 8 
 
 
 ==== Statistics ==== 
-Sort: 3.11517 ms
-Merge: 0.69008 ms
-Materialize: 0.001312 ms
+Sort: 3.1232 ms
+Merge: 36.734 ms
+Materialize: 0.546816 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -901,23 +901,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
-Column-1: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
-Column-2: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
+Column-0: 0 12 16 16 20 22 22 22 28 30 
+Column-1: 0 12 2 16 20 5 6 22 28 30 
+Column-2: 0 12 16 16 20 22 22 22 28 30 
 
 
 ==== Statistics ==== 
-Sort: 3.12179 ms
-Merge: 0.679808 ms
-Materialize: 0.001344 ms
+Sort: 3.1232 ms
+Merge: 34.3377 ms
+Materialize: 0.582656 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -934,23 +934,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 77033 76981 76965 76946 77520 77495 77487 77453 77414 97425 
-Column-1: 77033 76981 76965 76946 77520 77495 77487 77453 77414 97425 
-Column-2: 77033 76981 76965 76946 77520 77495 77487 77453 77414 97425 
+Column-0: 8 30 32 60 68 92 109 109 120 124 
+Column-1: 8 30 32 60 68 92 6 109 120 9 
+Column-2: 8 30 32 60 68 92 109 109 120 124 
 
 
 ==== Statistics ==== 
-Sort: 3.10262 ms
-Merge: 0.651744 ms
-Materialize: 0.001312 ms
+Sort: 3.11789 ms
+Merge: 31.7573 ms
+Materialize: 0.562976 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -967,23 +967,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 15463 14514 14602 127717 15647 15637 68583 69471 112293 15903 
-Column-1: 15463 14514 14602 127717 15647 15637 68583 69471 112293 15903 
-Column-2: 15463 14514 14602 127717 15647 15637 68583 69471 112293 15903 
+Column-0: 201 305 463 792 845 1178 1178 1178 1178 1178 
+Column-1: 201 305 463 792 845 5 6 7 8 9 
+Column-2: 201 305 463 792 845 1178 1178 1178 1178 1178 
 
 
 ==== Statistics ==== 
-Sort: 3.10579 ms
-Merge: 0.633376 ms
-Materialize: 0.001312 ms
+Sort: 3.11501 ms
+Merge: 28.9219 ms
+Materialize: 0.553984 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -1000,23 +1000,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 96526 92956 96745 92886 156171 76647 143183 76806 75020 75020 
-Column-1: 96526 92956 96745 92886 156171 76647 143183 76806 75020 75020 
-Column-2: 96526 92956 96745 92886 156171 76647 143183 76806 75020 75020 
+Column-0: 1578 1578 1578 1578 1578 1578 1578 2070 2070 2070 
+Column-1: 0 1 2 3 4 5 1578 7 8 9 
+Column-2: 1578 1578 1578 1578 1578 1578 1578 2070 2070 2070 
 
 
 ==== Statistics ==== 
-Sort: 3.10973 ms
-Merge: 0.626816 ms
-Materialize: 0.001312 ms
+Sort: 3.10701 ms
+Merge: 27.9849 ms
+Materialize: 0.544768 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -1033,23 +1033,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 125955 93015 43250 118070 118070 32488 48009 76312 32379 24128 
-Column-1: 125955 93015 43250 118070 118070 32488 48009 76312 32379 24128 
-Column-2: 125955 93015 43250 118070 118070 32488 48009 76312 32379 24128 
+Column-0: 1597 1597 1597 1597 1597 1597 1597 1597 1597 1597 
+Column-1: 0 1 2 3 4 5 6 7 8 1597 
+Column-2: 1597 1597 1597 1597 1597 1597 1597 1597 1597 1597 
 
 
 ==== Statistics ==== 
-Sort: 3.11277 ms
-Merge: 0.613856 ms
-Materialize: 0.001312 ms
+Sort: 3.10272 ms
+Merge: 26.9179 ms
+Materialize: 0.545952 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1066,23 +1066,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 31722 31720 31718 31715 31712 31710 31707 31705 31704 31701 
-Column-1: 31722 31720 31718 31715 31712 31710 31707 31705 31704 31701 
-Column-2: 31722 31720 31718 31715 31712 31710 31707 31705 31704 31701 
+Column-0: 0 1 2 2 2 5 5 6 7 7 
+Column-1: 0 1 2 3 2 5 5 6 8 9 
+Column-2: 0 1 2 2 2 5 5 6 7 7 
 
 
 ==== Statistics ==== 
-Sort: 3.11178 ms
-Merge: 0.695104 ms
-Materialize: 0.001312 ms
+Sort: 3.14778 ms
+Merge: 36.6428 ms
+Materialize: 0.539616 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1099,23 +1099,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 23061 23056 23055 23054 23051 23051 23047 23046 23046 23042 
-Column-1: 23061 23056 23055 23054 23051 23051 23047 23046 23046 23042 
-Column-2: 23061 23056 23055 23054 23051 23051 23047 23046 23046 23042 
+Column-0: 0 1 2 4 5 7 8 9 9 10 
+Column-1: 0 1 2 4 5 7 8 7 9 10 
+Column-2: 0 1 2 4 5 7 8 9 9 10 
 
 
 ==== Statistics ==== 
-Sort: 3.11296 ms
-Merge: 0.701984 ms
-Materialize: 0.00128 ms
+Sort: 3.14467 ms
+Merge: 36.5835 ms
+Materialize: 0.541696 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1132,23 +1132,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 64141 64139 64137 64134 64132 64129 64127 64126 64124 64122 
-Column-1: 64141 64139 64137 64134 64132 64129 64127 64126 64124 64122 
-Column-2: 64141 64139 64137 64134 64132 64129 64127 64126 64124 64122 
+Column-0: 0 2 2 2 2 5 5 6 6 11 
+Column-1: 0 1 2 3 2 5 5 7 6 11 
+Column-2: 0 2 2 2 2 5 5 6 6 11 
 
 
 ==== Statistics ==== 
-Sort: 3.10989 ms
-Merge: 0.694272 ms
-Materialize: 0.001312 ms
+Sort: 3.14365 ms
+Merge: 36.8751 ms
+Materialize: 0.538624 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1165,23 +1165,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 40965 40965 40965 40965 40965 40965 40965 40965 40965 40965 
-Column-1: 40965 40965 40965 40965 40965 40965 40965 40965 40965 40965 
-Column-2: 40965 40965 40965 40965 40965 40965 40965 40965 40965 40965 
+Column-0: 3 5 6 8 12 14 19 19 20 21 
+Column-1: 3 5 6 8 12 14 6 19 20 9 
+Column-2: 3 5 6 8 12 14 19 19 20 21 
 
 
 ==== Statistics ==== 
-Sort: 3.11296 ms
-Merge: 0.68304 ms
-Materialize: 0.001312 ms
+Sort: 3.14778 ms
+Merge: 36.6285 ms
+Materialize: 0.539648 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1198,23 +1198,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 20759 20759 20759 20759 20759 20759 20759 20759 20759 20759 
-Column-1: 20759 20759 20759 20759 20759 20759 20759 20759 20759 20759 
-Column-2: 20759 20759 20759 20759 20759 20759 20759 20759 20759 20759 
+Column-0: 0 0 0 5 16 16 16 16 20 22 
+Column-1: 0 1 0 5 4 5 6 16 20 9 
+Column-2: 0 0 0 5 16 16 16 16 20 22 
 
 
 ==== Statistics ==== 
-Sort: 3.12726 ms
-Merge: 0.679584 ms
-Materialize: 0.00128 ms
+Sort: 3.12026 ms
+Merge: 34.775 ms
+Materialize: 0.581536 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1231,23 +1231,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 142546 142546 142546 142546 142546 142546 142546 142546 142546 142546 
-Column-1: 142546 142546 142546 142546 142546 142546 142546 142546 142546 142546 
-Column-2: 142546 142546 142546 142546 142546 142546 142546 142546 142546 142546 
+Column-0: 30 32 60 68 92 109 109 120 124 124 
+Column-1: 30 32 60 68 92 5 109 120 8 9 
+Column-2: 30 32 60 68 92 109 109 120 124 124 
 
 
 ==== Statistics ==== 
-Sort: 3.11334 ms
-Merge: 0.658592 ms
-Materialize: 0.00128 ms
+Sort: 3.11482 ms
+Merge: 31.5546 ms
+Materialize: 0.5632 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1264,23 +1264,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
-Column-1: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
-Column-2: 33425 33425 33425 33425 33425 33425 33425 33425 33425 33425 
+Column-0: 16 101 101 101 101 101 101 101 115 201 
+Column-1: 16 1 2 3 4 5 6 101 115 201 
+Column-2: 16 101 101 101 101 101 101 101 115 201 
 
 
 ==== Statistics ==== 
-Sort: 3.10659 ms
-Merge: 0.634336 ms
-Materialize: 0.001312 ms
+Sort: 3.11398 ms
+Merge: 28.9229 ms
+Materialize: 0.546816 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1297,23 +1297,23 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 118657 117620 117597 80946 32568 96526 24060 92453 113899 113718 
-Column-1: 118657 117620 117597 80946 32568 96526 24060 92453 113899 113718 
-Column-2: 118657 117620 117597 80946 32568 96526 24060 92453 113899 113718 
+Column-0: 1178 1178 1178 1178 1406 1569 1578 1578 1578 1578 
+Column-1: 0 1 2 1178 1406 1569 6 7 8 9 
+Column-2: 1178 1178 1178 1178 1406 1569 1578 1578 1578 1578 
 
 
 ==== Statistics ==== 
-Sort: 3.10966 ms
-Merge: 0.624384 ms
-Materialize: 0.001312 ms
+Sort: 3.10669 ms
+Merge: 27.6152 ms
+Materialize: 0.541824 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1330,21 +1330,21 @@ Aggregation only? No
 
 Filtered FK to reduce the match ratio
 Data preparation is done
-Memory pool has initial size 13737184460 bytes.
+Memory pool has initial size 6868592230 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+Inside the custom merge path code
 
 Output Cardinality = 8388608
 Results (first 10 items): 
-Column-0: 80098 43250 177123 177123 32488 32379 93015 97480 76312 48009 
-Column-1: 80098 43250 177123 177123 32488 32379 93015 97480 76312 48009 
-Column-2: 80098 43250 177123 177123 32488 32379 93015 97480 76312 48009 
+Column-0: 1578 1578 1578 1578 1578 1578 1578 1578 11271 12346 
+Column-1: 0 1 2 3 4 5 6 1578 11271 9 
+Column-2: 1578 1578 1578 1578 1578 1578 1578 1578 11271 12346 
 
 
 ==== Statistics ==== 
-Sort: 3.10272 ms
-Merge: 0.61344 ms
-Materialize: 0.001632 ms
+Sort: 3.11286 ms
+Merge: 27.2251 ms
+Materialize: 0.546016 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 706303487 bytes
 
