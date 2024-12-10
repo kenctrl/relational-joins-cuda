@@ -418,7 +418,8 @@ ResultTuple exec_join(TupleR& relation_r, TupleS& relation_s, const struct join_
     } else if(args.algo == SHJ) {
         impl = new SortHashJoin<TupleR, TupleS, ResultTuple>(relation_r, relation_s, first_bit, args.phj_log_part1+args.phj_log_part2, circular_buffer_size);
     } else if(args.algo == SMJI) {
-        impl = new SortMergeJoinByIndex<TupleR, TupleS, ResultTuple, false>(relation_r, relation_s, circular_buffer_size);
+        impl = new OurSortMergeJoinGFUR<TupleR, TupleS, ResultTuple>(relation_r, relation_s, circular_buffer_size);
+        // impl = new SortMergeJoinByIndex<TupleR, TupleS, ResultTuple, false>(relation_r, relation_s, circular_buffer_size);
     } 
     else {
         std::cout << "Unsupported join algorithm\n";
