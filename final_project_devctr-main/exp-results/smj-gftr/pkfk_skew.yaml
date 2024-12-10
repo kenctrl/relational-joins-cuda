@@ -1,0 +1,18 @@
+experiments:
+  - name: pkfk_skew
+    group: 0
+    output: pkfk_skew.csv
+    query: >
+      SELECT DISTINCT *
+      FROM
+            (SELECT DISTINCT *
+            FROM df
+            WHERE nr = 23 AND 
+                  ratio = 0 AND
+                  pr = 1 AND pr = ps AND
+                  dist = 'zipf' AND
+                  join_type = 'pkfk' AND
+                  unique_keys = nr AND
+                  selectivity = 1 AND
+                  (algo LIKE 'smj%' AND (nr < 28 AND q = 6 or nr >= 28 AND q = 7)))
+      ORDER BY algo, nr, ratio, pr, ps, zipf_factor;
