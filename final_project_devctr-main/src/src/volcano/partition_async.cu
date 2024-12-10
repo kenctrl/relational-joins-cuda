@@ -30,7 +30,7 @@ __host__ size_t get_workspace_size(dim3 grid_dim, dim3 block_dim) {
     auto NUM_BUCKETS = 1 << (high_bit - low_bit);
     auto NUM_BLOCKS = grid_dim.x;
     // We need two arrays - one for block space and one for global block scan
-    return NUM_BLOCKS * NUM_BUCKETS * sizeof(CountT) + NUM_BUCKETS * sizeof(CountT);
+    return (NUM_BLOCKS * NUM_BUCKETS * sizeof(CountT) + NUM_BUCKETS * sizeof(CountT)) * 2;
 }
 
 template <typename KeyT, typename CountT, int THREAD_TILE, int low_bit, int high_bit>
@@ -61,31 +61,25 @@ template<
 __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* out, void* debug_out) {
     CountT* debug_ptr = (CountT*) debug_out;
 
-    // assert(gridDim.y == 1 && gridDim.z == 1); // We only support 1D grids for now
-    // assert(blockDim.y == 1 && blockDim.z == 1); // We only support 1D blocks for now
-    // assert(blockDim.x == NUM_THREADS); // We only support 1D blocks for now
-
     auto BLOCK_TILE = NUM_THREADS * THREAD_TILE;
     auto NUM_BUCKETS = 1 << (high_bit - low_bit);
 
     // Block space: We put status flags in top two bits
     // Block space points to current block's histogram in workspace
-    CountT* block_space = static_cast<CountT*>(workspace) + blockIdx.x * NUM_BUCKETS;
+    CountT* block_space0 = static_cast<CountT*>(workspace) + blockIdx.x * NUM_BUCKETS;
+    CountT* block_space1 = block_space0 + NUM_BUCKETS * gridDim.x;
     // Global scan array starts after all block histograms
-    CountT* global_block_scan = static_cast<CountT*>(workspace) + gridDim.x * NUM_BUCKETS;
+    CountT* global_block_scan0 = static_cast<CountT*>(workspace) + 2 * gridDim.x * NUM_BUCKETS;
+    CountT* global_block_scan1 = global_block_scan0 + NUM_BUCKETS;
 
-    // Assert that memory is not overlapping
+    CountT* block_space[2] = {block_space0, block_space1};
+    CountT* global_block_scans[2] = {global_block_scan0, global_block_scan1};
 
     CountT PREFIX_DONE = CountT(1) << (sizeof(CountT) * 8 - 1); // Top bit set means prefix sum is done
     CountT AGG_DONE = CountT(1) << (sizeof(CountT) * 8 - 2); // Second top bit set means aggregation is done
-    CountT ALL_DONE = PREFIX_DONE | AGG_DONE;
 
     cooperative_groups::thread_block block = cooperative_groups::this_thread_block();
     cooperative_groups::grid_group grid = cooperative_groups::this_grid();
-
-    // assert(__popc(PREFIX_DONE) == 1);
-    // assert(__popc(AGG_DONE) == 1);
-    // assert(__popc(ALL_DONE) == 2);
 
     // Shared memory
     extern __shared__ int cache[];
@@ -98,18 +92,23 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
 
     KeyT* keys_buffer[2] = {local_keys0, local_keys1};
     CountT* hist_buffer[2] = {local_hist0, local_hist1};
+    KeyT* output = (KeyT*) out;
 
     int stage = 0;
 
+    auto LOOP_STRIDE = gridDim.x * BLOCK_TILE;
+
     // First memory copy
-    cooperative_groups::memcpy_async(cooperative_groups::this_thread_block(), keys_buffer[stage], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+    cooperative_groups::memcpy_async(block, keys_buffer[stage], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+    key_array += LOOP_STRIDE;
 
     // Initialize local histogram
     for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
         hist_buffer[stage][i] = 0;
     }
     // Kick off next stage
-    cooperative_groups::memcpy_async(cooperative_groups::this_thread_block(), keys_buffer[stage ^ 1], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+    cooperative_groups::memcpy_async(block, keys_buffer[stage ^ 1], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+    key_array += LOOP_STRIDE;
     cooperative_groups::wait_prior<1>(block); // sync + memcopy
     // Compute local histogram
     for (auto i = threadIdx.x; i < BLOCK_TILE; i += NUM_THREADS) {
@@ -120,12 +119,11 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
 
     // Main loop
     for (auto outer_loop = 0; outer_loop < LOOP_TILE; outer_loop++){
-        KeyT* output = (KeyT*) out + outer_loop * BLOCK_TILE * gridDim.x;
         CountT write_status = (blockIdx.x == 0)? PREFIX_DONE: AGG_DONE;
         __syncthreads();
         for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
             auto write_data = write_status | hist_buffer[stage][i];
-            block_space[i] = write_data;
+            block_space[stage][i] = write_data;
         }
 
         // Each thread is responsible for some number of buckets
@@ -134,7 +132,7 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
             int prev_block = (int) blockIdx.x - 1;
             CountT local_val = hist_buffer[stage][cur_bucket]; // No status flags set
             while (prev_block >= 0) {
-                auto prev_space = ((CountT*) workspace) + prev_block * NUM_BUCKETS;
+                auto prev_space = ((CountT*) workspace) + prev_block * NUM_BUCKETS + stage * NUM_BUCKETS * gridDim.x;
                 auto prev_status = prev_space[cur_bucket];
                 if (prev_status & PREFIX_DONE) {
                     local_val += prev_status & ~(PREFIX_DONE | AGG_DONE); // Clear status flags
@@ -146,33 +144,37 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
                     // Keep spinning
                 }
             }
-            // We should not have any status flags set in local_val
-            // assert((local_val & (PREFIX_DONE | AGG_DONE)) == 0);
-            // No race here - write to global
-            // Set status flag to PREFIX_DONE
-            block_space[cur_bucket] = local_val | PREFIX_DONE;
+            block_space[stage][cur_bucket] = local_val | PREFIX_DONE;
+            assert(block_space[stage][cur_bucket] & PREFIX_DONE);
         }
         if (blockIdx.x == gridDim.x - 1) {
             // Simple code for now - we know that thread x has the prefix sum for its buckets
             for (auto cur_bucket = threadIdx.x; cur_bucket < NUM_BUCKETS; cur_bucket += NUM_THREADS) {
-                auto thread_val = block_space[cur_bucket] & ~(PREFIX_DONE | AGG_DONE);
+                auto thread_val = block_space[stage][cur_bucket] & ~(PREFIX_DONE | AGG_DONE);
                 for (auto j = cur_bucket; j < NUM_BUCKETS; j++) {
-                    atomicAdd(&global_block_scan[j], thread_val);
+                    atomicAdd(&global_block_scans[stage][j], thread_val);
                 }
+                // Set the next global_block_scan to 0 for the next iteration
+                global_block_scans[stage ^ 1][cur_bucket] = 0;
+
             }
         }
         // Initialize next local histogram
         for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
             hist_buffer[stage ^ 1][i] = 0;
         }
-        cooperative_groups::memcpy_async(cooperative_groups::this_thread_block(), keys_buffer[stage], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
-        cooperative_groups::wait_prior<1>(block); // sync + memcopy
+        cooperative_groups::wait_prior<0>(block); // sync + memcopy
         // Compute next local histogram
         for (auto i = threadIdx.x; i < BLOCK_TILE; i += NUM_THREADS) {
             BucketT key = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage ^ 1][i]);
             // // uncoalesced writes: Optimize this later with warp shuffle
             atomicAdd(&hist_buffer[stage ^ 1][key], 1);
         };
+
+        // Remove enabled status flags
+        for (auto i = threadIdx.x; i < NUM_BUCKETS; i += NUM_THREADS) {
+            block_space[stage ^ 1][i] = 0;
+        }
 
         grid.sync();
         __threadfence(); // Ensure all writes are visible
@@ -182,21 +184,24 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
         for (auto i = 0; i < BLOCK_TILE; i++) {
             BucketT bucket = get_bucket<BucketT, KeyT, low_bit, high_bit>(keys_buffer[stage][i]);
             // Check if bucket belongs to this thread
-            if (bucket % blockDim.x != threadIdx.x) {
+            if (bucket % NUM_THREADS != threadIdx.x) {
                 continue;
             }
             // Bucket internal offset, remove status flags
-            auto local_offset = (--block_space[bucket]) & ~(PREFIX_DONE | AGG_DONE);
+            auto local_offset = (block_space[stage][bucket] - hist_buffer[stage][bucket]--) & ~(PREFIX_DONE | AGG_DONE);
             // Offset from previous buckets - inclusive scan
-            auto global_offset = bucket > 0? global_block_scan[bucket - 1]: 0;
-            // Clear status flags
+            auto global_offset = bucket > 0? global_block_scans[stage][bucket - 1]: 0;
             auto out_index = global_offset + local_offset;
             // No race - each thread updates its own buckets
-            output[out_index] = keys_buffer[stage][i]; // Reverse order!!
+            output[out_index] = keys_buffer[stage][i];
         }
+        output += LOOP_STRIDE;
         // Swap buffers
         stage ^= 1;
     }
+    // Kick off next stage
+    cooperative_groups::memcpy_async(block, keys_buffer[stage], key_array + blockIdx.x * BLOCK_TILE, BLOCK_TILE * sizeof(KeyT));
+    key_array += LOOP_STRIDE;
 }
 
 
@@ -208,15 +213,11 @@ void test_1(){
 
     auto NUM_BUCKETS = 1 << (HIGH_BIT - LOW_BIT);
 
-    // constexpr int NUM_THREADS = 64;
-    // constexpr int THREAD_TILE = 8;
-    // constexpr int LOOP_TILE = 512;
-
     constexpr int NUM_THREADS = 1;
     constexpr int THREAD_TILE = 8;
-    constexpr int LOOP_TILE = 8;
+    constexpr int LOOP_TILE = 2;
 
-    size_t size = 1 << 10; //1 << 21;
+    size_t size = 1 << 8;
     uint32_t *key_array = nullptr; // device memory
     uint32_t *host_array = new uint32_t[size]; // host memory
     for(auto i = 0; i < size; i++) {
