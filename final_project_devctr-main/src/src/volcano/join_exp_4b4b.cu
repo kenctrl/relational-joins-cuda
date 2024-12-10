@@ -1,5 +1,5 @@
 #define CUB_STDERR
-// #define CHECK_CORRECTNESS
+#define CHECK_CORRECTNESS
 // #define SORTED_REL
 #define MR_FILTER_FK
 
