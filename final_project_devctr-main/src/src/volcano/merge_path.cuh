@@ -304,11 +304,9 @@ void merge_path(KeyIt r_sorted_keys, KeyIt s_sorted_keys,
 
 
 
-// Use constexpr for block/thread counts if fixed
 constexpr int NUM_THREADS = 128*4;
 constexpr int NUM_BLOCKS = 48*2;
 
-// Use restrict pointers and inline where beneficial
 template<typename key_t>
 __forceinline__ __device__ int merge_path_device(const key_t* __restrict__ a_keys, int a_count, 
                                                  const key_t* __restrict__ b_keys, int b_count, 
@@ -331,7 +329,6 @@ template<typename key_t>
 __global__ void create_merge_partitions(const key_t * __restrict__ r_sorted_keys, const int nr, 
                                         const key_t * __restrict__ s_sorted_keys, const int ns, 
                                         int * __restrict__ partition_starts, const int partition_size) {
-    // OPTIMIZATION: Using __restrict__, no code changes to logic
     const int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int diag_sum = threadId * partition_size;
     if (diag_sum < nr + ns) {
@@ -340,7 +337,7 @@ __global__ void create_merge_partitions(const key_t * __restrict__ r_sorted_keys
 
         while (r_low < r_max) {
             int r_mid = (r_low + r_max) >> 1;
-            // Precompute indices carefully
+            // Precompute indices
             int r_index = r_mid;
             int s_index = diag_sum - r_mid - 1;
 
@@ -364,123 +361,91 @@ __global__ void create_merge_partitions(const key_t * __restrict__ r_sorted_keys
 }
 
 template<typename key_t>
-__global__ void sequential_merge(const key_t * __restrict__ r_sorted_keys, const int nr, 
-                                 const key_t * __restrict__ s_sorted_keys, const int ns, 
-                                 const int * __restrict__ partition_starts, 
-                                 key_t * __restrict__ merged_keys, 
-                                 int * __restrict__ keys_idx, 
-                                 int * __restrict__ keys_r_arr) {
-    // OPTIMIZATION: __restrict__ and possibly unroll loops
+__global__ void direct_merge_join(const key_t* __restrict__ r_sorted_keys, const int nr,
+                                 const key_t* __restrict__ s_sorted_keys, const int ns,
+                                 const int* __restrict__ partition_starts,
+                                 key_t* __restrict__ keys_out,
+                                 int* __restrict__ r_out,
+                                 int* __restrict__ s_out,
+                                 int* __restrict__ partition_matches,
+                                 int output_buffer_size) {
     const int threadId = blockIdx.x * blockDim.x + threadIdx.x;
     int r_start = partition_starts[2 * threadId];
     int s_start = partition_starts[2 * threadId + 1];
-
+    
     int r_end = nr;
     int s_end = ns;
-    
     if (threadId != NUM_THREADS * NUM_BLOCKS - 1) {
         r_end = partition_starts[2 * threadId + 2];
         s_end = partition_starts[2 * threadId + 3];
     }
 
-    // Merge two sorted sublists
+    // Handle boundary condition between blocks
+    key_t prev_key = (threadId > 0 && r_start + s_start > 0) ? 
+        ((r_start > 0) ? r_sorted_keys[r_start - 1] : s_sorted_keys[s_start - 1]) : 
+        static_cast<key_t>(-999999999);
+    
+    int local_matches = 0;
+    
+    // Main merge-join loop
     while (r_start < r_end && s_start < s_end) {
         key_t r_key = r_sorted_keys[r_start];
         key_t s_key = s_sorted_keys[s_start];
-        bool pick_r = (r_key < s_key);
-        merged_keys[r_start + s_start] = pick_r ? r_key : s_key;
-        keys_idx[r_start + s_start]   = pick_r ? r_start : s_start;
-        keys_r_arr[r_start + s_start] = pick_r ? 1 : 0;
-        r_start += pick_r;
-        s_start += (!pick_r);
-    }
-    // Copy the remainder
-    while (r_start < r_end) {
-        merged_keys[r_start + s_start] = r_sorted_keys[r_start];
-        keys_idx[r_start + s_start]   = r_start;
-        keys_r_arr[r_start + s_start] = 1;
-        r_start++;
-    }
-    while (s_start < s_end) {
-        merged_keys[r_start + s_start] = s_sorted_keys[s_start];
-        keys_idx[r_start + s_start]   = s_start;
-        keys_r_arr[r_start + s_start] = 0;
-        s_start++;
-    }
-}
-
-template<typename key_t>
-__global__ void merge_partition_sizes(const int nr, const int ns, 
-                                      int * __restrict__ partition_matches, 
-                                      const key_t * __restrict__ merged_keys, 
-                                      int partition_size) {
-    // OPTIMIZATION: __restrict__ used
-    const int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-    int idx_start = threadId * partition_size;
-    int idx_end   = min((threadId + 1) * partition_size, nr + ns);
-    int count = 0;
-
-    if (idx_start == 0 && idx_end > 0) {
-        // The very first segment: start comparison from idx_start+1
-        for (int i = idx_start + 1; i < idx_end; i++) {
-            if (merged_keys[i] == merged_keys[i - 1]) count++;
-        }
-    } else {
-        for (int i = idx_start; i < idx_end; i++) {
-            if (i > 0 && merged_keys[i] == merged_keys[i - 1]) count++;
-        }
-    }
-
-    partition_matches[threadId] = count;
-}
-
-template<typename key_t>
-__global__ void merge_join_keys(const int nr, const int ns, 
-                                key_t * __restrict__ keys_out, 
-                                int * __restrict__ r_out, 
-                                int * __restrict__ s_out, 
-                                const int * __restrict__ prefix_partition_matches, 
-                                const key_t * __restrict__ merged_keys, 
-                                const int * __restrict__ keys_idx, 
-                                const int * __restrict__ keys_r_arr, 
-                                int partition_size, int output_buffer_size) {
-    // OPTIMIZATION: __restrict__, precompute prefix
-    const int threadId = blockIdx.x * blockDim.x + threadIdx.x;
-    int idx_start = threadId * partition_size;
-    int idx_end   = min((threadId + 1) * partition_size, nr + ns);
-
-    int prev_count = (threadId == 0) ? 0 : prefix_partition_matches[threadId - 1];
-    int count = prev_count;
-
-    for (int i = idx_start; i < idx_end; i++) {
-        if (i > 0 && merged_keys[i] == merged_keys[i - 1]) {
-            int pos = count % output_buffer_size;
-            keys_out[pos] = merged_keys[i];
-            if (keys_r_arr[i] == 1) {
-                r_out[pos] = keys_idx[i];
-                s_out[pos] = keys_idx[i - 1];
-            } else {
-                r_out[pos] = keys_idx[i - 1];
-                s_out[pos] = keys_idx[i];
+        
+        if (r_key == s_key) {
+            // Found a match - write to output
+            int pos = local_matches % output_buffer_size;
+            keys_out[pos] = r_key;
+            r_out[pos] = r_start;
+            s_out[pos] = s_start;
+            local_matches++;
+            
+            // Handle duplicates in R
+            int r_temp = r_start + 1;
+            while (r_temp < r_end && r_sorted_keys[r_temp] == r_key) {
+                pos = local_matches % output_buffer_size;
+                keys_out[pos] = r_key;
+                r_out[pos] = r_temp;
+                s_out[pos] = s_start;
+                local_matches++;
+                r_temp++;
             }
-            count++;
+            
+            // Handle duplicates in S
+            int s_temp = s_start + 1;
+            while (s_temp < s_end && s_sorted_keys[s_temp] == s_key) {
+                for (int r_dup = r_start; r_dup < r_temp; r_dup++) {
+                    pos = local_matches % output_buffer_size;
+                    keys_out[pos] = r_key;
+                    r_out[pos] = r_dup;
+                    s_out[pos] = s_temp;
+                    local_matches++;
+                }
+                s_temp++;
+            }
+            
+            r_start = r_temp;
+            s_start = s_temp;
+        } else if (r_key < s_key) {
+            r_start++;
+        } else {
+            s_start++;
         }
     }
+    
+    partition_matches[threadId] = local_matches;
 }
 
 template<typename key_t>
-void our_merge_path(key_t *r_sorted_keys, const int nr, 
-                    key_t *s_sorted_keys, const int ns, 
-                    key_t *keys_out, int *r_out, int *s_out, 
-                    int *num_matches, int output_buffer_size,
-                    key_t *merged_keys, int *keys_idx, int *keys_r_arr) {
+void our_merge_path(key_t *r_sorted_keys, const int nr,
+                    key_t *s_sorted_keys, const int ns,
+                    key_t *keys_out, int *r_out, int *s_out,
+                    int *num_matches, int output_buffer_size) {
     std::cout << "Inside the custom merge path code\n";
 
-    // Set cache preference for these kernels to prefer L1 (optional)
+    // Cache preference for kernels to prefer L1
     cudaFuncSetCacheConfig(create_merge_partitions<key_t>, cudaFuncCachePreferL1);
-    cudaFuncSetCacheConfig(sequential_merge<key_t>, cudaFuncCachePreferL1);
-    cudaFuncSetCacheConfig(merge_partition_sizes<key_t>, cudaFuncCachePreferL1);
-    cudaFuncSetCacheConfig(merge_join_keys<key_t>, cudaFuncCachePreferL1);
+    cudaFuncSetCacheConfig(direct_merge_join<key_t>, cudaFuncCachePreferL1);
 
     int partition_size = (nr + ns + NUM_THREADS * NUM_BLOCKS - 1) / (NUM_THREADS * NUM_BLOCKS);
     int *partition_starts;
@@ -491,10 +456,11 @@ void our_merge_path(key_t *r_sorted_keys, const int nr,
 
     // Create partitions
     create_merge_partitions<<<NUM_BLOCKS, NUM_THREADS>>>(r_sorted_keys, nr, s_sorted_keys, ns, partition_starts, partition_size);
-    // Merge each partition sequentially (in parallel)
-    sequential_merge<<<NUM_BLOCKS, NUM_THREADS>>>(r_sorted_keys, nr, s_sorted_keys, ns, partition_starts, merged_keys, keys_idx, keys_r_arr);
-    // Compute how many matches in each partition
-    merge_partition_sizes<<<NUM_BLOCKS, NUM_THREADS>>>(nr, ns, partition_matches, merged_keys, partition_size);
+
+    direct_merge_join<<<NUM_BLOCKS, NUM_THREADS>>>(
+        r_sorted_keys, nr, s_sorted_keys, ns,
+        partition_starts, keys_out, r_out, s_out,
+        partition_matches, output_buffer_size);
 
     // Inclusive scan to get prefix sums of matches
     thrust::device_ptr<int> d_partition_matches(partition_matches);
@@ -503,9 +469,6 @@ void our_merge_path(key_t *r_sorted_keys, const int nr,
     int final_sum;
     cudaMemcpy(&final_sum, partition_matches + (NUM_THREADS * NUM_BLOCKS - 1), sizeof(int), cudaMemcpyDeviceToHost);
     *num_matches = final_sum;
-
-    // Materialize the final joined keys and indices
-    merge_join_keys<<<NUM_BLOCKS, NUM_THREADS>>>(nr, ns, keys_out, r_out, s_out, partition_matches, merged_keys, keys_idx, keys_r_arr, partition_size, output_buffer_size);
 
     release_mem(partition_starts);
     release_mem(partition_matches);
