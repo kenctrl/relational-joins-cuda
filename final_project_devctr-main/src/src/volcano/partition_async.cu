@@ -126,6 +126,12 @@ __global__ void partition(KeyT* key_array, size_t size, void* workspace, void* o
             block_space[stage][i] = write_data;
         }
 
+        if (threadIdx.x == 0) {
+            for (auto i = 0; i < NUM_BUCKETS; i++) {
+                assert(block_space[stage][i] & (PREFIX_DONE | AGG_DONE));
+            }
+        }
+
         // Each thread is responsible for some number of buckets
         // It performs a decoupled lookback to get the prefix sum for its buckets
         for (auto cur_bucket = threadIdx.x; cur_bucket < NUM_BUCKETS; cur_bucket += NUM_THREADS) {
@@ -213,11 +219,11 @@ void test_1(){
 
     auto NUM_BUCKETS = 1 << (HIGH_BIT - LOW_BIT);
 
-    constexpr int NUM_THREADS = 1;
+    constexpr int NUM_THREADS = 64;
     constexpr int THREAD_TILE = 8;
-    constexpr int LOOP_TILE = 2;
+    constexpr int LOOP_TILE = 4;
 
-    size_t size = 1 << 8;
+    size_t size = 1 << 13;
     uint32_t *key_array = nullptr; // device memory
     uint32_t *host_array = new uint32_t[size]; // host memory
     for(auto i = 0; i < size; i++) {
@@ -309,9 +315,9 @@ void test_1(){
     uint32_t* output_host = new uint32_t[size];
     cudaMemcpy(output_host, out, size * sizeof(uint32_t), cudaMemcpyDeviceToHost);
 
-    for (int i = 0; i < size; i++) {
-        std::cout << output_host[i] << "\n";
-    }
+    // for (int i = 0; i < size; i++) {
+    //     std::cout << output_host[i] << "\n";
+    // }
 
     // for (int i = 0; i < size; i++) {
     //     std::cout << host_array[i] << "\n";
