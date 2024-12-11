@@ -1,0 +1,1280 @@
+============================ Experiment 1 ============================
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_morecols.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.93581 ms
+Merge: 4.2199 ms
+Materialize: 0.500736 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 2 S payload columns = 2
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_morecols.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90202 ms
+Merge: 4.05606 ms
+Materialize: 3.84726 ms
+
+Peak memory used: 638678527 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 3 S payload columns = 3
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_morecols.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
+Column-5: 0 1 2 3 4 5 6 7 8 9 
+Column-6: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90522 ms
+Merge: 4.19552 ms
+Materialize: 7.17926 ms
+
+Peak memory used: 772896255 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_morecols.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.91021 ms
+Merge: 4.1513 ms
+Materialize: 0.500736 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 2 S payload columns = 2
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_morecols.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFUR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.85491 ms
+Merge: 5.34528 ms
+Materialize: 7.17923 ms
+
+Peak memory used: 806450687 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 3 S payload columns = 3
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_morecols.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFUR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
+Column-5: 0 1 2 3 4 5 6 7 8 9 
+Column-6: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.85594 ms
+Merge: 4.52483 ms
+Materialize: 10.7254 ms
+
+Peak memory used: 940668415 bytes
+
+============================ Experiment 2 ============================
+||R|| = 4194304 ||S|| = 4194304
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_nr.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 4194304
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 4194304
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 1.57389 ms
+Merge: 1.87917 ms
+Materialize: 0.268224 ms
+
+Peak memory used: 252270079 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_nr.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90714 ms
+Merge: 4.19942 ms
+Materialize: 0.500736 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 16777216 ||S|| = 16777216
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_nr.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 16777216
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 16777216
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 5.69344 ms
+Merge: 7.10042 ms
+Materialize: 0.975872 ms
+
+Peak memory used: 1008842239 bytes
+||R|| = 4194304 ||S|| = 4194304
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_nr.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 4194304
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 4194304
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 1.54419 ms
+Merge: 1.85242 ms
+Materialize: 0.26944 ms
+
+Peak memory used: 252270079 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_nr.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90083 ms
+Merge: 4.21683 ms
+Materialize: 0.500672 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 16777216 ||S|| = 16777216
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_nr.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 16777216
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 16777216
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 5.68618 ms
+Merge: 7.04307 ms
+Materialize: 0.974848 ms
+
+Peak memory used: 1008842239 bytes
+
+============================ Experiment 3 ============================
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.93264 ms
+Merge: 4.25165 ms
+Materialize: 0.498752 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 16777216
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 16777216
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8386560
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 4.28954 ms
+Merge: 4.36429 ms
+Materialize: 0.57856 ms
+
+Peak memory used: 874624511 bytes
+||R|| = 8388608 ||S|| = 33554432
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 33554432
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8387379
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 7.06333 ms
+Merge: 7.38202 ms
+Materialize: 0.733184 ms
+
+Peak memory used: 1614952959 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8385536
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90198 ms
+Merge: 4.16768 ms
+Materialize: 0.502784 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 16777216
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 16777216
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8386560
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 4.29574 ms
+Merge: 4.33437 ms
+Materialize: 0.57856 ms
+
+Peak memory used: 874624511 bytes
+||R|| = 8388608 ||S|| = 33554432
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Uniform
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_ratio.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 33554432
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 8387379
+Results (first 10 items): 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 7.06662 ms
+Merge: 7.34394 ms
+Materialize: 0.734208 ms
+
+Peak memory used: 1614952959 bytes
+
+============================ Experiment 4 ============================
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 5307616
+Results (first 10 items): 
+Column-0: 0 1 2 4 5 6 9 10 13 14 
+Column-1: 0 1 2 4 5 6 9 10 13 14 
+Column-2: 0 1 2 4 5 6 9 10 13 14 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.94605 ms
+Merge: 3.2696 ms
+Materialize: 0.386048 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0.25
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 5177218
+Results (first 10 items): 
+Column-0: 3 7 8 12 13 15 16 17 18 19 
+Column-1: 3 7 8 12 13 15 16 17 18 19 
+Column-2: 3 7 8 12 13 15 16 17 18 19 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.93786 ms
+Merge: 3.23174 ms
+Materialize: 0.37888 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0.5
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 4674668
+Results (first 10 items): 
+Column-0: 0 5 6 7 8 10 11 13 16 21 
+Column-1: 0 5 6 7 8 10 11 13 16 21 
+Column-2: 0 5 6 7 8 10 11 13 16 21 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.93683 ms
+Merge: 3.13139 ms
+Materialize: 0.359584 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0.75
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 3567313
+Results (first 10 items): 
+Column-0: 1 4 5 7 8 11 13 16 17 19 
+Column-1: 1 4 5 7 8 11 13 16 17 19 
+Column-2: 1 4 5 7 8 11 13 16 17 19 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.91533 ms
+Merge: 2.77811 ms
+Materialize: 0.300896 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 1654629
+Results (first 10 items): 
+Column-0: 8 26 32 33 34 37 55 59 62 64 
+Column-1: 8 26 32 33 34 37 55 59 62 64 
+Column-2: 8 26 32 33 34 37 55 59 62 64 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90918 ms
+Merge: 2.5897 ms
+Materialize: 0.183296 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1.25
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 337938
+Results (first 10 items): 
+Column-0: 3 32 55 83 91 94 97 127 145 220 
+Column-1: 3 32 55 83 91 94 97 127 145 220 
+Column-2: 3 32 55 83 91 94 97 127 145 220 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90304 ms
+Merge: 2.43712 ms
+Materialize: 0.071712 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1.5
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 56282
+Results (first 10 items): 
+Column-0: 426 534 609 701 870 1204 1233 1288 1393 1509 
+Column-1: 426 534 609 701 870 1204 1233 1288 1393 1509 
+Column-2: 426 534 609 701 870 1204 1233 1288 1393 1509 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.90099 ms
+Merge: 2.29274 ms
+Materialize: 0.041056 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1.75
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 12719
+Results (first 10 items): 
+Column-0: 1233 1288 1393 2409 3639 3827 4655 5028 5638 7488 
+Column-1: 1233 1288 1393 2409 3639 3827 4655 5028 5638 7488 
+Column-2: 1233 1288 1393 2409 3639 3827 4655 5028 5638 7488 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.89792 ms
+Merge: 2.16867 ms
+Materialize: 0.03584 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJ
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 2
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 4044
+Results (first 10 items): 
+Column-0: 426 1288 1393 2409 2508 7488 7693 7886 16187 16960 
+Column-1: 426 1288 1393 2409 2508 7488 7693 7886 16187 16960 
+Column-2: 426 1288 1393 2409 2508 7488 7693 7886 16187 16960 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.8969 ms
+Merge: 2.00294 ms
+Materialize: 0.033664 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 5307598
+Results (first 10 items): 
+Column-0: 0 1 2 4 5 6 8 9 10 11 
+Column-1: 0 1 2 4 5 6 8 9 10 11 
+Column-2: 0 1 2 4 5 6 8 9 10 11 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.93581 ms
+Merge: 3.27581 ms
+Materialize: 0.386048 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0.25
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 5177199
+Results (first 10 items): 
+Column-0: 2 7 8 12 13 15 16 17 18 19 
+Column-1: 2 7 8 12 13 15 16 17 18 19 
+Column-2: 2 7 8 12 13 15 16 17 18 19 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.93274 ms
+Merge: 3.23379 ms
+Materialize: 0.383008 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0.5
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 4674675
+Results (first 10 items): 
+Column-0: 0 3 6 7 10 11 13 16 18 20 
+Column-1: 0 3 6 7 10 11 13 16 18 20 
+Column-2: 0 3 6 7 10 11 13 16 18 20 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.93786 ms
+Merge: 3.13139 ms
+Materialize: 0.357376 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 0.75
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 3567299
+Results (first 10 items): 
+Column-0: 1 4 5 6 7 8 13 16 17 19 
+Column-1: 1 4 5 6 7 8 13 16 17 19 
+Column-2: 1 4 5 6 7 8 13 16 17 19 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.91533 ms
+Merge: 2.7871 ms
+Materialize: 0.30208 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 1654607
+Results (first 10 items): 
+Column-0: 26 32 33 55 56 59 62 64 67 68 
+Column-1: 26 32 33 55 56 59 62 64 67 68 
+Column-2: 26 32 33 55 56 59 62 64 67 68 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.91421 ms
+Merge: 2.59174 ms
+Materialize: 0.18432 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1.25
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 337935
+Results (first 10 items): 
+Column-0: 32 55 83 91 94 97 145 220 226 229 
+Column-1: 32 55 83 91 94 97 145 220 226 229 
+Column-2: 32 55 83 91 94 97 145 220 226 229 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.91021 ms
+Merge: 2.45658 ms
+Materialize: 0.070656 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1.5
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 56290
+Results (first 10 items): 
+Column-0: 426 534 550 609 870 1114 1137 1288 1393 1509 
+Column-1: 426 534 550 609 870 1114 1137 1288 1393 1509 
+Column-2: 426 534 550 609 870 1114 1137 1288 1393 1509 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.89792 ms
+Merge: 2.31219 ms
+Materialize: 0.037888 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 1.75
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 12718
+Results (first 10 items): 
+Column-0: 426 1233 1288 1393 2409 3639 5051 5480 5638 6100 
+Column-1: 426 1233 1288 1393 2409 3639 5051 5480 5638 6100 
+Column-2: 426 1233 1288 1393 2409 3639 5051 5480 5638 6100 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.89997 ms
+Merge: 2.18419 ms
+Materialize: 0.034816 ms
+
+Peak memory used: 504460799 bytes
+||R|| = 8388608 ||S|| = 8388608
+R payload columns = 1 S payload columns = 1
+Join algorithm: SMJI
+Join type: Primary-foreign
+(if PK-FK) Distribution type: Zipf
+(if zipf) factor = 2
+(if PK-FK) Selectivity = 1
+(if PHJ) log_part1 = 9 log_part2 = 6
+key_bytes = 4 val_bytes = 4
+Late Materialization only? No
+Output file: exp_results/gpu_join/pkfk_skew.csv
+Data path prefix: /scratch/wubo/joinmb/
+Aggregation only? No
+
+Filtered FK to reduce the match ratio
+Data preparation is done
+Memory pool has initial size 13737184460 bytes.
+Circular buffer size = 8388608
+IN OUR SORT MERGE JOIN GFTR
+
+Output Cardinality = 4042
+Results (first 10 items): 
+Column-0: 1288 1393 2409 2508 3442 7488 7886 10635 10953 12548 
+Column-1: 1288 1393 2409 2508 3442 7488 7886 10635 10953 12548 
+Column-2: 1288 1393 2409 2508 3442 7488 7886 10635 10953 12548 
+
+Verifying...
+[CORRECT]
+
+==== Statistics ==== 
+Sort: 2.89587 ms
+Merge: 1.97325 ms
+Materialize: 0.034816 ms
+
+Peak memory used: 504460799 bytes
+

@@ -1,0 +1,18 @@
+experiments:
+  - name: pkfk_morecols
+    group: 0
+    output: pkfk_morecols.csv
+    query: >
+      SELECT DISTINCT *
+      FROM df
+      WHERE nr = 23 AND 
+            ratio = 0 AND
+            nr+ratio < 30 AND
+            1 <= pr AND pr <= 3 AND pr = ps AND
+            dist = 'uniform' AND
+            join_type = 'pkfk' AND
+            unique_keys = nr AND
+            zipf_factor = 0 AND
+            selectivity = 1 AND
+            (algo LIKE 'smj%')
+      ORDER BY algo, nr, ratio, pr, ps;
