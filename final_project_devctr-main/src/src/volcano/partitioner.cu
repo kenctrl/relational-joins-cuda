@@ -546,7 +546,7 @@ __global__ void join_kernel(int *__restrict__ out_idx_s,
 
 // all of these are in gpu mem
 template <int final_bucket_size>
-void launch_join(GpuRel &R, GpuRel &S) {
+auto launch_join(GpuRel &R, GpuRel &S) {
     int *num_buckets_r, *num_buckets_s;
     CHECK_CUDA_ERROR(
         cudaMallocHost(&num_buckets_r, sizeof(int))
@@ -683,11 +683,32 @@ void launch_join(GpuRel &R, GpuRel &S) {
         cudaMemcpy(h_value, out_value, sizeof(int) * (*num_matches), cudaMemcpyDeviceToHost)
     );
 
-    for(int i = 0; i < 100 && i < *num_matches; i++) {
+    for(int i = 0; i < 20 && i < *num_matches; i++) {
         std::cout << h_value[i] << " " << h_idx_r[i] << " " << h_idx_s[i] << std::endl;
     }
-}
 
+    release_mem(R.idx);
+    release_mem(R.value);
+    release_mem(R.cnt);
+    release_mem(R.chain);
+    release_mem(R.part);
+    release_mem(R.num_buckets);
+    release_mem(d_sched_r);
+
+    release_mem(S.idx);
+    release_mem(S.value);
+    release_mem(S.cnt);
+    release_mem(S.chain);
+    release_mem(S.part);
+    release_mem(S.num_buckets);
+    release_mem(d_sched_s);
+
+    return std::make_tuple(
+        h_value,
+        h_idx_r,
+        h_idx_s
+    );
+}
 
 int main() {
     const int num_rows = 1 << 25;
