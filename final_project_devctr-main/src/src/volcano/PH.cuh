@@ -1,5 +1,6 @@
 #include "utils.cuh"
 #include "cassert"
+#include "vector"
 
 template <int radix_size, int block>
 struct cache_t {
@@ -10,6 +11,15 @@ struct cache_t {
     int head[radix_size];
 };
 
+struct GpuRel {
+    int num_rows;
+    int *num_buckets;
+    int *idx;
+    int *value;
+    int *part;
+    int *cnt;
+    int *chain;
+};
 
 // first 32 bits of head is the size of the bucket
 // next 32 bits of head in the position of the head
@@ -115,6 +125,7 @@ __global__ void second_pass(
                            int * __restrict__ new_idx,
                            int * __restrict__ new_value,
                            int * __restrict__ new_cnt,
+                           int * __restrict__ new_chain,
                            const int * __restrict__ part,
                            const int * __restrict__ idx,
                            const int * __restrict__ value,
@@ -195,6 +206,7 @@ __global__ void second_pass(
                 atomicExch(&new_head[head_idx], new_start);
 
                 new_part[next_bucket] = head_idx;
+                new_chain[cur_bucket] = next_bucket;
             }
         }
         atomicAdd(&new_cnt[cur_bucket], run_length);
@@ -209,17 +221,21 @@ __global__ void second_pass(
 }
 
 
-template <int radix_size, int bucket_size>
-__global__ void init_buckets(int *num_buckets,
-                             unsigned long long *head,
-                             int* part,
-                             int* cnt,
+template <int radix_size, int bucket_size, bool has_chains>
+__global__ void init_buckets(int *__restrict__ num_buckets,
+                             unsigned long long *__restrict__ head,
+                             int *__restrict__ part,
+                             int* __restrict__ cnt,
+                             int* __restrict__ chain,
                              int max_buckets) {
     const int i = blockDim.x * blockIdx.x + threadIdx.x;
     if(i == 0) {
         *num_buckets = radix_size;
     }
     if(i < max_buckets) {
+        if constexpr(has_chains) {
+            chain[i] = -1;
+        }
         part[i] = (i < radix_size) ? i : -1;
         cnt[i] = 0;
     }
@@ -228,8 +244,7 @@ __global__ void init_buckets(int *num_buckets,
     }
 }
 
-
-static void check_ph_correctness(const int *num_buckets,
+void check_correctness(const int *num_buckets,
                        const int *part,
                        const int *idx,
                        const int *cnt,
@@ -271,10 +286,12 @@ static void check_ph_correctness(const int *num_buckets,
         cudaMemcpy(h_idx, idx, sizeof(int) * max_buckets * bucket_size, cudaMemcpyDeviceToHost)
     );
 
-    std::cout << "All memory moved the host" << std::endl;
+    #ifdef PHJ_DEBUG
+        std::cout << "All memory moved the host" << std::endl;
 
-    std::cout << "max buckets " << max_buckets << std::endl;
-    std::cout << "buckets needed " << *h_num_buckets << std::endl;
+        std::cout << "max buckets " << max_buckets << std::endl;
+        std::cout << "buckets needed " << *h_num_buckets << std::endl;
+    #endif
 
     int num_bucks = 0;
     int total_items = 0;
@@ -300,17 +317,21 @@ static void check_ph_correctness(const int *num_buckets,
             ++num_bucks;
         }
     }
-    std::cout << "total buckets found: " << num_bucks << std::endl;
-    std::cout << "total items found: " << total_items << std::endl;
+    #ifdef PHJ_DEBUG
+        std::cout << "total buckets found: " << num_bucks << std::endl;
+        std::cout << "total items found: " << total_items << std::endl;
+    #endif
     assert(total_items == num_rows);
     assert(num_bucks == *h_num_buckets);
-    std::cout << "Correctness checks passed!" << std::endl;
+    #ifdef PHJ_DEBUG
+        std::cout << "Correctness checks passed!" << std::endl;
+    #endif
 }
 
 
 // returns the cpu pointer
 template <int radix_size, int shift, int block, int bucket_size>
-static auto launch_first_pass(const int* keys, int num_rows) {
+auto launch_first_pass(const int* keys, int num_rows, float &total_time) {
     const int max_buckets = num_rows / bucket_size + radix_size + 2;
 
     int *d_keys;
@@ -332,11 +353,12 @@ static auto launch_first_pass(const int* keys, int num_rows) {
         cudaMemcpy(d_keys, keys, sizeof(int) * num_rows, cudaMemcpyHostToDevice)
     );
 
-    init_buckets<radix_size, bucket_size><<<max_buckets / 32 + 1, 32>>>(
+    init_buckets<radix_size, bucket_size, false><<<max_buckets / 32 + 1, 32>>>(
         num_buckets,
         head,
         part,
         cnt,
+        NULL,
         max_buckets
     );
 
@@ -357,15 +379,21 @@ static auto launch_first_pass(const int* keys, int num_rows) {
     float t = 0;
     SETUP_TIMING()
     TIME_FUNC(launch(), t)
-    std::cout << "First pass timing " << t << std::endl;
+    total_time += t;
+
+    #ifdef PHJ_DEBUG
+        std::cout << "First pass timing " << t << std::endl;
+    #endif
 
     auto radix_fn = [&] (int x) {
         return (x >> shift) & (radix_size - 1);
     };
 
-    check_ph_correctness(num_buckets, part, idx, cnt, keys, 
+    check_correctness(num_buckets, part, idx, cnt, keys, 
                       num_rows, max_buckets, bucket_size, radix_fn);
 
+    release_mem(d_keys);
+    release_mem(head);
     return std::make_tuple(
         num_buckets,
         idx,
@@ -375,17 +403,18 @@ static auto launch_first_pass(const int* keys, int num_rows) {
     );
 }
 
-static auto launch_second_pass(int *keys, int num_rows) {
+template <int final_bucket_size>
+GpuRel launch_second_pass(int *keys, int num_rows, float &total_time) {
     constexpr int lev1_block = 8;
     constexpr int radix_size1 = 256;
     constexpr int radix_size2 = 256;
     constexpr int shift1 = 1;
     constexpr int shift2 = 9;
     constexpr int bucket_size1 = radix_size1 * lev1_block;
-    constexpr int bucket_size2 = 1024;
+    constexpr int bucket_size2 = final_bucket_size;
 
     const auto [num_lev1_buckets, lev1_idx, lev1_value, lev1_part, lev1_cnt] = 
-                                                        launch_first_pass<radix_size1, shift1, lev1_block, bucket_size1>(keys, num_rows);
+                                                        launch_first_pass<radix_size1, shift1, lev1_block, bucket_size1>(keys, num_rows, total_time);
 
 
     constexpr int radix_size = radix_size1 * radix_size2;
@@ -395,9 +424,7 @@ static auto launch_second_pass(int *keys, int num_rows) {
     unsigned long long *head;
     int *part;
     int *value, *idx;
-    int *cnt;
-
-
+    int *cnt, *chain;
     int *h_num_lev1_buckets;
 
     CHECK_CUDA_ERROR(
@@ -413,15 +440,16 @@ static auto launch_second_pass(int *keys, int num_rows) {
     allocate_mem(&idx, false, sizeof(int) * max_buckets * bucket_size2);
     allocate_mem(&value, false, sizeof(int) * max_buckets * bucket_size2);
     allocate_mem(&cnt, false, sizeof(int) * max_buckets);
+    allocate_mem(&chain, false, sizeof(int) * max_buckets);
 
-    init_buckets<radix_size, bucket_size2><<<max_buckets / 32 + 1, 32>>>(
+    init_buckets<radix_size, bucket_size2, true><<<max_buckets / 32 + 1, 32>>>(
         num_buckets,
         head,
         part,
         cnt,
+        chain,
         max_buckets
     );
-    printf("hello everyone\n");
 
     auto launch = [&] () {
         const int gridDimX = *h_num_lev1_buckets;
@@ -432,6 +460,7 @@ static auto launch_second_pass(int *keys, int num_rows) {
             idx,
             value,
             cnt,
+            chain,
             lev1_part,
             lev1_idx,
             lev1_value,
@@ -444,7 +473,11 @@ static auto launch_second_pass(int *keys, int num_rows) {
     float t = 0;
     SETUP_TIMING()
     TIME_FUNC(launch(), t)
-    std::cout << "Second pass timing " << t << std::endl;
+    total_time += t;
+
+    #ifdef PHJ_DEBUG
+        std::cout << "Second pass timing " << t << std::endl;
+    #endif
 
     auto radix_fn = [&] (int x) {
         int partition1 = (x >> shift1) & (radix_size1 - 1);
@@ -452,14 +485,267 @@ static auto launch_second_pass(int *keys, int num_rows) {
         return partition1 * radix_size2 + partition2;
     };
 
-    check_ph_correctness(num_buckets, part, idx, cnt, keys, 
+    check_correctness(num_buckets, part, idx, cnt, keys, 
                       num_rows, max_buckets, bucket_size2, radix_fn);
 
+    release_mem(head);
+    release_mem(num_lev1_buckets);
+    release_mem(lev1_part);
+    release_mem(lev1_idx);
+    release_mem(lev1_value);
+    release_mem(lev1_cnt);
+
+    return {
+        .num_rows = num_rows,
+        .num_buckets = num_buckets, 
+        .idx = idx,
+        .value = value,
+        .part = part,
+        .cnt = cnt,
+        .chain = chain
+    };
+}
+
+struct entry_t {
+    int value;
+    int idx;
+};
+
+template <int bucket_size>
+__global__ void join_kernel(int *__restrict__ out_idx_s,
+                            int *__restrict__ out_idx_r,
+                            int *__restrict__ out_value,
+                            int *__restrict__ cur,
+                            const int *__restrict__ idx_r,
+                            const int *__restrict__ idx_s,
+                            const int *__restrict__ value_r,
+                            const int *__restrict__ value_s,
+                            const int *__restrict__ cnt_r,
+                            const int *__restrict__ cnt_s,
+                            const int *__restrict__ sched_r,
+                            const int *__restrict__ sched_s) {
+    const int buck_r = sched_r[blockIdx.x];
+    const int buck_s = sched_s[blockIdx.x];
+
+    extern __shared__ entry_t cache[]; 
+
+    for(int i = threadIdx.x; i < cnt_r[buck_r]; i += blockDim.x) {
+        cache[i].value = value_r[buck_r * bucket_size + i];
+        cache[i].idx = idx_r[buck_r * bucket_size + i];
+    }
+    __syncthreads();
+
+    for(int i = threadIdx.x; i < cnt_s[buck_s]; i += blockDim.x) {
+        int val_s = value_s[buck_s * bucket_size + i];
+        int id_s  = idx_s[buck_s * bucket_size + i];
+
+        // replace with hashtable
+        int cnt = 0;
+        for(int j = 0; j < cnt_r[buck_r]; j++) {
+            cnt += cache[j].value == val_s;
+        }
+
+        int start = atomicAdd(cur, cnt);
+        for(int j = 0; j < cnt_r[buck_r]; j++) {
+            if(cache[j].value == val_s) {
+                out_idx_r[start] = cache[j].idx;
+                out_idx_s[start] = id_s;
+                out_value[start] = val_s;
+                start += 1;
+            }
+        }
+    }
+}
+
+// all of these are in gpu mem
+template <int final_bucket_size>
+auto launch_join(GpuRel &R, GpuRel &S, float &total_time) {
+    int *num_buckets_r, *num_buckets_s;
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&num_buckets_r, sizeof(int))
+    );
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&num_buckets_s, sizeof(int))
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(num_buckets_r, R.num_buckets, sizeof(int), cudaMemcpyDeviceToHost)
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(num_buckets_s, S.num_buckets, sizeof(int), cudaMemcpyDeviceToHost)
+    );
+
+    #ifdef PHJ_DEBUG
+        std::cout << *num_buckets_r << " found for relation 1" << std::endl;
+        std::cout << *num_buckets_s << " found for relation 1" << std::endl;
+    #endif
+
+    int *part_r, *part_s;
+
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&part_r, sizeof(int) * (*num_buckets_r))
+    ); 
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&part_s, sizeof(int) * (*num_buckets_s))
+    ); 
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(part_r, R.part, sizeof(int) * (*num_buckets_r), cudaMemcpyDeviceToHost)
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(part_s, S.part, sizeof(int) * (*num_buckets_s), cudaMemcpyDeviceToHost)
+    );
+
+    std::map<int, std::vector<int>> match;
+    for(int i = 0; i < *num_buckets_r; i++) {
+        match[part_r[i]].push_back(i);
+    }
+    std::vector <std::pair<int, int>> sched_vec;
+    for(int i = 0; i < *num_buckets_s; i++) {
+        for(auto j : match[part_s[i]]) {
+            sched_vec.push_back({i, j});
+        }
+    }
+    int *schedR, *schedS;
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&schedR, sizeof(int) * sched_vec.size())
+    );
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&schedS, sizeof(int) * sched_vec.size())
+    );
+    for(int i = 0; i < (int) sched_vec.size(); i++) {
+        schedR[i] = sched_vec[i].first;
+        schedS[i] = sched_vec[i].second;
+    }
+    int *d_sched_r, *d_sched_s;
+    allocate_mem(&d_sched_r, false, sizeof(int) * sched_vec.size());
+    allocate_mem(&d_sched_s, false, sizeof(int) * sched_vec.size());
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(d_sched_r, schedR, sizeof(int) * sched_vec.size(), cudaMemcpyHostToDevice)
+    );
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(d_sched_s, schedS, sizeof(int) * sched_vec.size(), cudaMemcpyHostToDevice)
+    );
+
+    int *out_idx_r, *out_idx_s;
+    int *out_value;
+    int *cur;
+
+    int max_matching = std::max(R.num_rows, S.num_rows);
+    allocate_mem(&out_idx_r, false, sizeof(int) * max_matching);
+    allocate_mem(&out_idx_s, false, sizeof(int) * max_matching);
+    allocate_mem(&out_value, false, sizeof(int) * max_matching);
+    allocate_mem(&cur, true, sizeof(int)); // initialize it with 0
+
+    auto launch = [&] () {
+        join_kernel<final_bucket_size> <<< sched_vec.size(), 1024, sizeof(entry_t) * final_bucket_size >>> (
+            out_idx_r,
+            out_idx_s,
+            out_value,
+            cur,
+            R.idx,
+            S.idx,
+            R.value,
+            S.value,
+            R.cnt,
+            S.cnt,
+            d_sched_r,
+            d_sched_s
+        );
+    };
+    float t = 0;
+    SETUP_TIMING();
+    TIME_FUNC(launch(), t);
+    total_time += t;
+
+    #ifdef PHJ_DEBUG
+        std::cout << "time taken in join " << t << std::endl;
+    #endif 
+
+    int *h_idx_s, *h_idx_r;
+    int *h_value;
+    int *num_matches;
+
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&num_matches, sizeof(int))
+    );
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(num_matches, cur, sizeof(int), cudaMemcpyDeviceToHost)
+    );
+
+    #ifdef PHJ_DEBUG
+        std::cout << *num_matches << " matches found" << std::endl;
+    #endif
+
+
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&h_idx_s, sizeof(int) * (*num_matches))
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&h_idx_r, sizeof(int) * (*num_matches))
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMallocHost(&h_value, sizeof(int) * (*num_matches))
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(h_idx_r, out_idx_r, sizeof(int) * (*num_matches), cudaMemcpyDeviceToHost)
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(h_idx_s, out_idx_s, sizeof(int) * (*num_matches), cudaMemcpyDeviceToHost)
+    );
+
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(h_value, out_value, sizeof(int) * (*num_matches), cudaMemcpyDeviceToHost)
+    );
+
+    #ifdef PHJ_DEBUG
+        for(int i = 0; i < 20 && i < *num_matches; i++) {
+            std::cout << h_value[i] << " " << h_idx_r[i] << " " << h_idx_s[i] << std::endl;
+        }
+    #endif
+
+    release_mem(R.idx);
+    release_mem(R.value);
+    release_mem(R.cnt);
+    release_mem(R.chain);
+    release_mem(R.part);
+    release_mem(R.num_buckets);
+    release_mem(d_sched_r);
+
+    release_mem(S.idx);
+    release_mem(S.value);
+    release_mem(S.cnt);
+    release_mem(S.chain);
+    release_mem(S.part);
+    release_mem(S.num_buckets);
+    release_mem(d_sched_s);
+
     return std::make_tuple(
-        num_buckets, 
-        idx,
-        value,
-        part,
-        cnt
+        *num_matches,
+        h_value,
+        h_idx_r,
+        h_idx_s
     );
 }
+
+auto hash_join(int* keys1, int num_rows1, int *keys2, int num_rows2) {
+    float partition_time = 0, join_time = 0;
+    GpuRel relR = launch_second_pass<1024>(keys1, num_rows1, partition_time);
+    GpuRel relS = launch_second_pass<1024>(keys2, num_rows2, partition_time);
+
+    auto res = launch_join<1024>(relR, relS, join_time);
+
+    std::cout << "Our PHJ statistics" << std::endl;
+    std::cout << "===========================" << std::endl;
+    std::cout << "Custom Partition Time: " << partition_time << std::endl;
+    std::cout << "Custom Join Time: " << join_time << std::endl << std::endl;
+
+    return res;
+} 

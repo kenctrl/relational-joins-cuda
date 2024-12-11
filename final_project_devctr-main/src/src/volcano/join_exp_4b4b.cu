@@ -21,6 +21,7 @@
 #include "sort_hash_join.cuh"
 #include "experiment_util.cuh"
 #include "join_base.hpp"
+#include "PH.cuh"
 
 
 using namespace std;
@@ -283,6 +284,10 @@ void prepare_workload(const struct join_args& args, TupleR& relation_r, TupleS& 
             memcpy(r[i], r[0], sizeof(col_t)*nr);
         }
     }
+
+    auto [num_matches, joined_keys, joined_idx1, joined_idx2] = hash_join(r[0], nr, s[0], ns);
+
+    std::cout << "Custom PHJ kernel is Done!" << std::endl << std::endl;
 
     cout << "Data preparation is done\n";
 
