@@ -17,21 +17,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 94334 94332 94330 94328 94326 94324 94322 94320 94318 94316 
-Column-1: 94334 94332 94330 94328 94326 94324 94322 94320 94318 94316 
-Column-2: 94334 94332 94330 94328 94326 94324 94322 94320 94318 94316 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 3.15802 ms
-Merge: 0.70128 ms
-Materialize: 0.001824 ms
+Sort: 2.93581 ms
+Merge: 4.2199 ms
+Materialize: 0.500736 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 2 S payload columns = 2
 Join algorithm: SMJ
@@ -50,23 +52,25 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 78846 78844 78842 78840 78838 78836 78834 78832 78830 78828 
-Column-1: 78846 78844 78842 78840 78838 78836 78834 78832 78830 78828 
-Column-2: 78846 78844 78842 78840 78838 78836 78834 78832 78830 78828 
-Column-3: 78846 78844 78842 78840 78838 78836 78834 78832 78830 78828 
-Column-4: 78846 78844 78842 78840 78838 78836 78834 78832 78830 78828 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 3.12218 ms
-Merge: 0.53104 ms
-Materialize: 4.15184 ms
+Sort: 2.90202 ms
+Merge: 4.05606 ms
+Materialize: 3.84726 ms
 
-Peak memory used: 638892803 bytes
+Peak memory used: 638678527 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 3 S payload columns = 3
 Join algorithm: SMJ
@@ -85,25 +89,27 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 96318 96316 96314 96312 96310 96308 96306 96304 96302 96300 
-Column-1: 96318 96316 96314 96312 96310 96308 96306 96304 96302 96300 
-Column-2: 96318 96316 96314 96312 96310 96308 96306 96304 96302 96300 
-Column-3: 96318 96316 96314 96312 96310 96308 96306 96304 96302 96300 
-Column-4: 96318 96316 96314 96312 96310 96308 96306 96304 96302 96300 
-Column-5: 96318 96316 96314 96312 96310 96308 96306 96304 96302 96300 
-Column-6: 96318 96316 96314 96312 96310 96308 96306 96304 96302 96300 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
+Column-5: 0 1 2 3 4 5 6 7 8 9 
+Column-6: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 3.13139 ms
-Merge: 0.536224 ms
-Materialize: 7.74269 ms
+Sort: 2.90522 ms
+Merge: 4.19552 ms
+Materialize: 7.17926 ms
 
-Peak memory used: 773110531 bytes
+Peak memory used: 772896255 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -122,21 +128,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 72702 72700 72698 72696 72694 72692 72690 72688 72686 72684 
-Column-1: 72702 72700 72698 72696 72694 72692 72690 72688 72686 72684 
-Column-2: 72702 72700 72698 72696 72694 72692 72690 72688 72686 72684 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 3.13651 ms
-Merge: 0.697568 ms
-Materialize: 0.001696 ms
+Sort: 2.91021 ms
+Merge: 4.1513 ms
+Materialize: 0.500736 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 2 S payload columns = 2
 Join algorithm: SMJI
@@ -155,23 +163,25 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFUR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 25470 25468 25466 25464 25462 25460 25458 25456 25454 25452 
-Column-1: 25470 25468 25466 25464 25462 25460 25458 25456 25454 25452 
-Column-2: 25470 25468 25466 25464 25462 25460 25458 25456 25454 25452 
-Column-3: 25470 25468 25466 25464 25462 25460 25458 25456 25454 25452 
-Column-4: 25470 25468 25466 25464 25462 25460 25458 25456 25454 25452 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 3.08003 ms
-Merge: 0.692544 ms
-Materialize: 7.37485 ms
+Sort: 2.85491 ms
+Merge: 5.34528 ms
+Materialize: 7.17923 ms
 
-Peak memory used: 739523072 bytes
+Peak memory used: 806450687 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 3 S payload columns = 3
 Join algorithm: SMJI
@@ -190,25 +200,27 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFUR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 39870 39868 39866 39864 39862 39860 39858 39856 39854 39852 
-Column-1: 39870 39868 39866 39864 39862 39860 39858 39856 39854 39852 
-Column-2: 39870 39868 39866 39864 39862 39860 39858 39856 39854 39852 
-Column-3: 39870 39868 39866 39864 39862 39860 39858 39856 39854 39852 
-Column-4: 39870 39868 39866 39864 39862 39860 39858 39856 39854 39852 
-Column-5: 39870 39868 39866 39864 39862 39860 39858 39856 39854 39852 
-Column-6: 39870 39868 39866 39864 39862 39860 39858 39856 39854 39852 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
+Column-3: 0 1 2 3 4 5 6 7 8 9 
+Column-4: 0 1 2 3 4 5 6 7 8 9 
+Column-5: 0 1 2 3 4 5 6 7 8 9 
+Column-6: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 3.0769 ms
-Merge: 0.702304 ms
-Materialize: 11.0203 ms
+Sort: 2.85594 ms
+Merge: 4.52483 ms
+Materialize: 10.7254 ms
 
-Peak memory used: 873740800 bytes
+Peak memory used: 940668415 bytes
 
 ============================ Experiment 2 ============================
 ||R|| = 4194304 ||S|| = 4194304
@@ -229,21 +241,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 4194304
-Allocating 34221567 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
 Output Cardinality = 4194304
 Results (first 10 items): 
-Column-0: 43134 43132 43130 43128 43126 43124 43122 43120 43118 43116 
-Column-1: 43134 43132 43130 43128 43126 43124 43122 43120 43118 43116 
-Column-2: 43134 43132 43130 43128 43126 43124 43122 43120 43118 43116 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 1.58515 ms
-Merge: 0.365664 ms
-Materialize: 0.00176 ms
+Sort: 1.57389 ms
+Merge: 1.87917 ms
+Materialize: 0.268224 ms
 
-Peak memory used: 218787587 bytes
+Peak memory used: 252270079 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -262,21 +276,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 79998 79996 79994 79992 79990 79988 79986 79984 79982 79980 
-Column-1: 79998 79996 79994 79992 79990 79988 79986 79984 79982 79980 
-Column-2: 79998 79996 79994 79992 79990 79988 79986 79984 79982 79980 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.48454 ms
-Merge: 0.677984 ms
-Materialize: 0.001664 ms
+Sort: 2.90714 ms
+Merge: 4.19942 ms
+Materialize: 0.500736 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 16777216 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -295,21 +311,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
 Output Cardinality = 16777216
 Results (first 10 items): 
-Column-0: 22654 22652 22650 22648 22646 22644 22642 22640 22638 22636 
-Column-1: 22654 22652 22650 22648 22646 22644 22642 22640 22638 22636 
-Column-2: 22654 22652 22650 22648 22646 22644 22642 22640 22638 22636 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 10.879 ms
-Merge: 1.32688 ms
-Materialize: 0.00176 ms
+Sort: 5.69344 ms
+Merge: 7.10042 ms
+Materialize: 0.975872 ms
 
-Peak memory used: 875122435 bytes
+Peak memory used: 1008842239 bytes
 ||R|| = 4194304 ||S|| = 4194304
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -328,21 +346,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 4194304
-Allocating 34221567 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
 Output Cardinality = 4194304
 Results (first 10 items): 
-Column-0: 47998 47996 47994 47992 47990 47988 47986 47984 47982 47980 
-Column-1: 47998 47996 47994 47992 47990 47988 47986 47984 47982 47980 
-Column-2: 47998 47996 47994 47992 47990 47988 47986 47984 47982 47980 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 1.58208 ms
-Merge: 0.350016 ms
-Materialize: 0.001728 ms
+Sort: 1.54419 ms
+Merge: 1.85242 ms
+Materialize: 0.26944 ms
 
-Peak memory used: 218787587 bytes
+Peak memory used: 252270079 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -361,21 +381,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 41726 41724 41722 41720 41718 41716 41714 41712 41710 41708 
-Column-1: 41726 41724 41722 41720 41718 41716 41714 41712 41710 41708 
-Column-2: 41726 41724 41722 41720 41718 41716 41714 41712 41710 41708 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.48557 ms
-Merge: 0.671904 ms
-Materialize: 0.001728 ms
+Sort: 2.90083 ms
+Merge: 4.21683 ms
+Materialize: 0.500672 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 16777216 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -394,21 +416,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
 Output Cardinality = 16777216
 Results (first 10 items): 
-Column-0: 16446 16444 16442 16440 16438 16436 16434 16432 16430 16428 
-Column-1: 16446 16444 16442 16440 16438 16436 16434 16432 16430 16428 
-Column-2: 16446 16444 16442 16440 16438 16436 16434 16432 16430 16428 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 10.9056 ms
-Merge: 1.32515 ms
-Materialize: 0.002112 ms
+Sort: 5.68618 ms
+Merge: 7.04307 ms
+Materialize: 0.974848 ms
 
-Peak memory used: 875122435 bytes
+Peak memory used: 1008842239 bytes
 
 ============================ Experiment 3 ============================
 ||R|| = 8388608 ||S|| = 8388608
@@ -429,21 +453,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 97150 97148 97146 97144 97142 97140 97138 97136 97134 97132 
-Column-1: 97150 97148 97146 97144 97142 97140 97138 97136 97134 97132 
-Column-2: 97150 97148 97146 97144 97142 97140 97138 97136 97134 97132 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.4528 ms
-Merge: 0.674432 ms
-Materialize: 0.001728 ms
+Sort: 2.93264 ms
+Merge: 4.25165 ms
+Materialize: 0.498752 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -462,21 +488,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 16777216
+Output Cardinality = 8386560
 Results (first 10 items): 
-Column-0: 53887 53885 53884 53883 53881 53880 53879 53877 53876 53875 
-Column-1: 53887 53885 53884 53883 53881 53880 53879 53877 53876 53875 
-Column-2: 53887 53885 53884 53883 53881 53880 53879 53877 53876 53875 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 9.38598 ms
-Merge: 1.16163 ms
-Materialize: 0.002432 ms
+Sort: 4.28954 ms
+Merge: 4.36429 ms
+Materialize: 0.57856 ms
 
-Peak memory used: 740888323 bytes
+Peak memory used: 874624511 bytes
 ||R|| = 8388608 ||S|| = 33554432
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -495,21 +523,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 33554432
-Allocating 273708543 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 33554432
+Output Cardinality = 8387379
 Results (first 10 items): 
-Column-0: 16434 16433 16433 16432 16431 16430 16429 16429 16428 16427 
-Column-1: 16434 16433 16433 16432 16431 16430 16429 16429 16428 16427 
-Column-2: 16434 16433 16433 16432 16431 16430 16429 16429 16428 16427 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 14.7763 ms
-Merge: 2.0511 ms
-Materialize: 0.002048 ms
+Sort: 7.06333 ms
+Merge: 7.38202 ms
+Materialize: 0.733184 ms
 
-Peak memory used: 1347532547 bytes
+Peak memory used: 1614952959 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -528,21 +558,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 8385536
 Results (first 10 items): 
-Column-0: 98430 98428 98426 98424 98422 98420 98418 98416 98414 98412 
-Column-1: 98430 98428 98426 98424 98422 98420 98418 98416 98414 98412 
-Column-2: 98430 98428 98426 98424 98422 98420 98418 98416 98414 98412 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.45485 ms
-Merge: 0.675328 ms
-Materialize: 0.002368 ms
+Sort: 2.90198 ms
+Merge: 4.16768 ms
+Materialize: 0.502784 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 16777216
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -561,21 +593,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 16777216
-Allocating 136859135 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 16777216
+Output Cardinality = 8386560
 Results (first 10 items): 
-Column-0: 45695 45693 45692 45691 45689 45688 45687 45685 45684 45683 
-Column-1: 45695 45693 45692 45691 45689 45688 45687 45685 45684 45683 
-Column-2: 45695 45693 45692 45691 45689 45688 45687 45685 45684 45683 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 9.39213 ms
-Merge: 1.15706 ms
-Materialize: 0.002016 ms
+Sort: 4.29574 ms
+Merge: 4.33437 ms
+Materialize: 0.57856 ms
 
-Peak memory used: 740888323 bytes
+Peak memory used: 874624511 bytes
 ||R|| = 8388608 ||S|| = 33554432
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -594,21 +628,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 33554432
-Allocating 273708543 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 33554432
+Output Cardinality = 8387379
 Results (first 10 items): 
-Column-0: 36069 36069 36068 36067 36066 36065 36065 36064 36063 36062 
-Column-1: 36069 36069 36068 36067 36066 36065 36065 36064 36063 36062 
-Column-2: 36069 36069 36068 36067 36066 36065 36065 36064 36063 36062 
+Column-0: 0 1 2 3 4 5 6 7 8 9 
+Column-1: 0 1 2 3 4 5 6 7 8 9 
+Column-2: 0 1 2 3 4 5 6 7 8 9 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 14.5132 ms
-Merge: 2.03946 ms
-Materialize: 0.00176 ms
+Sort: 7.06662 ms
+Merge: 7.34394 ms
+Materialize: 0.734208 ms
 
-Peak memory used: 1347532547 bytes
+Peak memory used: 1614952959 bytes
 
 ============================ Experiment 4 ============================
 ||R|| = 8388608 ||S|| = 8388608
@@ -629,21 +665,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 5307616
 Results (first 10 items): 
-Column-0: 41466 41465 41463 41460 41457 41454 41451 41449 41448 41446 
-Column-1: 41466 41465 41463 41460 41457 41454 41451 41449 41448 41446 
-Column-2: 41466 41465 41463 41460 41457 41454 41451 41449 41448 41446 
+Column-0: 0 1 2 4 5 6 9 10 13 14 
+Column-1: 0 1 2 4 5 6 9 10 13 14 
+Column-2: 0 1 2 4 5 6 9 10 13 14 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.46099 ms
-Merge: 0.679104 ms
-Materialize: 0.002336 ms
+Sort: 2.94605 ms
+Merge: 3.2696 ms
+Materialize: 0.386048 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -662,21 +700,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 5177218
 Results (first 10 items): 
-Column-0: 30874 30873 30871 30869 30868 30865 30863 30862 30859 30856 
-Column-1: 30874 30873 30871 30869 30868 30865 30863 30862 30859 30856 
-Column-2: 30874 30873 30871 30869 30868 30865 30863 30862 30859 30856 
+Column-0: 3 7 8 12 13 15 16 17 18 19 
+Column-1: 3 7 8 12 13 15 16 17 18 19 
+Column-2: 3 7 8 12 13 15 16 17 18 19 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.48864 ms
-Merge: 0.6856 ms
-Materialize: 0.002688 ms
+Sort: 2.93786 ms
+Merge: 3.23174 ms
+Materialize: 0.37888 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -695,21 +735,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 4674668
 Results (first 10 items): 
-Column-0: 39470 39464 39462 39460 39460 39457 39455 39454 39450 39449 
-Column-1: 39470 39464 39462 39460 39460 39457 39455 39454 39450 39449 
-Column-2: 39470 39464 39462 39460 39460 39457 39455 39454 39450 39449 
+Column-0: 0 5 6 7 8 10 11 13 16 21 
+Column-1: 0 5 6 7 8 10 11 13 16 21 
+Column-2: 0 5 6 7 8 10 11 13 16 21 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.46816 ms
-Merge: 0.688992 ms
-Materialize: 0.001952 ms
+Sort: 2.93683 ms
+Merge: 3.13139 ms
+Materialize: 0.359584 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -728,21 +770,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 3567313
 Results (first 10 items): 
-Column-0: 85777 85777 85777 85777 85777 85777 85777 85777 85777 85777 
-Column-1: 85777 85777 85777 85777 85777 85777 85777 85777 85777 85777 
-Column-2: 85777 85777 85777 85777 85777 85777 85777 85777 85777 85777 
+Column-0: 1 4 5 7 8 11 13 16 17 19 
+Column-1: 1 4 5 7 8 11 13 16 17 19 
+Column-2: 1 4 5 7 8 11 13 16 17 19 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.49274 ms
-Merge: 0.679456 ms
-Materialize: 0.001696 ms
+Sort: 2.91533 ms
+Merge: 2.77811 ms
+Materialize: 0.300896 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -761,21 +805,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 1654629
 Results (first 10 items): 
-Column-0: 80780 80780 80780 80780 80780 80780 80780 80780 80780 80780 
-Column-1: 80780 80780 80780 80780 80780 80780 80780 80780 80780 80780 
-Column-2: 80780 80780 80780 80780 80780 80780 80780 80780 80780 80780 
+Column-0: 8 26 32 33 34 37 55 59 62 64 
+Column-1: 8 26 32 33 34 37 55 59 62 64 
+Column-2: 8 26 32 33 34 37 55 59 62 64 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.50195 ms
-Merge: 0.67408 ms
-Materialize: 0.001728 ms
+Sort: 2.90918 ms
+Merge: 2.5897 ms
+Materialize: 0.183296 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -794,21 +840,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 337938
 Results (first 10 items): 
-Column-0: 70618 70618 70618 70618 70618 70618 70618 70618 70618 70618 
-Column-1: 70618 70618 70618 70618 70618 70618 70618 70618 70618 70618 
-Column-2: 70618 70618 70618 70618 70618 70618 70618 70618 70618 70618 
+Column-0: 3 32 55 83 91 94 97 127 145 220 
+Column-1: 3 32 55 83 91 94 97 127 145 220 
+Column-2: 3 32 55 83 91 94 97 127 145 220 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.48864 ms
-Merge: 0.649824 ms
-Materialize: 0.002176 ms
+Sort: 2.90304 ms
+Merge: 2.43712 ms
+Materialize: 0.071712 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -827,21 +875,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 56282
 Results (first 10 items): 
-Column-0: 11242 97789 13109 13095 97014 12458 96720 96665 88117 120371 
-Column-1: 11242 97789 13109 13095 97014 12458 96720 96665 88117 120371 
-Column-2: 11242 97789 13109 13095 97014 12458 96720 96665 88117 120371 
+Column-0: 426 534 609 701 870 1204 1233 1288 1393 1509 
+Column-1: 426 534 609 701 870 1204 1233 1288 1393 1509 
+Column-2: 426 534 609 701 870 1204 1233 1288 1393 1509 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.48045 ms
-Merge: 0.638944 ms
-Materialize: 0.00208 ms
+Sort: 2.90099 ms
+Merge: 2.29274 ms
+Materialize: 0.041056 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -860,21 +910,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 12719
 Results (first 10 items): 
-Column-0: 66307 66307 66307 66307 66307 66307 66307 66307 66307 66307 
-Column-1: 66307 66307 66307 66307 66307 66307 66307 66307 66307 66307 
-Column-2: 66307 66307 66307 66307 66307 66307 66307 66307 66307 66307 
+Column-0: 1233 1288 1393 2409 3639 3827 4655 5028 5638 7488 
+Column-1: 1233 1288 1393 2409 3639 3827 4655 5028 5638 7488 
+Column-2: 1233 1288 1393 2409 3639 3827 4655 5028 5638 7488 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.4784 ms
-Merge: 0.613312 ms
-Materialize: 0.001888 ms
+Sort: 2.89792 ms
+Merge: 2.16867 ms
+Materialize: 0.03584 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJ
@@ -893,21 +945,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 4044
 Results (first 10 items): 
-Column-0: 179965 124530 180058 175554 168431 128357 139062 32670 151954 83355 
-Column-1: 179965 124530 180058 175554 168431 128357 139062 32670 151954 83355 
-Column-2: 179965 124530 180058 175554 168431 128357 139062 32670 151954 83355 
+Column-0: 426 1288 1393 2409 2508 7488 7693 7886 16187 16960 
+Column-1: 426 1288 1393 2409 2508 7488 7693 7886 16187 16960 
+Column-2: 426 1288 1393 2409 2508 7488 7693 7886 16187 16960 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.4528 ms
-Merge: 0.604608 ms
-Materialize: 0.002528 ms
+Sort: 2.8969 ms
+Merge: 2.00294 ms
+Materialize: 0.033664 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -926,21 +980,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 5307598
 Results (first 10 items): 
-Column-0: 90641 90639 90637 90635 90631 90630 90629 90625 90624 90619 
-Column-1: 90641 90639 90637 90635 90631 90630 90629 90625 90624 90619 
-Column-2: 90641 90639 90637 90635 90631 90630 90629 90625 90624 90619 
+Column-0: 0 1 2 4 5 6 8 9 10 11 
+Column-1: 0 1 2 4 5 6 8 9 10 11 
+Column-2: 0 1 2 4 5 6 8 9 10 11 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.50195 ms
-Merge: 0.690592 ms
-Materialize: 0.00176 ms
+Sort: 2.93581 ms
+Merge: 3.27581 ms
+Materialize: 0.386048 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -959,21 +1015,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 5177199
 Results (first 10 items): 
-Column-0: 41765 41763 41760 41759 41757 41755 41753 41751 41750 41748 
-Column-1: 41765 41763 41760 41759 41757 41755 41753 41751 41750 41748 
-Column-2: 41765 41763 41760 41759 41757 41755 41753 41751 41750 41748 
+Column-0: 2 7 8 12 13 15 16 17 18 19 
+Column-1: 2 7 8 12 13 15 16 17 18 19 
+Column-2: 2 7 8 12 13 15 16 17 18 19 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.47741 ms
-Merge: 0.688544 ms
-Materialize: 0.001952 ms
+Sort: 2.93274 ms
+Merge: 3.23379 ms
+Materialize: 0.383008 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -992,21 +1050,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 4674675
 Results (first 10 items): 
-Column-0: 33629 33628 33625 33624 33620 33619 33617 33615 33614 33609 
-Column-1: 33629 33628 33625 33624 33620 33619 33617 33615 33614 33609 
-Column-2: 33629 33628 33625 33624 33620 33619 33617 33615 33614 33609 
+Column-0: 0 3 6 7 10 11 13 16 18 20 
+Column-1: 0 3 6 7 10 11 13 16 18 20 
+Column-2: 0 3 6 7 10 11 13 16 18 20 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.1497 ms
-Merge: 0.688224 ms
-Materialize: 0.002496 ms
+Sort: 2.93786 ms
+Merge: 3.13139 ms
+Materialize: 0.357376 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1025,21 +1085,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 3567299
 Results (first 10 items): 
-Column-0: 6759 6759 6759 6759 6759 6759 6759 6759 6759 6759 
-Column-1: 6759 6759 6759 6759 6759 6759 6759 6759 6759 6759 
-Column-2: 6759 6759 6759 6759 6759 6759 6759 6759 6759 6759 
+Column-0: 1 4 5 6 7 8 13 16 17 19 
+Column-1: 1 4 5 6 7 8 13 16 17 19 
+Column-2: 1 4 5 6 7 8 13 16 17 19 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.49274 ms
-Merge: 0.683904 ms
-Materialize: 0.001728 ms
+Sort: 2.91533 ms
+Merge: 2.7871 ms
+Materialize: 0.30208 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1058,21 +1120,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 1654607
 Results (first 10 items): 
-Column-0: 84241 84241 84241 84241 84241 84241 84241 84241 84241 84241 
-Column-1: 84241 84241 84241 84241 84241 84241 84241 84241 84241 84241 
-Column-2: 84241 84241 84241 84241 84241 84241 84241 84241 84241 84241 
+Column-0: 26 32 33 55 56 59 62 64 67 68 
+Column-1: 26 32 33 55 56 59 62 64 67 68 
+Column-2: 26 32 33 55 56 59 62 64 67 68 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.48557 ms
-Merge: 0.68832 ms
-Materialize: 0.001728 ms
+Sort: 2.91421 ms
+Merge: 2.59174 ms
+Materialize: 0.18432 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1091,21 +1155,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 337935
 Results (first 10 items): 
-Column-0: 90549 90549 90549 90549 90549 90549 90549 90549 90549 90549 
-Column-1: 90549 90549 90549 90549 90549 90549 90549 90549 90549 90549 
-Column-2: 90549 90549 90549 90549 90549 90549 90549 90549 90549 90549 
+Column-0: 32 55 83 91 94 97 145 220 226 229 
+Column-1: 32 55 83 91 94 97 145 220 226 229 
+Column-2: 32 55 83 91 94 97 145 220 226 229 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.47942 ms
-Merge: 0.65792 ms
-Materialize: 0.001824 ms
+Sort: 2.91021 ms
+Merge: 2.45658 ms
+Materialize: 0.070656 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1124,21 +1190,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 56290
 Results (first 10 items): 
-Column-0: 100633 118466 101020 99653 118383 117295 91692 118839 103683 90057 
-Column-1: 100633 118466 101020 99653 118383 117295 91692 118839 103683 90057 
-Column-2: 100633 118466 101020 99653 118383 117295 91692 118839 103683 90057 
+Column-0: 426 534 550 609 870 1114 1137 1288 1393 1509 
+Column-1: 426 534 550 609 870 1114 1137 1288 1393 1509 
+Column-2: 426 534 550 609 870 1114 1137 1288 1393 1509 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.4825 ms
-Merge: 0.638176 ms
-Materialize: 0.00224 ms
+Sort: 2.89792 ms
+Merge: 2.31219 ms
+Materialize: 0.037888 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1157,21 +1225,23 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 12718
 Results (first 10 items): 
-Column-0: 129121 121959 35782 125662 125654 128026 144116 169027 36282 152312 
-Column-1: 129121 121959 35782 125662 125654 128026 144116 169027 36282 152312 
-Column-2: 129121 121959 35782 125662 125654 128026 144116 169027 36282 152312 
+Column-0: 426 1233 1288 1393 2409 3639 5051 5480 5638 6100 
+Column-1: 426 1233 1288 1393 2409 3639 5051 5480 5638 6100 
+Column-2: 426 1233 1288 1393 2409 3639 5051 5480 5638 6100 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.05139 ms
-Merge: 0.612576 ms
-Materialize: 0.001728 ms
+Sort: 2.89997 ms
+Merge: 2.18419 ms
+Materialize: 0.034816 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 ||R|| = 8388608 ||S|| = 8388608
 R payload columns = 1 S payload columns = 1
 Join algorithm: SMJI
@@ -1190,19 +1260,21 @@ Filtered FK to reduce the match ratio
 Data preparation is done
 Memory pool has initial size 13737184460 bytes.
 Circular buffer size = 8388608
-Allocating 68434431 bytes of temporary storage for sorting.
+IN OUR SORT MERGE JOIN GFTR
 
-Output Cardinality = 8388608
+Output Cardinality = 4042
 Results (first 10 items): 
-Column-0: 81861 174823 97353 158477 158610 44390 158991 105817 32670 36171 
-Column-1: 81861 174823 97353 158477 158610 44390 158991 105817 32670 36171 
-Column-2: 81861 174823 97353 158477 158610 44390 158991 105817 32670 36171 
+Column-0: 1288 1393 2409 2508 3442 7488 7886 10635 10953 12548 
+Column-1: 1288 1393 2409 2508 3442 7488 7886 10635 10953 12548 
+Column-2: 1288 1393 2409 2508 3442 7488 7886 10635 10953 12548 
 
+Verifying...
+[CORRECT]
 
 ==== Statistics ==== 
-Sort: 5.48352 ms
-Merge: 0.610208 ms
-Materialize: 0.001984 ms
+Sort: 2.89587 ms
+Merge: 1.97325 ms
+Materialize: 0.034816 ms
 
-Peak memory used: 437566211 bytes
+Peak memory used: 504460799 bytes
 
