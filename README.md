@@ -23,4 +23,4 @@ Comment back in the two lines with `OurSortMergeJoin`, while commenting out the 
 Toggle correctness check in `join_exp_4b4b.cu` with the `CHECK_CORRECTNESS` flag.
 
 #### How to run our PHJ-GFUR/GFTR
-Branches `partitioner` and `phj` contain our PHJ-GFUR/GFTR implementations. TODO: add running instructions.
+Branches `partitioner` and `phj` contain our PHJ-GFUR/GFTR implementations. `partitioner` has a fully functional paritioned hash join implementation at `final_project_devctr-main/src/src/volcano/PH.cuh`. This header file is included by the benchmarking file `join_exp_4b4b.cu` which runs both our implementation and the paper PHJ implementation. Simply running `./run-experiment.sh -c` would run and benchmark all the yaml files. The output would be dumped at `output.txt` in the `final_project_devctr-main` directory. In the output file, you can search through the initializing token `========Our PHJ Statistics========` which details out which part of the code took how much time.
