@@ -742,8 +742,8 @@ auto hash_join(int* keys1, int num_rows1, int *keys2, int num_rows2) {
 
     auto res = launch_join<1024>(relR, relS, join_time);
 
-    std::cout << "Our PHJ statistics" << std::endl;
-    std::cout << "===========================" << std::endl;
+    std::cout << std::endl;
+    std::cout << "========Our PHJ Statistics========" << std::endl;
     std::cout << "Custom Partition Time: " << partition_time << std::endl;
     std::cout << "Custom Join Time: " << join_time << std::endl << std::endl;
 
