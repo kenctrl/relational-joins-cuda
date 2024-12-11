@@ -18,7 +18,7 @@ Run `./run_experiment.sh` to run the experiment. Use the `--compile` flag to rec
 Depending on your computer architecture, you may need to run `export DOCKER_DEFAULT_PLATFORM=linux/amd64` to compile the binaries for x86. If your computer has ARM architecture, run OrbStack; else, run Docker.
 
 #### How to run our SMJ-GFUR/GFTR
-Comment back in the two lines with `OurSortMergeJoin`, while commenting out the two lines with `SortMergeJoin` and `SortMergeJoinByIndex`.
+Comment back in the two lines with `OurSortMergeJoin`, while commenting out the two lines with `SortMergeJoin` and `SortMergeJoinByIndex`. Then run `./run-experiment.sh -c` to compile and run the microbenchmarks in `src/exp/`. 
 
 Toggle correctness check in `join_exp_4b4b.cu` with the `CHECK_CORRECTNESS` flag.
 
