@@ -14,5 +14,5 @@ experiments:
             unique_keys = nr AND
             zipf_factor = 0 AND
             selectivity = 1 AND
-            (algo LIKE 'smj%')
+            (algo LIKE 'phj%')
       ORDER BY algo, nr, ratio, pr, ps;

@@ -14,5 +14,5 @@ experiments:
                   join_type = 'pkfk' AND
                   unique_keys = nr AND
                   selectivity = 1 AND
-                  (algo LIKE 'smj%' AND (nr < 28 AND q = 6 or nr >= 28 AND q = 7)))
+                  (algo LIKE 'phj%' AND (nr < 28 AND q = 6 or nr >= 28 AND q = 7)))
       ORDER BY algo, nr, ratio, pr, ps, zipf_factor;
