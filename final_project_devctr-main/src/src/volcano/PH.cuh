@@ -229,7 +229,7 @@ __global__ void init_buckets(int *num_buckets,
 }
 
 
-void check_correctness(const int *num_buckets,
+static void check_ph_correctness(const int *num_buckets,
                        const int *part,
                        const int *idx,
                        const int *cnt,
@@ -310,7 +310,7 @@ void check_correctness(const int *num_buckets,
 
 // returns the cpu pointer
 template <int radix_size, int shift, int block, int bucket_size>
-auto launch_first_pass(const int* keys, int num_rows) {
+static auto launch_first_pass(const int* keys, int num_rows) {
     const int max_buckets = num_rows / bucket_size + radix_size + 2;
 
     int *d_keys;
@@ -363,11 +363,9 @@ auto launch_first_pass(const int* keys, int num_rows) {
         return (x >> shift) & (radix_size - 1);
     };
 
-    check_correctness(num_buckets, part, idx, cnt, keys, 
+    check_ph_correctness(num_buckets, part, idx, cnt, keys, 
                       num_rows, max_buckets, bucket_size, radix_fn);
 
-    release_mem(d_keys);
-    release_mem(head);
     return std::make_tuple(
         num_buckets,
         idx,
@@ -377,7 +375,7 @@ auto launch_first_pass(const int* keys, int num_rows) {
     );
 }
 
-auto launch_second_pass(int *keys, int num_rows) {
+static auto launch_second_pass(int *keys, int num_rows) {
     constexpr int lev1_block = 8;
     constexpr int radix_size1 = 256;
     constexpr int radix_size2 = 256;
@@ -454,15 +452,8 @@ auto launch_second_pass(int *keys, int num_rows) {
         return partition1 * radix_size2 + partition2;
     };
 
-    check_correctness(num_buckets, part, idx, cnt, keys, 
+    check_ph_correctness(num_buckets, part, idx, cnt, keys, 
                       num_rows, max_buckets, bucket_size2, radix_fn);
-
-    release_mem(head);
-    release_mem(num_lev1_buckets);
-    release_mem(lev1_part);
-    release_mem(lev1_idx);
-    release_mem(lev1_value);
-    release_mem(lev1_cnt);
 
     return std::make_tuple(
         num_buckets, 
@@ -471,18 +462,4 @@ auto launch_second_pass(int *keys, int num_rows) {
         part,
         cnt
     );
-}
-
-
-int main() {
-    const int num_rows = 1 << 25;
-    int *keys;
-    CHECK_CUDA_ERROR(
-        cudaMallocHost(&keys, sizeof(int) * num_rows)
-    );
-    for(int i = 0; i < num_rows; i++) {
-        keys[i] = rand();
-    }
-    launch_second_pass(keys, num_rows);
-    return 0;
 }
